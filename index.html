@@ -573,6 +573,125 @@ body {
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+.pin-mode-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  background: var(--bg2);
+  border-radius: 14px;
+  padding: 4px;
+}
+.pin-mode-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-xsoft);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.pin-mode-btn.active {
+  background: var(--card);
+  color: var(--text);
+  font-weight: 400;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ── PIN screen ── */
+#pin-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 998;
+  padding: 40px 20px;
+}
+.pin-title {
+  font-family: 'Lora', serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+.pin-subtitle {
+  font-size: 12px;
+  color: var(--text-xsoft);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+}
+.pin-dots {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.pin-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  transition: all 0.15s ease;
+}
+.pin-dot.filled {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.1);
+}
+.pin-dot.error {
+  border-color: #E06060;
+  background: #E06060;
+  animation: shake 0.3s ease;
+}
+.pin-error {
+  font-size: 12px;
+  color: #E08080;
+  letter-spacing: 0.08em;
+  height: 20px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.pin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 280px;
+}
+.pin-key {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-family: 'Lora', serif;
+  font-size: 24px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pin-key:active { background: var(--bg3); transform: scale(0.94); }
+.pin-key-empty { background: transparent; border-color: transparent; cursor: default; }
+.pin-key-del { font-size: 18px; color: var(--text-soft); }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -586,6 +705,40 @@ body {
   <div class="loading-title">cycle 🌙</div>
   <div class="loading-spinner"></div>
   <div class="loading-sub">syncing your data</div>
+</div>
+
+<!-- PIN screen -->
+<div id="pin-screen" style="display:none">
+  <div class="pin-title">cycle 🌙</div>
+
+  <!-- Mode selector -->
+  <div class="pin-mode-row" id="pin-mode-row">
+    <button class="pin-mode-btn active" id="pin-mode-enter" onclick="switchPinMode('enter')">Enter PIN</button>
+    <button class="pin-mode-btn" id="pin-mode-create" onclick="switchPinMode('create')">Create PIN</button>
+  </div>
+
+  <div class="pin-subtitle" id="pin-subtitle">enter your 4-digit pin</div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="dot-0"></div>
+    <div class="pin-dot" id="dot-1"></div>
+    <div class="pin-dot" id="dot-2"></div>
+    <div class="pin-dot" id="dot-3"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-pad">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <div class="pin-key pin-key-empty"></div>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key pin-key-del" onclick="pinDel()">⌫</button>
+  </div>
 </div>
 
 <!-- Sync indicator dot -->
@@ -792,16 +945,144 @@ const SUPABASE_URL = 'https://sdvmycusfyavsuvsjvrv.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkdm15Y3VzZnlhdnN1dnNqdnJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4Mjc1NjAsImV4cCI6MjA5MjQwMzU2MH0.sOPwil85LdViJ81HD_hFu1SWbQW9M1tEiR25CtcFmaw';
 
 // Generate or retrieve a stable user token (stays in localStorage — just an ID, no health data)
-function getUserToken() {
-  let token = localStorage.getItem('cycleUserToken');
-  if (!token) {
-    token = 'user_' + Math.random().toString(36).substr(2,16) + Date.now().toString(36);
-    localStorage.setItem('cycleUserToken', token);
+// ── PIN AUTH ───────────────────────────────────────────────────────────────
+let USER_TOKEN = null;
+let pinEntry = '';
+let pinStage = 'enter'; // 'enter' | 'create' | 'confirm'
+let pinFirst = '';
+let pinMode = 'enter'; // current selected mode tab
+
+function pinToToken(pin) {
+  const salt = 'cycle_app_v1_leonna';
+  const str = salt + pin;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash = hash & hash;
   }
-  return token;
+  const h1 = Math.abs(hash).toString(36);
+  let hash2 = 0;
+  for (let i = str.length - 1; i >= 0; i--) {
+    hash2 = ((hash2 << 5) - hash2) + str.charCodeAt(i);
+    hash2 = hash2 & hash2;
+  }
+  const h2 = Math.abs(hash2).toString(36);
+  return `cycle_${h1}${h2}`;
 }
 
-const USER_TOKEN = getUserToken();
+function switchPinMode(mode) {
+  pinMode = mode;
+  pinEntry = '';
+  pinFirst = '';
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-mode-enter').classList.toggle('active', mode === 'enter');
+  document.getElementById('pin-mode-create').classList.toggle('active', mode === 'create');
+  if (mode === 'enter') {
+    pinStage = 'enter';
+    document.getElementById('pin-subtitle').textContent = 'enter your 4-digit pin';
+  } else {
+    pinStage = 'create';
+    document.getElementById('pin-subtitle').textContent = 'choose your 4-digit pin';
+  }
+  updatePinDots();
+}
+
+function showPinScreen() {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('pin-screen').style.display = 'flex';
+  switchPinMode('enter');
+}
+
+function updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    dot.classList.remove('filled','error');
+    if (i < pinEntry.length) dot.classList.add('filled');
+  }
+}
+
+function pinError(msg) {
+  document.getElementById('pin-error').textContent = msg;
+  for (let i = 0; i < 4; i++) {
+    document.getElementById(`dot-${i}`).classList.remove('filled');
+    document.getElementById(`dot-${i}`).classList.add('error');
+  }
+  setTimeout(() => {
+    pinEntry = '';
+    document.getElementById('pin-error').textContent = '';
+    updatePinDots();
+  }, 800);
+}
+
+function pinKey(digit) {
+  if (pinEntry.length >= 4) return;
+  pinEntry += digit;
+  updatePinDots();
+  if (pinEntry.length === 4) setTimeout(() => handlePinComplete(), 100);
+}
+
+function pinDel() {
+  if (pinEntry.length > 0) {
+    pinEntry = pinEntry.slice(0, -1);
+    updatePinDots();
+  }
+}
+
+async function handlePinComplete() {
+  if (pinStage === 'enter') {
+    // Any valid 4-digit PIN maps to a token — just use it
+    USER_TOKEN = pinToToken(pinEntry);
+    localStorage.setItem('cycleUserToken', USER_TOKEN);
+    await launchApp();
+
+  } else if (pinStage === 'create') {
+    pinFirst = pinEntry;
+    pinEntry = '';
+    pinStage = 'confirm';
+    document.getElementById('pin-subtitle').textContent = 'confirm your pin';
+    updatePinDots();
+
+  } else if (pinStage === 'confirm') {
+    if (pinEntry === pinFirst) {
+      USER_TOKEN = pinToToken(pinEntry);
+      localStorage.setItem('cycleUserToken', USER_TOKEN);
+      await launchApp();
+    } else {
+      pinError('pins don\'t match — try again');
+      pinStage = 'create';
+      pinFirst = '';
+      setTimeout(() => {
+        document.getElementById('pin-subtitle').textContent = 'choose your 4-digit pin';
+      }, 850);
+    }
+  }
+}
+
+async function launchApp() {
+  sessionStorage.setItem('cycleSessionToken', USER_TOKEN);
+  document.getElementById('pin-screen').style.display = 'none';
+  document.getElementById('loading-screen').style.display = 'flex';
+  setSyncDot('syncing');
+
+  try {
+    appData = await loadFromSupabase();
+    if (!appData.symptoms) appData.symptoms = {};
+    setSyncDot('');
+  } catch(e) {
+    setSyncDot('error');
+  }
+
+  const loader = document.getElementById('loading-screen');
+  loader.classList.add('hidden');
+  setTimeout(() => loader.style.display = 'none', 500);
+
+  const now = new Date();
+  document.getElementById('log-start').value = fmt(now);
+  document.getElementById('today-date-label').textContent =
+    now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}).toLowerCase();
+
+  renderAll();
+}
 
 async function dbFetch(path, options={}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -834,7 +1115,6 @@ async function loadFromSupabase() {
         settings:     row.settings     || TEMPDROP_DEFAULT.settings
       };
     }
-    // First time — seed with TempDrop default
     const fresh = JSON.parse(JSON.stringify(TEMPDROP_DEFAULT));
     await saveToSupabase(fresh);
     return fresh;
@@ -922,28 +1202,19 @@ window.onload = async () => {
   const now = new Date();
   calYear  = now.getFullYear();
   calMonth = now.getMonth();
-
   symptomViewDate = fmt(now);
-  document.getElementById('log-start').value = fmt(now);
-  document.getElementById('today-date-label').textContent =
-    now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}).toLowerCase();
 
-  setSyncDot('syncing');
-
-  try {
-    appData = await loadFromSupabase();
-    if (!appData.symptoms) appData.symptoms = {};
-    setSyncDot('');
-  } catch(e) {
-    setSyncDot('error');
+  // Check if already unlocked this session
+  const sessionToken = sessionStorage.getItem('cycleSessionToken');
+  if (sessionToken) {
+    // Already authenticated this session — skip PIN
+    USER_TOKEN = sessionToken;
+    await launchApp();
+  } else {
+    // Show PIN screen
+    document.getElementById('loading-screen').style.display = 'none';
+    showPinScreen();
   }
-
-  // Hide loading screen
-  const loader = document.getElementById('loading-screen');
-  loader.classList.add('hidden');
-  setTimeout(() => loader.style.display = 'none', 500);
-
-  renderAll();
 };
 
 function renderAll() {
