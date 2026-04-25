@@ -28,3 +28,18 @@ Built on 21 cycles of real TempDrop data as the baseline. Averages update automa
 
 Built entirely with [Claude](https://claude.ai). Single HTML file. No frameworks.
 
+---
+
+## future updates
+
+**Data-aware phase insights** — instead of generic phase descriptions, pull from logged symptom history to surface personal patterns. "last time you were in luteal you logged brain fog and intense cramps around day 11."
+
+**Hormone chart** — a visual of estrogen, progesterone, LH, and FSH rising and falling across the cycle, embedded in the "about this phase" section. Educational and beautiful.
+
+**Cycle length weighting** — weight recent cycles more heavily than older ones when calculating averages, so the predictions stay responsive to how your body is behaving right now rather than being anchored to older data.
+
+**Phase transition animation** — a more ceremonial moment when you cross into a new phase. Currently a banner drop, could be something more immersive.
+
+**Friend version** — a clean blank version of the app (no TempDrop baseline, default 28-day cycle) hosted on its own repository for sharing.
+
+**Printed calendar companion** — a monthly printable tracker to run alongside the app for the slowdown, paper-based version of the same data.
