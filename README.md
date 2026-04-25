@@ -28,6 +28,3 @@ Built on 21 cycles of real TempDrop data as the baseline. Averages update automa
 
 Built entirely with [Claude](https://claude.ai). Single HTML file. No frameworks.
 
----
-
-*built with intention · used with consistency · trusted over time*
