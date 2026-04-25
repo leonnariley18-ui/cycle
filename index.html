@@ -152,8 +152,118 @@ body {
 .nav-btn svg { width: 22px; height: 22px; stroke-width: 1.5; }
 .nav-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; }
 
-.page { display: none; }
-.page.active { display: block; }
+/* ── Page transitions ── */
+.page { display: none; opacity: 0; }
+.page.active {
+  display: block;
+  animation: pageIn 0.3s ease forwards;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Cycle ring ── */
+.cycle-ring-wrap {
+  position: relative;
+  margin-bottom: 14px;
+  animation: fadeUp 0.4s ease both;
+}
+.cycle-ring-svg {
+  position: absolute;
+  top: -6px; left: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  pointer-events: none;
+  overflow: visible;
+  border-radius: calc(var(--radius) + 6px);
+}
+
+/* ── Phase transition banner ── */
+.phase-transition-banner {
+  position: fixed;
+  top: 0; left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0 0 20px 20px;
+  padding: 16px 28px;
+  text-align: center;
+  z-index: 300;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 320px;
+  width: 90%;
+  box-shadow: var(--shadow);
+}
+.phase-transition-banner.show { transform: translateX(-50%) translateY(0); }
+.phase-transition-title {
+  font-family: 'Lora', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.phase-transition-sub {
+  font-size: 11px;
+  color: var(--text-xsoft);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Loading particles ── */
+.loading-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  animation: floatUp var(--dur) var(--delay) infinite ease-in-out;
+}
+@keyframes floatUp {
+  0%   { opacity: 0; transform: translateY(0) scale(0); }
+  20%  { opacity: 0.7; transform: translateY(-20px) scale(1); }
+  80%  { opacity: 0.2; transform: translateY(-80px) scale(0.6); }
+  100% { opacity: 0; transform: translateY(-120px) scale(0); }
+}
+
+/* ── Background glow ── */
+.bg-glow {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,132,154,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  transition: background 1.5s ease;
+}
+
+/* ── Nav animations ── */
+.nav-btn { transition: color 0.2s, transform 0.15s; }
+.nav-btn:active { transform: scale(0.88); }
+
+/* ── Stat card stagger ── */
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+
+/* ── Symptom pill micro-animation ── */
+.symptom-pill { transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.symptom-pill:active { transform: scale(0.9); }
+.symptom-pill.active { transform: scale(1.04); }
+
+/* ── Date pill animation ── */
+.symptom-date-pill { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.symptom-date-pill:active { transform: scale(0.92); }
 
 /* Typography */
 .page-title {
@@ -527,19 +637,79 @@ body {
 .phase-detail-title { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-xsoft); margin-bottom: 8px; }
 .phase-detail-text { font-size: 13px; line-height: 1.7; color: var(--text-soft); }
 
-/* Symptom date nav */
-.symptom-date-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.symptom-date-nav {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  width: 30px; height: 30px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text-soft); font-size: 14px;
+/* Today button */
+.cal-today-btn {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-xsoft);
+  border: 1px solid var(--accent-soft);
+  border-radius: 20px;
+  padding: 3px 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
   transition: all 0.2s;
 }
-.symptom-date-nav:hover { background: var(--bg3); }
-.symptom-date-label { font-size: 13px; color: var(--text-soft); font-weight: 400; text-align: center; }
+.cal-today-btn:hover { background: var(--accent-soft); }
+
+/* Symptom date scroll row */
+.symptom-date-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+.symptom-date-scroll::-webkit-scrollbar { display: none; }
+
+.symptom-date-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  transition: all 0.18s;
+  flex-shrink: 0;
+  min-width: 44px;
+}
+.symptom-date-pill:hover { background: var(--bg3); }
+.symptom-date-pill.active {
+  background: var(--accent-xsoft);
+  border-color: var(--accent);
+}
+.symptom-date-pill.today-pill {
+  border-color: var(--accent);
+}
+.symptom-date-pill .pill-day {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-xsoft);
+  font-weight: 400;
+}
+.symptom-date-pill.active .pill-day { color: var(--accent); }
+.symptom-date-pill .pill-num {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-soft);
+  line-height: 1;
+}
+.symptom-date-pill.active .pill-num { color: var(--accent); }
+.symptom-date-pill .pill-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.symptom-date-pill .pill-dot.has-data { opacity: 1; }
 
 /* Symptom insights */
 .symptom-insight-row { padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -702,10 +872,20 @@ body {
 
 <!-- Loading screen -->
 <div id="loading-screen">
+  <div class="loading-particles" id="loading-particles"></div>
   <div class="loading-title">cycle 🌙</div>
   <div class="loading-spinner"></div>
   <div class="loading-sub">syncing your data</div>
 </div>
+
+<!-- Phase transition banner -->
+<div class="phase-transition-banner" id="phase-banner">
+  <div class="phase-transition-title" id="phase-banner-title"></div>
+  <div class="phase-transition-sub" id="phase-banner-sub"></div>
+</div>
+
+<!-- Background glow -->
+<div class="bg-glow" id="bg-glow"></div>
 
 <!-- PIN screen -->
 <div id="pin-screen" style="display:none">
@@ -751,12 +931,18 @@ body {
     <div class="page-title">today ✨</div>
     <div class="page-sub" id="today-date-label">—</div>
 
-    <div class="phase-hero phase-none" id="phase-hero">
-      <div class="phase-eyebrow">Current phase</div>
-      <div class="phase-title" id="ph-name">—</div>
-      <div class="phase-subtitle" id="ph-sub">Log your first period to get started</div>
-      <div class="phase-progress-bar"><div class="phase-progress-fill" id="ph-bar" style="width:0%"></div></div>
-      <div class="phase-progress-label"><span id="ph-day-label">—</span></div>
+    <div class="cycle-ring-wrap" id="cycle-ring-wrap">
+      <svg class="cycle-ring-svg" id="cycle-ring-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect class="cycle-ring-track" x="1.5" y="1.5" width="97" height="97" rx="20" ry="20"/>
+        <rect class="cycle-ring-progress" id="cycle-ring-progress" x="1.5" y="1.5" width="97" height="97" rx="20" ry="20"/>
+      </svg>
+      <div class="phase-hero phase-none" id="phase-hero">
+        <div class="phase-eyebrow">Current phase</div>
+        <div class="phase-title" id="ph-name">—</div>
+        <div class="phase-subtitle" id="ph-sub">Log your first period to get started</div>
+        <div class="phase-progress-bar"><div class="phase-progress-fill" id="ph-bar" style="width:0%"></div></div>
+        <div class="phase-progress-label"><span id="ph-day-label">—</span></div>
+      </div>
     </div>
 
     <div class="stats-row">
@@ -781,12 +967,8 @@ body {
 
     <!-- Symptom log -->
     <div class="card" id="today-symptom-card" style="display:none">
-      <div class="symptom-date-row">
-        <button class="symptom-date-nav" onclick="symptomPrevDay()">‹</button>
-        <span class="symptom-date-label" id="symptom-date-label">today</span>
-        <button class="symptom-date-nav" id="symptom-next-btn" onclick="symptomNextDay()">›</button>
-      </div>
-      <div class="card-label">How are you feeling? 🫶🏾</div>
+      <div class="symptom-date-scroll" id="symptom-date-scroll"></div>
+      <div class="card-label" style="margin-top:14px">How are you feeling? 🫶🏾</div>
       <div class="symptom-grid" id="symptom-grid"></div>
     </div>
 
@@ -809,7 +991,10 @@ body {
     <div class="card" style="padding: 24px 16px;overflow:hidden">
       <div class="cal-header">
         <button class="cal-nav" onclick="calPrev()">‹</button>
-        <div class="cal-month" id="cal-month-label">—</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div class="cal-month" id="cal-month-label">—</div>
+          <button class="cal-today-btn" id="cal-today-btn" onclick="calToday()" style="display:none">today</button>
+        </div>
         <button class="cal-nav" onclick="calNext()">›</button>
       </div>
       <div class="cal-grid" id="cal-grid"></div>
@@ -918,6 +1103,67 @@ body {
 <div class="toast" id="toast"></div>
 
 <script>
+// ── HAPTICS ────────────────────────────────────────────────────────────────
+function haptic(style = 'light') {
+  if (navigator.vibrate) {
+    const patterns = { light: 10, medium: 20, success: [10, 50, 10] };
+    navigator.vibrate(patterns[style] || 10);
+  }
+}
+
+// ── PARTICLES ──────────────────────────────────────────────────────────────
+function initParticles() {
+  const container = document.getElementById('loading-particles');
+  if (!container) return;
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `left:${Math.random()*100}%;top:${40+Math.random()*40}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*3}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
+    container.appendChild(p);
+  }
+}
+
+// ── CYCLE RING ─────────────────────────────────────────────────────────────
+function updateCycleRing(progress, color) {
+  const el = document.getElementById('cycle-ring-progress');
+  if (!el) return;
+  const length = 376;
+  const offset = length - (Math.min(progress, 100) / 100) * length;
+  el.style.strokeDasharray = length;
+  el.style.strokeDashoffset = offset;
+  el.style.stroke = color || 'rgba(255,255,255,0.25)';
+}
+
+// ── BACKGROUND GLOW ────────────────────────────────────────────────────────
+function updateBgGlow(phase) {
+  const glow = document.getElementById('bg-glow');
+  if (!glow) return;
+  const colors = {
+    menstrual:  'rgba(212,132,154,0.08)',
+    follicular: 'rgba(128,200,160,0.07)',
+    ovulation:  'rgba(224,168,120,0.08)',
+    luteal:     'rgba(123,159,224,0.08)',
+  };
+  glow.style.background = `radial-gradient(circle, ${colors[phase]||'rgba(212,132,154,0.04)'} 0%, transparent 70%)`;
+}
+
+// ── PHASE TRANSITION BANNER ────────────────────────────────────────────────
+let lastKnownPhase = null;
+function checkPhaseTransition(phase) {
+  if (!lastKnownPhase) { lastKnownPhase = phase; return; }
+  if (lastKnownPhase !== phase) {
+    lastKnownPhase = phase;
+    const pd = phaseData[phase];
+    if (!pd) return;
+    document.getElementById('phase-banner-title').textContent = pd.name;
+    document.getElementById('phase-banner-sub').textContent = 'new phase begins';
+    const banner = document.getElementById('phase-banner');
+    banner.classList.add('show');
+    haptic('success');
+    setTimeout(() => banner.classList.remove('show'), 3000);
+  }
+}
+
 // ── SYMPTOMS ───────────────────────────────────────────────────────────────
 const SYMPTOMS = [
   {id:'light-cramps',     label:'Light cramps',      cat:'physical'},
@@ -1227,6 +1473,7 @@ function setSyncDot(state) {
 }
 
 window.onload = async () => {
+  initParticles();
   const now = new Date();
   calYear  = now.getFullYear();
   calMonth = now.getMonth();
@@ -1300,6 +1547,7 @@ function getActivePeriod() {
 }
 
 function startPeriod() {
+  haptic('medium');
   if (appData.activePeriod) { showToast('End your current period first'); return; }
   const start = document.getElementById('log-start').value;
   const notes = document.getElementById('log-notes').value.trim();
@@ -1319,6 +1567,7 @@ function startPeriod() {
 }
 
 function endPeriod() {
+  haptic('success');
   const active = getActivePeriod();
   if (!active) return;
   active.end = fmt(today());
@@ -1330,6 +1579,7 @@ function endPeriod() {
 }
 
 function logFlowForDate(dateStr, flow) {
+  haptic('light');
   const active = getActivePeriod();
   if (!active) return;
   const existing = active.dailyFlow.find(f=>f.date===dateStr);
@@ -1538,6 +1788,18 @@ function renderToday() {
     const pct=Math.min((info.dayInPhase/info.phaseDur)*100,100);
     document.getElementById('ph-bar').style.width=pct+'%';
     document.getElementById('ph-day-label').textContent=`Day ${info.dayInPhase} of ${info.phaseDur}`;
+
+    // Cycle ring — progress through full cycle
+    const cycleProgress = Math.min((info.cycleDay / info.cl) * 100, 100);
+    const ringColors = {
+      menstrual: 'rgba(212,132,154,0.6)',
+      follicular: 'rgba(128,200,160,0.6)',
+      ovulation: 'rgba(224,168,120,0.6)',
+      luteal: 'rgba(123,159,224,0.6)',
+    };
+    updateCycleRing(cycleProgress, ringColors[info.phase]);
+    updateBgGlow(info.phase);
+    checkPhaseTransition(info.phase);
   }
 
   // ── Stats ──
@@ -1645,18 +1907,38 @@ function toggleAbout() {
 // ── SYMPTOMS ───────────────────────────────────────────────────────────────
 function renderSymptomGrid() {
   const todayStr = fmt(today());
-  const isToday  = symptomViewDate === todayStr;
-  const isFuture = symptomViewDate > todayStr;
 
-  // Nav buttons
-  document.getElementById('symptom-next-btn').style.visibility = isToday ? 'hidden' : 'visible';
+  // Build 7-day pill row
+  const scroll = document.getElementById('symptom-date-scroll');
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today().getTime() - i * 86400000);
+    days.push(fmt(d));
+  }
 
-  // Date label
-  const d = parse(symptomViewDate);
-  const label = isToday ? 'today' :
-    d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}).toLowerCase();
-  document.getElementById('symptom-date-label').textContent = label;
+  scroll.innerHTML = days.map(dateStr => {
+    const d = parse(dateStr);
+    const dayName = d.toLocaleDateString('en-US', {weekday:'short'}).toLowerCase();
+    const dayNum  = d.getDate();
+    const isToday = dateStr === todayStr;
+    const isActive = dateStr === symptomViewDate;
+    const hasData = !!(appData.symptoms[dateStr] && appData.symptoms[dateStr].length > 0);
 
+    return `<div class="symptom-date-pill${isActive?' active':''}${isToday&&!isActive?' today-pill':''}"
+      onclick="symptomSelectDay('${dateStr}')">
+      <span class="pill-day">${isToday ? 'today' : dayName}</span>
+      <span class="pill-num">${dayNum}</span>
+      <span class="pill-dot${hasData?' has-data':''}"></span>
+    </div>`;
+  }).join('');
+
+  // Scroll selected pill into view
+  setTimeout(() => {
+    const active = scroll.querySelector('.active');
+    if (active) active.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  }, 50);
+
+  // Render symptom pills
   const checked = appData.symptoms[symptomViewDate] || [];
   document.getElementById('symptom-grid').innerHTML = SYMPTOMS.map(s=>`
     <button class="symptom-pill cat-${s.cat}${checked.includes(s.id)?' active':''}"
@@ -1664,7 +1946,13 @@ function renderSymptomGrid() {
   `).join('');
 }
 
+function symptomSelectDay(dateStr) {
+  symptomViewDate = dateStr;
+  renderSymptomGrid();
+}
+
 function toggleSymptom(id) {
+  haptic('light');
   if (!appData.symptoms[symptomViewDate]) appData.symptoms[symptomViewDate] = [];
   const arr = appData.symptoms[symptomViewDate];
   const idx = arr.indexOf(id);
@@ -1676,32 +1964,29 @@ function toggleSymptom(id) {
   renderSymptomGrid();
 }
 
-function symptomPrevDay() {
-  const d = parse(symptomViewDate);
-  d.setDate(d.getDate()-1);
-  symptomViewDate = fmt(d);
-  renderSymptomGrid();
-}
-
-function symptomNextDay() {
-  const d = parse(symptomViewDate);
-  const todayStr = fmt(today());
-  d.setDate(d.getDate()+1);
-  const next = fmt(d);
-  if (next <= todayStr) { symptomViewDate = next; renderSymptomGrid(); }
-}
 
 
 // ── CALENDAR ───────────────────────────────────────────────────────────────
 // Monday-first: remap Sunday(0)→6, Mon(1)→0, Tue(2)→1 … Sat(6)→5
 function dowMon(date) { return (date.getDay()+6)%7; }
 
-function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
-function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+function calToday(){
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  renderCalendar();
+}
 
 function renderCalendar() {
   const label=new Date(calYear,calMonth,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
   document.getElementById('cal-month-label').textContent=label.toLowerCase();
+
+  // Show today button only if not viewing current month
+  const now2 = new Date();
+  const isCurrentMonth = calYear === now2.getFullYear() && calMonth === now2.getMonth();
+  document.getElementById('cal-today-btn').style.display = isCurrentMonth ? 'none' : 'block';
 
   const grid=document.getElementById('cal-grid');
   const now=today();
@@ -1879,8 +2164,12 @@ function renderSymptomInsights() {
   const dates     = Object.keys(symptoms);
 
   if (!dates.length) {
-    patternEl.style.display='none';
-    phaseEl.style.display='none';
+    document.getElementById('symptom-patterns-list').innerHTML =
+      '<div class="symptom-insights-empty">log symptoms to see your patterns 🫶🏾</div>';
+    document.getElementById('symptom-phases-list').innerHTML =
+      '<div class="symptom-insights-empty">log symptoms to see how they map to your phases</div>';
+    patternEl.style.display='block';
+    phaseEl.style.display='block';
     return;
   }
 
@@ -2058,6 +2347,7 @@ function clearAll(){
 
 // ── NAV ────────────────────────────────────────────────────────────────────
 function goTo(page, btn){
+  haptic('light');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
