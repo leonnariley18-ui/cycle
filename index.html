@@ -219,7 +219,7 @@ body {
   to   { opacity: 0.7; transform: translateY(0); }
 }
 
-/* ── Hero whisper line ── */
+
   font-size: 11px;
   opacity: 0.5;
   text-align: center;
@@ -1774,25 +1774,6 @@ function getTimeGreeting() {
   return 'good night 🌙';
 }
 
-  const daysLeft = phaseDur - dayInPhase;
-  if (phase === 'menstrual') {
-    if (dayInPhase <= 2) return 'the hardest days — be gentle 🌑';
-    if (daysLeft <= 1)   return 'almost through it ✨';
-    return `${daysLeft} more days`;
-  }
-  if (phase === 'follicular') {
-    if (dayInPhase <= 2) return 'energy is on its way 🌱';
-    if (daysLeft <= 2)   return 'peak energy approaching ✨';
-    return 'building momentum 🌱';
-  }
-  if (phase === 'ovulation') return 'your power window ✨';
-  if (phase === 'luteal') {
-    if (nextIn <= 3)   return `period in ~${nextIn} days 🌑`;
-    if (daysLeft <= 3) return 'winding down, almost there 🌙';
-    return 'slow and steady 🌙';
-  }
-  return '';
-}
 
 function triggerHeroShimmer() {
   const hero = document.getElementById('phase-hero');
