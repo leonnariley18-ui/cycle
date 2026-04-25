@@ -213,6 +213,8 @@ body {
   margin-bottom: 20px;
   animation: subtitleFade 0.6s ease 0.3s forwards;
   text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
 }
 @keyframes subtitleFade {
   from { opacity: 0; transform: translateY(4px); }
@@ -400,7 +402,6 @@ body {
 }
 .phase-eyebrow { font-size: 11px; letter-spacing: 0.06em; text-transform: none; opacity: 0.6; margin-bottom: 8px; text-align: center; }
 .phase-title { font-family: 'Lora', serif; font-size: 42px; font-weight: 400; line-height: 1; margin-bottom: 6px; text-align: center; }
-.phase-subtitle { font-size: 13px; opacity: 0.7; margin-bottom: 20px; text-align: center; }
 .phase-progress-bar { height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
 .phase-progress-fill { height: 100%; border-radius: 2px; background: rgba(255,255,255,0.6); transition: width 0.8s ease; }
 .phase-progress-label { font-size: 11px; opacity: 0.55; display: flex; justify-content: center; }
@@ -1838,7 +1839,7 @@ function getPhaseForDay(dateStr) {
 // ── PHASE DATA ─────────────────────────────────────────────────────────────
 const phaseData = {
   menstrual: {
-    name:'🌑 Menstrual', sub:'Your body is renewing itself', cls:'phase-menstrual',
+    name:'🌑 Menstrual', sub:'a red sun rises', cls:'phase-menstrual',
     intro:'Your period has arrived. Estrogen and progesterone are at their lowest as your body sheds its uterine lining.',
     // day-sensitive insights: [daysIntoPhase threshold, text]
     insights: [
@@ -1852,7 +1853,7 @@ const phaseData = {
     goEasy:"High intensity workouts · Big social commitments · Major decisions · Pushing through fatigue"
   },
   follicular: {
-    name:'🌱 Follicular', sub:'Energy is building', cls:'phase-follicular',
+    name:'🌱 Follicular', sub:'brush your shoulders off', cls:'phase-follicular',
     intro:'Your period has ended and your body is rebuilding. Estrogen is rising steadily as follicles develop, bringing a gradual return of energy and mental clarity.',
     insights: [
       [4, "Estrogen is just starting to rise — you may not feel it yet but your energy and mental clarity are quietly building. A gentle ramp-up phase."],
@@ -1865,7 +1866,7 @@ const phaseData = {
     goEasy:"Overcommitting — this energy feels endless but it isn't · Neglecting sleep even when you feel wired"
   },
   ovulation: {
-    name:'✨ Ovulation', sub:'Peak energy window', cls:'phase-ovulation',
+    name:'✨ Ovulation', sub:'you\'re in your element', cls:'phase-ovulation',
     intro:'You\'re at the peak of your cycle. Estrogen is at its highest, an egg is being released, and most people feel their most energized and socially engaged right now.',
     insights: [
       [1, "Ovulation day — estrogen peaks and LH surges to trigger egg release. You may feel a physical twinge on one side (mittelschmerz). Energy and confidence are typically at their highest."],
@@ -1878,7 +1879,7 @@ const phaseData = {
     goEasy:"Nothing — this is your power window. Use it."
   },
   luteal: {
-    name:'🌙 Luteal', sub:'Winding down', cls:'phase-luteal',
+    name:'🌙 Luteal', sub:'the calm before the storm', cls:'phase-luteal',
     intro:'Ovulation is behind you and progesterone is now rising. Your body is either preparing for pregnancy or winding down toward your next period.',
     insights: [
       [5, "Early luteal — progesterone is rising but estrogen is still reasonable. You may feel a subtle shift but energy is generally still okay. Calm and steady."],
@@ -1959,7 +1960,7 @@ function renderToday() {
     hero.className='phase-hero expecting-hero';
     document.getElementById('ph-eyebrow').textContent = getTimeGreeting();
     document.getElementById('ph-name').textContent='👀 Expecting';
-    document.getElementById('ph-sub').textContent='Your period is due — has it started?';
+    document.getElementById('ph-sub').textContent='👀 your period is due — has it started?';
     document.getElementById('ph-bar').style.width='100%';
     const daysLate = diffDays(new Date(lastStart.getTime() + cl * 86400000), nowDate);
     document.getElementById('ph-day-label').textContent = daysLate === 0 ? 'Due today' : `${daysLate} day${daysLate>1?'s':''} late`;
