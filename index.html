@@ -228,6 +228,39 @@ body {
   font-style: italic;
   animation: subtitleFade 0.6s ease 0.5s both;
 }
+
+/* ── Cycle ring inside hero ── */
+
+/* ── Hero tap & glow border ── */
+.phase-hero { cursor: pointer; position: relative; overflow: visible !important; }
+.phase-hero:active { transform: scale(0.985) !important; }
+.hero-glow-border {
+  position: absolute;
+  bottom: -3px; left: 12%; width: 76%; height: 2px;
+  border-radius: 2px;
+  transition: background 1s ease, box-shadow 1s ease;
+}
+
+/* ── Hairline connector ── */
+.ring-connector {
+  width: 60%; height: 1px;
+  margin: 0 auto -14px;
+  border-radius: 1px;
+  transition: background 1s ease;
+  position: relative; z-index: 1;
+}
+
+/* ── Ring card ── */
+.ring-card { padding: 24px 20px 20px; animation: none !important; }
+.ring-countdown {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-xsoft);
+  letter-spacing: 0.06em;
+  margin-top: 12px;
+  font-style: italic;
+}
+
 .phase-transition-banner {
   position: fixed;
   top: 0; left: 50%;
@@ -300,9 +333,6 @@ body {
 .nav-btn:active { transform: scale(0.88); }
 
 /* ── Stat card stagger ── */
-.stat-card:nth-child(1) { animation-delay: 0.05s; }
-.stat-card:nth-child(2) { animation-delay: 0.1s; }
-.stat-card:nth-child(3) { animation-delay: 0.15s; }
 
 /* ── Symptom pill micro-animation ── */
 .symptom-pill { transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -310,7 +340,7 @@ body {
 .symptom-pill.active { transform: scale(1.04); }
 
 /* ── Date pill animation ── */
-.symptom-date-pill { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.symptom-date-pill:active { transform: scale(0.92); }
 .symptom-date-pill:active { transform: scale(0.92); }
 
 /* Typography */
@@ -368,7 +398,7 @@ body {
   border-radius: 50%;
   background: rgba(255,255,255,0.07);
 }
-.phase-eyebrow { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; text-align: center; }
+.phase-eyebrow { font-size: 11px; letter-spacing: 0.06em; text-transform: none; opacity: 0.6; margin-bottom: 8px; text-align: center; }
 .phase-title { font-family: 'Lora', serif; font-size: 42px; font-weight: 400; line-height: 1; margin-bottom: 6px; text-align: center; }
 .phase-subtitle { font-size: 13px; opacity: 0.7; margin-bottom: 20px; text-align: center; }
 .phase-progress-bar { height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
@@ -383,22 +413,6 @@ body {
 .expecting-hero   { background: linear-gradient(135deg, #6B2A3A, #4A1828); color: white; }
 
 /* Stats row */
-.stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
-  animation: fadeUp 0.4s ease 0.1s both;
-}
-.stat-card {
-  background: var(--card);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  padding: 16px 12px;
-  text-align: center;
-}
-.stat-num { font-family: 'Lora', serif; font-size: 28px; font-weight: 400; color: var(--text); line-height: 1; margin-bottom: 4px; }
-.stat-lbl { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-xsoft); }
 
 /* Active period card */
 .active-period-card { animation: fadeUp 0.4s ease 0.15s both; }
@@ -714,29 +728,28 @@ body {
 
 .symptom-date-pill {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 4px;
-  padding: 8px 10px;
-  border-radius: 14px;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 20px;
   border: 1.5px solid var(--border);
   background: var(--bg);
   cursor: pointer;
-  transition: all 0.18s;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
-  min-width: 44px;
+  white-space: nowrap;
 }
 .symptom-date-pill:hover { background: var(--bg3); }
 .symptom-date-pill.active {
   background: var(--accent-xsoft);
   border-color: var(--accent);
+  box-shadow: 0 0 10px 2px var(--accent-soft);
 }
-.symptom-date-pill.today-pill {
-  border-color: var(--accent);
-}
+.symptom-date-pill.today-pill { border-color: var(--accent); }
 .symptom-date-pill .pill-day {
-  font-size: 9px;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-xsoft);
   font-weight: 400;
@@ -744,18 +757,19 @@ body {
 .symptom-date-pill.active .pill-day { color: var(--accent); }
 .symptom-date-pill .pill-num {
   font-family: 'Lora', serif;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--text-soft);
   line-height: 1;
 }
 .symptom-date-pill.active .pill-num { color: var(--accent); }
 .symptom-date-pill .pill-dot {
-  width: 5px; height: 5px;
+  width: 4px; height: 4px;
   border-radius: 50%;
   background: var(--accent);
   opacity: 0;
   transition: opacity 0.2s;
+  margin-left: 2px;
 }
 .symptom-date-pill .pill-dot.has-data { opacity: 1; }
 
@@ -979,32 +993,41 @@ body {
     <div class="page-title">today ✨</div>
     <div class="page-sub" id="today-date-label">—</div>
 
-    <div class="phase-hero phase-none" id="phase-hero">
+    <div class="phase-hero phase-none" id="phase-hero" onclick="toggleRingCard()" style="cursor:pointer">
       <div class="phase-eyebrow" id="ph-eyebrow">Current phase</div>
       <div class="phase-title" id="ph-name">—</div>
       <div class="phase-subtitle" id="ph-sub">Log your first period to get started</div>
       <div class="phase-progress-bar"><div class="phase-progress-fill" id="ph-bar" style="width:0%"></div></div>
       <div class="phase-progress-label"><span id="ph-day-label">—</span></div>
+      <div class="hero-glow-border" id="hero-glow-border"></div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-num" id="stat-cycle">—</div><div class="stat-lbl">Cycle day</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-avg">—</div><div class="stat-lbl" id="stat-avg-lbl">Avg length</div></div>
-      <div class="stat-card" id="stat-next-card"><div class="stat-num" id="stat-next">—</div><div class="stat-lbl">Days away</div></div>
+    <!-- Hairline connector -->
+    <div class="ring-connector" id="ring-connector" style="display:none"></div>
+
+    <!-- Ring card -->
+    <div class="card ring-card" id="ring-card" style="display:none">
+      <svg id="phase-ring-svg" viewBox="0 0 280 310" width="100%" style="display:block;margin:0 auto"></svg>
+      <div class="ring-countdown" id="ring-countdown" style="display:none"></div>
     </div>
 
-    <!-- Active period / expecting / phase context card -->
+    <!-- Combined phase card: overview + day insight, collapsible, open by default -->
     <div class="card active-period-card" id="today-context-card">
-      <div class="card-label" id="today-context-label">About this phase</div>
-      <div id="today-context-body">
-        <div class="phase-desc">Add your period history to see insights about your current phase.</div>
+      <div class="collapsible-header" onclick="togglePhaseCard()">
+        <div class="card-label" id="today-context-label" style="margin-bottom:0">Phase overview</div>
+        <span class="collapsible-arrow open" id="phase-card-arrow">▾</span>
       </div>
-    </div>
-
-    <!-- Phase-day insight -->
-    <div class="card" id="today-insight-card" style="display:none">
-      <div class="card-label" id="today-insight-label">What to expect today</div>
-      <div class="phase-insight" id="today-insight-text"></div>
+      <div class="collapsible-body open" id="phase-card-body">
+        <div class="collapsible-inner" style="padding-top:14px;margin-top:10px">
+          <div id="today-context-body">
+            <div class="phase-desc">Add your period history to see insights about your current phase.</div>
+          </div>
+          <div id="today-insight-section" style="display:none">
+            <div class="card-label" id="today-insight-label" style="margin-top:16px;margin-bottom:8px">What to expect today</div>
+            <div class="phase-insight" id="today-insight-text"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Symptom log -->
@@ -1163,6 +1186,120 @@ function initParticles() {
     p.style.cssText = `left:${Math.random()*100}%;top:${40+Math.random()*40}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*3}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
     container.appendChild(p);
   }
+}
+
+// ── RING CARD ──────────────────────────────────────────────────────────────
+let ringCardOpen = false;
+
+function toggleRingCard() {
+  haptic('light');
+  ringCardOpen = !ringCardOpen;
+  const card      = document.getElementById('ring-card');
+  const connector = document.getElementById('ring-connector');
+  if (ringCardOpen) {
+    card.style.display = 'block';
+    connector.style.display = 'block';
+    buildPhaseRing();
+  } else {
+    card.style.display = 'none';
+    connector.style.display = 'none';
+  }
+}
+
+function buildPhaseRing() {
+  const info = getCurrentCycleInfo();
+  const svg  = document.getElementById('phase-ring-svg');
+  if (!svg || !info) return;
+
+  const cx = 140, cy = 140, r = 110;
+  const circ = 2 * Math.PI * r;
+  const cl = info.cl, pl = avgPeriodLength();
+  const ovD = cl - 14;
+
+  // Phase lengths in days
+  const follLen = Math.max(ovD - 1 - pl, 1);
+  const lutLen  = Math.max(cl - (ovD + 1), 1);
+  const phases  = [
+    { name: 'Menstrual',  days: pl,      color: '#E090A8' },
+    { name: 'Follicular', days: follLen, color: '#80C8A0' },
+    { name: 'Ovulation',  days: 3,       color: '#E0A878' },
+    { name: 'Luteal',     days: lutLen,  color: '#7B9FE0' },
+  ];
+
+  const total = phases.reduce((a,p) => a + p.days, 0);
+  const gapDeg = 2; // small gap between phases in degrees
+
+  let html = '';
+  let currentDeg = -90; // start at top
+
+  phases.forEach(phase => {
+    const phaseDeg = (phase.days / total) * 360 - gapDeg;
+    const startRad = (currentDeg * Math.PI) / 180;
+    const endRad   = ((currentDeg + phaseDeg) * Math.PI) / 180;
+    const x1 = cx + r * Math.cos(startRad);
+    const y1 = cy + r * Math.sin(startRad);
+    const x2 = cx + r * Math.cos(endRad);
+    const y2 = cy + r * Math.sin(endRad);
+    const large = phaseDeg > 180 ? 1 : 0;
+    html += `<path d="M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}"
+      fill="none" stroke="${phase.color}" stroke-width="20" stroke-linecap="round"/>`;
+    currentDeg += phaseDeg + gapDeg;
+  });
+
+  // Current day marker
+  const dayDeg = -90 + (info.cycleDay / total) * 360;
+  const dayRad = (dayDeg * Math.PI) / 180;
+  const mx = cx + r * Math.cos(dayRad);
+  const my = cy + r * Math.sin(dayRad);
+  html += `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="9" fill="white" opacity="0.95"/>`;
+  html += `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="5" fill="#1A1728"/>`;
+
+  // Inner track
+  html = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/>` + html;
+
+  // Center text
+  html += `<text x="${cx}" y="${cy-8}" text-anchor="middle" font-family="Lora,serif" font-size="38" font-weight="400" fill="white" opacity="0.92">${info.cycleDay}</text>`;
+  html += `<text x="${cx}" y="${cy+16}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="white" opacity="0.4" letter-spacing="2">day of cycle</text>`;
+
+  // Phase legend — evenly spaced
+  const legendColors = ['#E090A8','#80C8A0','#E0A878','#7B9FE0'];
+  const legendNames  = ['Menstrual','Follicular','Ovulation','Luteal'];
+  const segW = 280 / 4;
+  legendNames.forEach((lbl, i) => {
+    const lx = i * segW + 8;
+    html += `<rect x="${lx}" y="285" width="8" height="8" rx="2" fill="${legendColors[i]}" opacity="0.85"/>`;
+    html += `<text x="${lx+12}" y="293" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(255,255,255,0.45)">${lbl}</text>`;
+  });
+
+  svg.setAttribute('viewBox', '0 0 280 310');
+  svg.innerHTML = html;
+
+  // Countdown — only show if ≤ 7 days away
+  const countdown = document.getElementById('ring-countdown');
+  if (info.nextIn > 0 && info.nextIn <= 7 && !info.inActivePeriod) {
+    countdown.textContent = `period in ~${info.nextIn} day${info.nextIn===1?'':'s'}`;
+    countdown.style.display = 'block';
+  } else {
+    countdown.style.display = 'none';
+  }
+}
+
+// ── UPDATE GLOW & CONNECTOR ────────────────────────────────────────────────
+function updateHeroGlow(phase) {
+  const colors = {
+    menstrual:  '#E090A8',
+    follicular: '#80C8A0',
+    ovulation:  '#E0A878',
+    luteal:     '#7B9FE0',
+  };
+  const c = colors[phase] || 'rgba(255,255,255,0.2)';
+  const glow = document.getElementById('hero-glow-border');
+  const conn = document.getElementById('ring-connector');
+  if (glow) {
+    glow.style.background = c;
+    glow.style.boxShadow  = `0 0 14px 4px ${c}90`;
+  }
+  if (conn) conn.style.background = c;
 }
 
 // ── BACKGROUND GLOW ────────────────────────────────────────────────────────
@@ -1488,9 +1625,7 @@ const TEMPDROP_DEFAULT = {
 let appData = JSON.parse(JSON.stringify(TEMPDROP_DEFAULT));
 
 let calYear, calMonth;
-let todayFlowSelected = null;
 let symptomViewDate = null;
-let isSyncing = false;
 
 function save() {
   saveToSupabase(appData); // async, fire and forget
@@ -1774,7 +1909,6 @@ function getTimeGreeting() {
   return 'good night 🌙';
 }
 
-
 function triggerHeroShimmer() {
   const hero = document.getElementById('phase-hero');
   hero.classList.remove('shimmer');
@@ -1789,21 +1923,21 @@ function renderToday() {
   const hero   = document.getElementById('phase-hero');
   const ctxLbl = document.getElementById('today-context-label');
   const ctxBdy = document.getElementById('today-context-body');
-  const insightCard  = document.getElementById('today-insight-card');
+  const insightSection = document.getElementById('today-insight-section');
   const symptomCard  = document.getElementById('today-symptom-card');
   const aboutCard    = document.getElementById('today-about-card');
 
   if (!info) {
     hero.className='phase-hero phase-none';
+    document.getElementById('ph-eyebrow').textContent = 'cycle 🌙';
     document.getElementById('ph-name').textContent='unknown';
     document.getElementById('ph-sub').textContent='Log your first period to get started';
     document.getElementById('ph-bar').style.width='0%';
     document.getElementById('ph-day-label').textContent='';
     
-    ['stat-cycle','stat-avg','stat-next'].forEach(id=>document.getElementById(id).textContent='—');
     ctxLbl.textContent='About this phase';
     ctxBdy.innerHTML='<div class="phase-desc">Add your period history to see insights about your current phase.</div>';
-    insightCard.style.display='none';
+    insightSection.style.display='none';
     symptomCard.style.display='none';
     aboutCard.style.display='none';
     return;
@@ -1829,13 +1963,17 @@ function renderToday() {
     document.getElementById('ph-bar').style.width='100%';
     const daysLate = diffDays(new Date(lastStart.getTime() + cl * 86400000), nowDate);
     document.getElementById('ph-day-label').textContent = daysLate === 0 ? 'Due today' : `${daysLate} day${daysLate>1?'s':''} late`;
+    updateHeroGlow('menstrual');
     
   } else {
     const pd = phaseData[info.phase];
     hero.className=`phase-hero ${pd.cls}`;
     document.getElementById('ph-eyebrow').textContent = getTimeGreeting();
-    document.getElementById('ph-name').textContent=pd.name;
-    // Reset subtitle animation
+    // Split emoji from phase name for sizing
+    const nameParts = pd.name.split(' ');
+    const emoji = nameParts[0];
+    const phaseName = nameParts.slice(1).join(' ');
+    document.getElementById('ph-name').innerHTML = `<span style="font-size:0.65em;vertical-align:middle;margin-right:4px">${emoji}</span>${phaseName}`;
     const sub = document.getElementById('ph-sub');
     sub.style.animation = 'none';
     void sub.offsetWidth;
@@ -1845,24 +1983,12 @@ function renderToday() {
     document.getElementById('ph-bar').style.width=pct+'%';
     document.getElementById('ph-day-label').textContent=`Day ${info.dayInPhase} of ${info.phaseDur}`;
 
+    updateHeroGlow(info.phase);
     updateBgGlow(info.phase);
     checkPhaseTransition(info.phase);
     triggerHeroShimmer();
-  }
-
-  // ── Stats ──
-  document.getElementById('stat-cycle').textContent = info.cycleDay;
-  if (info.inActivePeriod) {
-    const active = getActivePeriod();
-    const periodDay = diffDays(parse(active.start), nowDate) + 1;
-    document.getElementById('stat-avg').textContent = 'Day ' + periodDay;
-    document.getElementById('stat-avg-lbl').textContent = 'of period';
-    document.getElementById('stat-next-card').style.visibility = 'hidden';
-  } else {
-    document.getElementById('stat-avg').textContent = cl+'d';
-    document.getElementById('stat-avg-lbl').textContent = 'Avg length';
-    document.getElementById('stat-next-card').style.visibility = 'visible';
-    document.getElementById('stat-next').textContent = Math.max(0,info.nextIn);
+    // Rebuild ring if open
+    if (ringCardOpen) buildPhaseRing();
   }
 
   // ── Context card ──
@@ -1908,11 +2034,11 @@ function renderToday() {
 
   // ── Phase-day insight card ──
   if (!isExpecting && info) {
-    document.getElementById('today-insight-label').textContent = `Day ${info.dayInPhase} of ${info.phase}`;
+    document.getElementById('today-insight-label').textContent = `Day ${info.dayInPhase} of ${info.phase.charAt(0).toUpperCase()+info.phase.slice(1)}`;
     document.getElementById('today-insight-text').textContent = getPhaseInsight(info.phase, info.dayInPhase);
-    insightCard.style.display='block';
+    insightSection.style.display='block';
   } else {
-    insightCard.style.display='none';
+    insightSection.style.display='none';
   }
 
   // ── Symptom log ──
@@ -1943,6 +2069,13 @@ function renderToday() {
   } else {
     aboutCard.style.display='none';
   }
+}
+
+function togglePhaseCard() {
+  const body  = document.getElementById('phase-card-body');
+  const arrow = document.getElementById('phase-card-arrow');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
 }
 
 function toggleAbout() {
