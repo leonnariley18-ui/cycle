@@ -163,23 +163,71 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Cycle ring ── */
-.cycle-ring-wrap {
-  position: relative;
-  margin-bottom: 14px;
-  animation: fadeUp 0.4s ease both;
+/* ── Hero card shimmer ── */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(300%) skewX(-15deg); }
 }
-.cycle-ring-svg {
+.phase-hero.shimmer::before {
+  content: '';
   position: absolute;
-  top: -6px; left: -6px;
-  width: calc(100% + 12px);
-  height: calc(100% + 12px);
+  top: 0; left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: shimmer 0.8s ease forwards;
   pointer-events: none;
-  overflow: visible;
-  border-radius: calc(var(--radius) + 6px);
+  z-index: 2;
 }
 
-/* ── Phase transition banner ── */
+/* ── Phase textures ── */
+.phase-menstrual  {
+  background: linear-gradient(160deg, #8B3A50 0%, #6B2038 60%, #4A1428 100%);
+  color: white;
+}
+.phase-follicular {
+  background: linear-gradient(135deg, #2A6B4A 0%, #1A4A30 50%, #0E3020 100%);
+  color: white;
+}
+.phase-ovulation  {
+  background: linear-gradient(135deg, #8B5230 0%, #6B3818 40%, #4A2208 100%);
+  color: white;
+}
+.phase-luteal     {
+  background: linear-gradient(160deg, #243870 0%, #1A2858 50%, #0E1840 100%);
+  color: white;
+}
+.phase-none       {
+  background: linear-gradient(135deg, #2A2440 0%, #1A1630 100%);
+  color: rgba(255,255,255,0.5);
+}
+.expecting-hero   {
+  background: linear-gradient(160deg, #6B2A3A 0%, #4A1828 60%, #2A0818 100%);
+  color: white;
+}
+
+/* ── Animated subtitle ── */
+.phase-subtitle {
+  font-size: 13px;
+  opacity: 0;
+  margin-bottom: 20px;
+  animation: subtitleFade 0.6s ease 0.3s forwards;
+  text-align: center;
+}
+@keyframes subtitleFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 0.7; transform: translateY(0); }
+}
+
+/* ── Hero whisper line ── */
+  font-size: 11px;
+  opacity: 0.5;
+  text-align: center;
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+  font-style: italic;
+  animation: subtitleFade 0.6s ease 0.5s both;
+}
 .phase-transition-banner {
   position: fixed;
   top: 0; left: 50%;
@@ -931,18 +979,12 @@ body {
     <div class="page-title">today ✨</div>
     <div class="page-sub" id="today-date-label">—</div>
 
-    <div class="cycle-ring-wrap" id="cycle-ring-wrap">
-      <svg class="cycle-ring-svg" id="cycle-ring-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect class="cycle-ring-track" x="1.5" y="1.5" width="97" height="97" rx="20" ry="20"/>
-        <rect class="cycle-ring-progress" id="cycle-ring-progress" x="1.5" y="1.5" width="97" height="97" rx="20" ry="20"/>
-      </svg>
-      <div class="phase-hero phase-none" id="phase-hero">
-        <div class="phase-eyebrow">Current phase</div>
-        <div class="phase-title" id="ph-name">—</div>
-        <div class="phase-subtitle" id="ph-sub">Log your first period to get started</div>
-        <div class="phase-progress-bar"><div class="phase-progress-fill" id="ph-bar" style="width:0%"></div></div>
-        <div class="phase-progress-label"><span id="ph-day-label">—</span></div>
-      </div>
+    <div class="phase-hero phase-none" id="phase-hero">
+      <div class="phase-eyebrow" id="ph-eyebrow">Current phase</div>
+      <div class="phase-title" id="ph-name">—</div>
+      <div class="phase-subtitle" id="ph-sub">Log your first period to get started</div>
+      <div class="phase-progress-bar"><div class="phase-progress-fill" id="ph-bar" style="width:0%"></div></div>
+      <div class="phase-progress-label"><span id="ph-day-label">—</span></div>
     </div>
 
     <div class="stats-row">
@@ -1121,17 +1163,6 @@ function initParticles() {
     p.style.cssText = `left:${Math.random()*100}%;top:${40+Math.random()*40}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*3}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
     container.appendChild(p);
   }
-}
-
-// ── CYCLE RING ─────────────────────────────────────────────────────────────
-function updateCycleRing(progress, color) {
-  const el = document.getElementById('cycle-ring-progress');
-  if (!el) return;
-  const length = 376;
-  const offset = length - (Math.min(progress, 100) / 100) * length;
-  el.style.strokeDasharray = length;
-  el.style.strokeDashoffset = offset;
-  el.style.stroke = color || 'rgba(255,255,255,0.25)';
 }
 
 // ── BACKGROUND GLOW ────────────────────────────────────────────────────────
@@ -1734,6 +1765,43 @@ function getPhaseInsight(phase, dayInPhase) {
   return thresholds[thresholds.length-1][1];
 }
 
+// ── HERO HELPERS ───────────────────────────────────────────────────────────
+function getTimeGreeting() {
+  const h = new Date().getHours();
+  if (h >= 5  && h < 12) return 'good morning ☀️';
+  if (h >= 12 && h < 17) return 'good afternoon ✨';
+  if (h >= 17 && h < 21) return 'good evening 🌆';
+  return 'good night 🌙';
+}
+
+  const daysLeft = phaseDur - dayInPhase;
+  if (phase === 'menstrual') {
+    if (dayInPhase <= 2) return 'the hardest days — be gentle 🌑';
+    if (daysLeft <= 1)   return 'almost through it ✨';
+    return `${daysLeft} more days`;
+  }
+  if (phase === 'follicular') {
+    if (dayInPhase <= 2) return 'energy is on its way 🌱';
+    if (daysLeft <= 2)   return 'peak energy approaching ✨';
+    return 'building momentum 🌱';
+  }
+  if (phase === 'ovulation') return 'your power window ✨';
+  if (phase === 'luteal') {
+    if (nextIn <= 3)   return `period in ~${nextIn} days 🌑`;
+    if (daysLeft <= 3) return 'winding down, almost there 🌙';
+    return 'slow and steady 🌙';
+  }
+  return '';
+}
+
+function triggerHeroShimmer() {
+  const hero = document.getElementById('phase-hero');
+  hero.classList.remove('shimmer');
+  void hero.offsetWidth;
+  hero.classList.add('shimmer');
+  setTimeout(() => hero.classList.remove('shimmer'), 900);
+}
+
 // ── TODAY RENDER ───────────────────────────────────────────────────────────
 function renderToday() {
   const info   = getCurrentCycleInfo();
@@ -1774,6 +1842,7 @@ function renderToday() {
   // ── Hero ──
   if (isExpecting) {
     hero.className='phase-hero expecting-hero';
+    document.getElementById('ph-eyebrow').textContent = getTimeGreeting();
     document.getElementById('ph-name').textContent='👀 Expecting';
     document.getElementById('ph-sub').textContent='Your period is due — has it started?';
     document.getElementById('ph-bar').style.width='100%';
@@ -1783,23 +1852,21 @@ function renderToday() {
   } else {
     const pd = phaseData[info.phase];
     hero.className=`phase-hero ${pd.cls}`;
+    document.getElementById('ph-eyebrow').textContent = getTimeGreeting();
     document.getElementById('ph-name').textContent=pd.name;
-    document.getElementById('ph-sub').textContent=pd.sub;
+    // Reset subtitle animation
+    const sub = document.getElementById('ph-sub');
+    sub.style.animation = 'none';
+    void sub.offsetWidth;
+    sub.style.animation = '';
+    sub.textContent=pd.sub;
     const pct=Math.min((info.dayInPhase/info.phaseDur)*100,100);
     document.getElementById('ph-bar').style.width=pct+'%';
     document.getElementById('ph-day-label').textContent=`Day ${info.dayInPhase} of ${info.phaseDur}`;
 
-    // Cycle ring — progress through full cycle
-    const cycleProgress = Math.min((info.cycleDay / info.cl) * 100, 100);
-    const ringColors = {
-      menstrual: 'rgba(212,132,154,0.6)',
-      follicular: 'rgba(128,200,160,0.6)',
-      ovulation: 'rgba(224,168,120,0.6)',
-      luteal: 'rgba(123,159,224,0.6)',
-    };
-    updateCycleRing(cycleProgress, ringColors[info.phase]);
     updateBgGlow(info.phase);
     checkPhaseTransition(info.phase);
+    triggerHeroShimmer();
   }
 
   // ── Stats ──
@@ -2352,6 +2419,7 @@ function goTo(page, btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   if(btn) btn.classList.add('active');
+  if(page === 'today') setTimeout(triggerHeroShimmer, 150);
 }
 </script>
 </body>
