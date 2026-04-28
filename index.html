@@ -1076,20 +1076,9 @@ body {
 
   <!-- LOG -->
   <div class="screen page" id="page-log">
-    <div class="page-title">log 🩸</div>
-    <div class="page-sub">start a new period</div>
-    <div class="card" id="log-start-card">
-      <div class="card-label">New period</div>
-      <div class="field">
-        <label>Start date</label>
-        <input type="date" id="log-start">
-      </div>
-      <div class="field">
-        <label>Notes <span style="color:var(--text-xsoft);text-transform:none;letter-spacing:0">(optional)</span></label>
-        <textarea id="log-notes" placeholder="anything worth noting at the start…"></textarea>
-      </div>
-      <button class="btn-primary" onclick="startPeriod()">Start period 🌑</button>
-    </div>
+    <div class="page-title" id="log-page-title">log 🩸</div>
+    <div class="page-sub" id="log-page-sub">start a new period</div>
+    <div id="log-dynamic-card"></div>
 
     <div style="margin-top: 6px;">
       <div class="card-label" style="padding: 0 4px; margin-bottom: 10px;">History 📋</div>
@@ -1492,7 +1481,6 @@ async function launchApp() {
   setTimeout(() => loader.style.display = 'none', 500);
 
   const now = new Date();
-  document.getElementById('log-start').value = fmt(now);
   document.getElementById('today-date-label').textContent =
     now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}).toLowerCase();
 
@@ -1662,9 +1650,72 @@ window.onload = async () => {
 function renderAll() {
   renderToday();
   renderCalendar();
+  renderLogTab();
   renderHistory();
   renderInsights();
   renderSymptomGrid();
+}
+
+// ── LOG TAB ────────────────────────────────────────────────────────────────
+function renderLogTab() {
+  const dynCard = document.getElementById('log-dynamic-card');
+  const title   = document.getElementById('log-page-title');
+  const sub     = document.getElementById('log-page-sub');
+  const active  = getActivePeriod();
+
+  if (active) {
+    title.textContent = 'log 🩸';
+    sub.textContent = 'your current period';
+
+    const todayStr = fmt(today());
+    const startDate = parse(active.start);
+    const nowDate = today();
+    let allDays = [];
+    let cur = new Date(startDate);
+    while (cur <= nowDate) { allDays.push(fmt(cur)); cur = new Date(cur.getTime()+86400000); }
+
+    const periodDay = allDays.length;
+    const pl = avgPeriodLength();
+    const overAvg = periodDay > pl;
+
+    const dayRows = allDays.map(dateStr => {
+      const entry = active.dailyFlow.find(f=>f.date===dateStr);
+      const flow = entry?.flow || null;
+      const isToday = dateStr === todayStr;
+      return `<div class="flow-day-row">
+        <span class="flow-day-label">${isToday?'today':dayName(dateStr)}</span>
+        <div style="display:flex;gap:4px">
+          ${['spotting','light','medium','heavy'].map(f=>`
+            <button class="flow-tap${flow===f?' active':''}" style="flex:none;padding:5px 8px;font-size:10px"
+              onclick="logFlowForDate('${dateStr}','${f}')">${f.charAt(0).toUpperCase()+f.slice(1)}</button>
+          `).join('')}
+        </div>
+      </div>`;
+    }).join('');
+
+    dynCard.innerHTML = `<div class="card">
+      <div class="card-label">day ${periodDay} of your period</div>
+      ${dayRows}
+      ${overAvg ? `<div style="font-size:12px;color:var(--text-xsoft);text-align:center;margin-top:12px;font-style:italic">past your average — still going? 🤔</div>` : ''}
+      <button class="btn-end-period" onclick="endPeriod()">End period 🕊️</button>
+    </div>`;
+  } else {
+    title.textContent = 'log 🩸';
+    sub.textContent = 'start a new period';
+
+    dynCard.innerHTML = `<div class="card">
+      <div class="card-label">new period</div>
+      <div class="field">
+        <label>Start date</label>
+        <input type="date" id="log-start" value="${fmt(new Date())}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:13px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:var(--text);outline:none;-webkit-appearance:none;color-scheme:dark">
+      </div>
+      <div class="field">
+        <label>Notes <span style="color:var(--text-xsoft);text-transform:none;letter-spacing:0">(optional)</span></label>
+        <textarea id="log-notes" placeholder="anything worth noting at the start…" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:13px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:var(--text);outline:none;resize:none;height:80px;color-scheme:dark"></textarea>
+      </div>
+      <button class="btn-primary" onclick="startPeriod()">Start period 🌑</button>
+    </div>`;
+  }
 }
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
@@ -1716,17 +1767,16 @@ function getActivePeriod() {
 function startPeriod() {
   haptic('medium');
   if (appData.activePeriod) { showToast('End your current period first'); return; }
-  const start = document.getElementById('log-start').value;
-  const notes = document.getElementById('log-notes').value.trim();
+  const startEl = document.getElementById('log-start');
+  const notesEl = document.getElementById('log-notes');
+  const start = startEl ? startEl.value : fmt(new Date());
+  const notes = notesEl ? notesEl.value.trim() : '';
   if (!start) { showToast('Please add a start date'); return; }
 
   const entry = { id: Date.now(), start, end: null, dailyFlow: [], notes };
   appData.periods.push(entry);
   appData.activePeriod = entry.id;
   save();
-
-  document.getElementById('log-notes').value = '';
-  document.getElementById('log-start').value = fmt(new Date());
 
   renderAll();
   showToast('Period started 🌑');
@@ -2193,12 +2243,12 @@ function renderCalendar() {
     while(cur<=pe){periodDays.add(fmt(cur));cur=new Date(cur.getTime()+86400000);}
   });
 
-  // Predicted
+  // Predicted — use most recent period start (including active) as anchor
   const predictedDays=new Set();
-  const sorted=[...appData.periods].sort((a,b)=>a.start.localeCompare(b.start));
-  if(sorted.length>=1&&!appData.activePeriod){
+  const allPeriodsSorted=[...appData.periods].sort((a,b)=>a.start.localeCompare(b.start));
+  if(allPeriodsSorted.length>=1){
     const cl=avgCycleLength();
-    const lastStart=parse(sorted[sorted.length-1].start);
+    const lastStart=parse(allPeriodsSorted[allPeriodsSorted.length-1].start);
     for(let c=1;c<=3;c++){
       const predStart=new Date(lastStart.getTime()+c*cl*86400000);
       for(let d=0;d<pl;d++){
@@ -2311,28 +2361,31 @@ function renderInsights() {
     </div>`).join('');
   phasesEl.style.display='block';
 
-  const lastStart=parse(sorted[sorted.length-1].start);
+  // Use most recent period start (including active) for predictions
+  const allSorted = [...appData.periods].sort((a,b)=>a.start.localeCompare(b.start));
+  const mostRecentStart = allSorted.length ? parse(allSorted[allSorted.length-1].start) : null;
   const now=today();
   let predHtml='';
-  for(let c=1;c<=8;c++){
-    const predDate=new Date(lastStart.getTime()+c*cl*86400000);
-    const daysAway=diffDays(now,predDate);
-    // Show up to 6 future predictions only
-    if(daysAway>=0){
-      const predEnd=new Date(predDate.getTime()+(pl-1)*86400000);
-      predHtml+=`<div class="insight-row">
-        <span class="insight-label">
-          ${predDate.toLocaleDateString('en-US',{month:'long',day:'numeric'})}
-          <span style="color:var(--text-xsoft);font-size:11px"> – ${predEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
-        </span>
-        <span class="insight-value" style="font-size:16px;color:${daysAway<=7?'var(--menstrual)':'var(--text)'}">
-          ${daysAway===0?'today':'in '+daysAway+'d'}
-        </span>
-      </div>`;
+  if (mostRecentStart) {
+    for(let c=1;c<=8;c++){
+      const predDate=new Date(mostRecentStart.getTime()+c*cl*86400000);
+      const daysAway=diffDays(now,predDate);
+      if(daysAway>=0){
+        const predEnd=new Date(predDate.getTime()+(pl-1)*86400000);
+        predHtml+=`<div class="insight-row">
+          <span class="insight-label">
+            ${predDate.toLocaleDateString('en-US',{month:'long',day:'numeric'})}
+            <span style="color:var(--text-xsoft);font-size:11px"> – ${predEnd.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
+          </span>
+          <span class="insight-value" style="font-size:16px;color:${daysAway===0?'var(--menstrual)':daysAway<=7?'var(--menstrual)':'var(--text)'}">
+            ${daysAway===0?'today':'in '+daysAway+'d'}
+          </span>
+        </div>`;
+      }
+      if(predHtml.split('insight-row').length-1>=6) break;
     }
-    if(predHtml.split('insight-row').length-1>=6) break;
   }
-  document.getElementById('predictions-list').innerHTML=predHtml;
+  document.getElementById('predictions-list').innerHTML=predHtml || '<div style="text-align:center;color:var(--text-xsoft);font-style:italic;padding:12px 0">log a period to see predictions</div>';
   predEl.style.display='block';
 
   // ── Symptom insights ──────────────────────────────────────────────────────
