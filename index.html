@@ -2457,7 +2457,7 @@ function renderInsights() {
     <div class="insight-row"><span class="insight-label">Longest cycle</span><span class="insight-value">${maxCL} days</span></div>
     <div class="insight-row"><span class="insight-label">Cycles tracked</span><span class="insight-value">${sorted.length}</span></div>`;
 
-  const follLen=ovD-1-pl, lutLen=cl-(ovD+1), total=pl+follLen+3+lutLen;
+  const follLen=ovD-pl, lutLen=cl-(ovD+1), total=pl+follLen+3+lutLen;
   const phases=[
     {name:'Menstrual', days:pl,       color:'var(--menstrual)'},
     {name:'Follicular',days:follLen,  color:'var(--follicular)'},
@@ -2535,10 +2535,9 @@ function renderSymptomInsights() {
     }
     if (!lastPeriod) return null;
     const cycleStart = parse(lastPeriod.start);
-    const cd = diffDays(cycleStart, parse(dateStr)) + 1;
-    const ad = ((cd-1)%cl)+1;
+    const ad = diffDays(cycleStart, parse(dateStr)) + 1;
     let follStart = pl + 1;
-    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 2;
+    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
     if (ad < follStart) return 'menstrual';
     if (ad<ovD-1) return 'follicular';
     if (ad<=ovD+1) return 'ovulation';
@@ -2552,10 +2551,9 @@ function renderSymptomInsights() {
     }
     if (!lastPeriod) return null;
     const cycleStart = parse(lastPeriod.start);
-    const cd = diffDays(cycleStart, parse(dateStr)) + 1;
-    const ad = ((cd-1)%cl)+1;
+    const ad = diffDays(cycleStart, parse(dateStr)) + 1;
     let follStart = pl + 1;
-    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 2;
+    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
     if (ad < follStart) return ad;
     if (ad<ovD-1) return ad - follStart + 1;
     if (ad<=ovD+1) return ad-(ovD-2);
