@@ -1864,7 +1864,7 @@ function getCurrentCycleInfo() {
     phase='menstrual';
     dayInPhase = diffDays(parse(active.start), now) + 1;
     phaseDur = pl;
-  } else if (lastPeriod.end && now <= parse(lastPeriod.end)) {
+  } else if (lastPeriod.end && now < parse(lastPeriod.end)) {
     // Still within logged period dates
     phase='menstrual'; dayInPhase=adjDay; phaseDur=actualPL;
   } else if (adjDay <= pl && !lastPeriod.end) {
