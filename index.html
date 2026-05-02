@@ -1203,17 +1203,25 @@ function buildPhaseRing() {
 
   const cx = 140, cy = 140, r = 110;
   const circ = 2 * Math.PI * r;
-  const cl = info.cl, pl = avgPeriodLength();
+  const cl = info.cl;
   const ovD = cl - 14;
+  
+  // Use actual period length from most recent period if available
+  const sortedPeriods = [...appData.periods].sort((a,b)=>b.start.localeCompare(a.start));
+  const lastPeriod = sortedPeriods[0];
+  let actualPL = avgPeriodLength();
+  if (lastPeriod && lastPeriod.end) {
+    actualPL = diffDays(parse(lastPeriod.start), parse(lastPeriod.end)) + 1;
+  }
 
   // Phase lengths in days
-  const follLen = Math.max(ovD - 1 - pl, 1);
+  const follLen = Math.max(ovD - 1 - actualPL, 1);
   const lutLen  = Math.max(cl - (ovD + 1), 1);
   const phases  = [
-    { name: 'Menstrual',  days: pl,      color: '#E090A8' },
-    { name: 'Follicular', days: follLen, color: '#80C8A0' },
-    { name: 'Ovulation',  days: 3,       color: '#E0A878' },
-    { name: 'Luteal',     days: lutLen,  color: '#7B9FE0' },
+    { name: 'Menstrual',  days: actualPL, color: '#E090A8' },
+    { name: 'Follicular', days: follLen,  color: '#80C8A0' },
+    { name: 'Ovulation',  days: 3,        color: '#E0A878' },
+    { name: 'Luteal',     days: lutLen,   color: '#7B9FE0' },
   ];
 
   const total = phases.reduce((a,p) => a + p.days, 0);
@@ -1835,7 +1843,8 @@ function getCurrentCycleInfo() {
   const pl  = avgPeriodLength();
   const ovD = cl - 14;
   const now = today();
-  const cycleStart = parse(sorted[0].start);
+  const lastPeriod = sorted[0];
+  const cycleStart = parse(lastPeriod.start);
   const cycleDay   = diffDays(cycleStart, now) + 1;
   const adjDay     = ((cycleDay-1)%cl)+1;
   const nextIn     = cl - adjDay + 1;
@@ -1844,15 +1853,40 @@ function getCurrentCycleInfo() {
   const active = getActivePeriod();
   const inActivePeriod = !!active;
 
+  // Determine actual period length for this cycle
+  let actualPL = pl;
+  if (lastPeriod.end) {
+    actualPL = diffDays(parse(lastPeriod.start), parse(lastPeriod.end)) + 1;
+  }
+
   let phase, dayInPhase, phaseDur;
-  if (inActivePeriod || adjDay <= pl) {
+  if (inActivePeriod) {
+    phase='menstrual';
+    dayInPhase = diffDays(parse(active.start), now) + 1;
+    phaseDur = pl;
+  } else if (lastPeriod.end && now <= parse(lastPeriod.end)) {
+    // Still within logged period dates
+    phase='menstrual'; dayInPhase=adjDay; phaseDur=actualPL;
+  } else if (adjDay <= pl && !lastPeriod.end) {
+    // Within estimated period (no end date logged)
     phase='menstrual'; dayInPhase=adjDay; phaseDur=pl;
-  } else if (adjDay < ovD-1) {
-    phase='follicular'; dayInPhase=adjDay-pl; phaseDur=ovD-1-pl;
-  } else if (adjDay <= ovD+1) {
-    phase='ovulation'; dayInPhase=adjDay-(ovD-2); phaseDur=3;
   } else {
-    phase='luteal'; dayInPhase=adjDay-(ovD+1); phaseDur=cl-(ovD+1);
+    // Post-period — calculate from actual end if available
+    const follicularStart = lastPeriod.end 
+      ? diffDays(cycleStart, parse(lastPeriod.end)) + 2  // day after period ended
+      : pl + 1;
+    const daysSinceFollicularStart = adjDay - follicularStart + 1;
+    const follicularDur = ovD - 1 - follicularStart + 1;
+    
+    if (adjDay < ovD - 1) {
+      phase='follicular'; 
+      dayInPhase = Math.max(1, daysSinceFollicularStart);
+      phaseDur = Math.max(1, follicularDur);
+    } else if (adjDay <= ovD + 1) {
+      phase='ovulation'; dayInPhase=adjDay-(ovD-2); phaseDur=3;
+    } else {
+      phase='luteal'; dayInPhase=adjDay-(ovD+1); phaseDur=cl-(ovD+1);
+    }
   }
 
   return { phase, cycleDay:adjDay, dayInPhase, phaseDur, nextIn, cl, pl, ovD, inActivePeriod };
@@ -1864,25 +1898,33 @@ function getPhaseForDay(dateStr) {
   const cl=avgCycleLength(), pl=avgPeriodLength(), ovD=cl-14;
   const target=parse(dateStr);
 
-  // Check actual logged period days
+  // Check actual logged period days first
   for (const p of sorted) {
     const ps=parse(p.start);
     const pe=p.end?parse(p.end):new Date(ps.getTime()+(pl-1)*86400000);
     if (target>=ps&&target<=pe) return 'menstrual';
   }
 
-  let cycleStart=null;
+  // Find the most recent period start before this date
+  let lastPeriod=null;
   for (let i=sorted.length-1;i>=0;i--) {
-    const ps=parse(sorted[i].start);
-    if (ps<=target){cycleStart=ps;break;}
+    if (parse(sorted[i].start)<=target){lastPeriod=sorted[i];break;}
   }
-  if (!cycleStart) return null;
+  if (!lastPeriod) return null;
 
+  const cycleStart=parse(lastPeriod.start);
   const cycleDay=diffDays(cycleStart,target)+1;
   const adjDay=((cycleDay-1)%cl)+1;
-  if (adjDay<=pl) return 'menstrual';
-  if (adjDay<ovD-1) return 'follicular';
-  if (adjDay<=ovD+1) return 'ovulation';
+
+  // Use actual period end to determine follicular start
+  let follicularStart = pl + 1;
+  if (lastPeriod.end) {
+    follicularStart = diffDays(cycleStart, parse(lastPeriod.end)) + 2;
+  }
+
+  if (adjDay < follicularStart) return 'menstrual';
+  if (adjDay < ovD-1) return 'follicular';
+  if (adjDay <= ovD+1) return 'ovulation';
   return 'luteal';
 }
 
@@ -1942,6 +1984,73 @@ const phaseData = {
     goEasy:"Overloading your schedule · Harsh self-judgment about low energy · Big decisions in late luteal when mood may be most affected"
   }
 };
+
+function getPhaseDetail(phase, dayInPhase, phaseDur) {
+  const pos = dayInPhase / phaseDur;
+  const pd = phaseData[phase];
+  
+  if (phase === 'menstrual') {
+    if (pos <= 0.4) return {
+      hormones: "Estrogen and progesterone are at their lowest. Prostaglandins are peaking — they're driving cramping and heavier flow right now.",
+      energy: "Energy is at its lowest. You may feel drained, foggy, or emotionally raw. This is your body working hard, not you being weak.",
+      leanInto: "Rest without guilt · Warmth and comfort · Heating pads · Solo time · Nourishing, warming foods",
+      goEasy: "High intensity anything · Big social commitments · Major decisions · Pushing through the fatigue"
+    };
+    return {
+      hormones: "Prostaglandins are fading and estrogen is just beginning to rise. The worst is behind you.",
+      energy: "Still lower than usual, but the heaviness is lifting. You might notice small windows of clarity returning.",
+      leanInto: "Gentle movement · Stretching · Easing back into your routine · Light socializing if it feels right",
+      goEasy: "Jumping back to full speed — give yourself one more day · Heavy workouts"
+    };
+  }
+  
+  if (phase === 'follicular') {
+    if (pos <= 0.4) return {
+      hormones: "Estrogen is starting to climb. FSH is stimulating follicle development in your ovaries. Your body is rebuilding the uterine lining.",
+      energy: "Energy is returning. Mental clarity is sharpening. You may feel a noticeable lift compared to last week.",
+      leanInto: "Starting new projects · Planning ahead · Gradually increasing workout intensity · Social energy returning",
+      goEasy: "Overcommitting just because you feel good again — pace yourself"
+    };
+    return {
+      hormones: "Estrogen is climbing higher. You're approaching your most energized window. A dominant follicle is being selected.",
+      energy: "Energy is strong and building toward its peak. Focus, motivation, and social confidence tend to be high.",
+      leanInto: "Creative work · Big conversations · Challenging workouts · Learning something new · Making plans",
+      goEasy: "Nothing major — this is a good window. Just don't burn yourself out before ovulation"
+    };
+  }
+  
+  if (phase === 'ovulation') {
+    return {
+      hormones: pd.hormones,
+      energy: pd.energy,
+      leanInto: pd.leanInto,
+      goEasy: pd.goEasy
+    };
+  }
+  
+  if (phase === 'luteal') {
+    if (pos <= 0.35) return {
+      hormones: "Progesterone is rising after ovulation. Estrogen dips briefly then has a small secondary rise. Your body temperature increases slightly.",
+      energy: "Energy is still relatively stable. You may feel calmer and more grounded than the ovulation high. A gentle transition.",
+      leanInto: "Steady work · Wrapping up existing projects · Moderate exercise · Routine and structure",
+      goEasy: "Starting too many new things — your energy to finish them will decrease over the next week"
+    };
+    if (pos <= 0.7) return {
+      hormones: "Progesterone is at or near its peak. This is the hormone that can make you feel sleepier, hungrier, and more emotionally sensitive.",
+      energy: "Energy is noticeably declining. You may crave more sleep, comfort food, and alone time. Appetite often increases.",
+      leanInto: "Comfort and routine · Journaling · Lighter workouts · Extra sleep · Saying no to things",
+      goEasy: "Overloading your schedule · Harsh self-talk about low productivity · Skipping meals"
+    };
+    return {
+      hormones: "Both progesterone and estrogen are dropping rapidly. This hormonal withdrawal is what triggers PMS symptoms and eventually your period.",
+      energy: "Energy may be at its lowest since your last period. Irritability, bloating, fatigue, and emotional sensitivity are common and hormonal.",
+      leanInto: "Maximum gentleness · Rest · Warmth · Low stimulation · Preparing for your period",
+      goEasy: "Major decisions · Difficult conversations · Self-criticism · Pushing through when your body says stop"
+    };
+  }
+  
+  return { hormones: pd.hormones, energy: pd.energy, leanInto: pd.leanInto, goEasy: pd.goEasy };
+}
 
 function getPhaseInsight(phase, dayInPhase) {
   const thresholds = phaseData[phase].insights;
@@ -2098,23 +2207,23 @@ function renderToday() {
 
   // ── About this phase collapsible ──
   if (!isExpecting && info) {
-    const pd = phaseData[info.phase];
+    const detail = getPhaseDetail(info.phase, info.dayInPhase, info.phaseDur);
     document.getElementById('about-inner').innerHTML = `
       <div class="phase-detail-section">
         <div class="phase-detail-title">What's happening</div>
-        <div class="phase-detail-text">${pd.hormones}</div>
+        <div class="phase-detail-text">${detail.hormones}</div>
       </div>
       <div class="phase-detail-section">
         <div class="phase-detail-title">Energy & mood</div>
-        <div class="phase-detail-text">${pd.energy}</div>
+        <div class="phase-detail-text">${detail.energy}</div>
       </div>
       <div class="phase-detail-section">
         <div class="phase-detail-title">Lean into</div>
-        <div class="phase-detail-text">${pd.leanInto}</div>
+        <div class="phase-detail-text">${detail.leanInto}</div>
       </div>
       <div class="phase-detail-section">
         <div class="phase-detail-title">Go easy on</div>
-        <div class="phase-detail-text">${pd.goEasy}</div>
+        <div class="phase-detail-text">${detail.goEasy}</div>
       </div>`;
     aboutCard.style.display='block';
   } else {
@@ -2415,33 +2524,38 @@ function renderSymptomInsights() {
   function phaseForDate(dateStr) {
     for (const p of sorted) {
       const ps = parse(p.start);
-      const pe = parse(p.end);
+      const pe = p.end ? parse(p.end) : new Date(ps.getTime()+(pl-1)*86400000);
       if (parse(dateStr) >= ps && parse(dateStr) <= pe) return 'menstrual';
     }
-    let cycleStart = null;
+    let lastPeriod = null;
     for (let i = sorted.length-1; i >= 0; i--) {
-      if (parse(sorted[i].start) <= parse(dateStr)) { cycleStart = parse(sorted[i].start); break; }
+      if (parse(sorted[i].start) <= parse(dateStr)) { lastPeriod = sorted[i]; break; }
     }
-    if (!cycleStart) return null;
+    if (!lastPeriod) return null;
+    const cycleStart = parse(lastPeriod.start);
     const cd = diffDays(cycleStart, parse(dateStr)) + 1;
     const ad = ((cd-1)%cl)+1;
-    if (ad<=pl) return 'menstrual';
+    let follStart = pl + 1;
+    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 2;
+    if (ad < follStart) return 'menstrual';
     if (ad<ovD-1) return 'follicular';
     if (ad<=ovD+1) return 'ovulation';
     return 'luteal';
   }
 
-  // Helper: get day within phase for a date
   function dayInPhaseForDate(dateStr) {
-    let cycleStart = null;
+    let lastPeriod = null;
     for (let i = sorted.length-1; i >= 0; i--) {
-      if (parse(sorted[i].start) <= parse(dateStr)) { cycleStart = parse(sorted[i].start); break; }
+      if (parse(sorted[i].start) <= parse(dateStr)) { lastPeriod = sorted[i]; break; }
     }
-    if (!cycleStart) return null;
+    if (!lastPeriod) return null;
+    const cycleStart = parse(lastPeriod.start);
     const cd = diffDays(cycleStart, parse(dateStr)) + 1;
     const ad = ((cd-1)%cl)+1;
-    if (ad<=pl) return ad;
-    if (ad<ovD-1) return ad-pl;
+    let follStart = pl + 1;
+    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 2;
+    if (ad < follStart) return ad;
+    if (ad<ovD-1) return ad - follStart + 1;
     if (ad<=ovD+1) return ad-(ovD-2);
     return ad-(ovD+1);
   }
