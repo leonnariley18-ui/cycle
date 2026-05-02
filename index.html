@@ -1877,8 +1877,13 @@ function getCurrentCycleInfo() {
       : pl + 1;
     const daysSinceFollicularStart = adjDay - follicularStart + 1;
     const follicularDur = ovD - 1 - follicularStart + 1;
-    
-    if (adjDay < ovD - 1) {
+
+    // adjDay may still be on the end day itself — treat as day 1 follicular
+    if (adjDay < follicularStart) {
+      phase='follicular';
+      dayInPhase = 1;
+      phaseDur = Math.max(1, follicularDur);
+    } else if (adjDay < ovD - 1) {
       phase='follicular'; 
       dayInPhase = Math.max(1, daysSinceFollicularStart);
       phaseDur = Math.max(1, follicularDur);
