@@ -221,7 +221,7 @@ body {
   to   { opacity: 0.7; transform: translateY(0); }
 }
 
-.phase-hint {
+
   font-size: 11px;
   opacity: 0.5;
   text-align: center;
@@ -1762,7 +1762,7 @@ function avgCycleLength() {
 function avgPeriodLength() {
   const withEnd = appData.periods.filter(p=>p.end);
   if (!withEnd.length) return appData.settings.periodLength;
-  const durs = withEnd.map(p=>diffDays(parse(p.start),parse(p.end))+1).filter(d=>d>0&&d<14);
+  const durs = withEnd.map(p=>diffDays(parse(p.start),parse(p.end))).filter(d=>d>0&&d<14);
   return durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : appData.settings.periodLength;
 }
 
@@ -1846,9 +1846,7 @@ function getCurrentCycleInfo() {
   const lastPeriod = sorted[0];
   const cycleStart = parse(lastPeriod.start);
   const cycleDay   = diffDays(cycleStart, now) + 1;
-  // Don't wrap with modulo — if cycle runs long, keep counting forward
-  // rather than snapping back to day 1. nextIn can go negative (late).
-  const adjDay     = cycleDay;
+  const adjDay     = ((cycleDay-1)%cl)+1;
   const nextIn     = cl - adjDay + 1;
 
   // Check if in active period
@@ -1866,28 +1864,26 @@ function getCurrentCycleInfo() {
     phase='menstrual';
     dayInPhase = diffDays(parse(active.start), now) + 1;
     phaseDur = pl;
-  } else if (lastPeriod.end && now < parse(lastPeriod.end)) {
-    // Still within logged period dates
+  } else if (lastPeriod.end && now <= parse(lastPeriod.end)) {
     phase='menstrual'; dayInPhase=adjDay; phaseDur=actualPL;
   } else if (adjDay <= pl && !lastPeriod.end) {
-    // Within estimated period (no end date logged)
     phase='menstrual'; dayInPhase=adjDay; phaseDur=pl;
   } else {
-    // Post-period — calculate from actual end if available
-    const follicularStart = lastPeriod.end 
-      ? diffDays(cycleStart, parse(lastPeriod.end)) + 1  // end date = first follicular day
-      : pl + 1;
-    const daysSinceFollicularStart = adjDay - follicularStart + 1;
-    const follicularDur = ovD - 1 - follicularStart + 1;
-
-    if (adjDay < ovD - 1) {
+    // Use actual period length for current cycle, average for wrapped cycles
+    const isCurrentCycle = cycleDay <= cl;
+    const effectivePL = (isCurrentCycle && lastPeriod.end) ? actualPL : pl;
+    const follicularStart = effectivePL + 1;
+    
+    if (adjDay <= effectivePL) {
+      phase='menstrual'; dayInPhase=adjDay; phaseDur=effectivePL;
+    } else if (adjDay < ovD - 1) {
       phase='follicular'; 
-      dayInPhase = Math.max(1, daysSinceFollicularStart);
-      phaseDur = Math.max(1, follicularDur);
+      dayInPhase = adjDay - effectivePL;
+      phaseDur = Math.max(1, ovD - 1 - effectivePL);
     } else if (adjDay <= ovD + 1) {
       phase='ovulation'; dayInPhase=adjDay-(ovD-2); phaseDur=3;
     } else {
-      phase='luteal'; dayInPhase=adjDay-(ovD+1); phaseDur=cl-(ovD+1);
+      phase='luteal'; dayInPhase=adjDay-(ovD+1); phaseDur=Math.max(1, cl-(ovD+1));
     }
   }
 
@@ -1916,15 +1912,16 @@ function getPhaseForDay(dateStr) {
 
   const cycleStart=parse(lastPeriod.start);
   const cycleDay=diffDays(cycleStart,target)+1;
-  const adjDay=cycleDay;
+  const adjDay=((cycleDay-1)%cl)+1;
 
-  // Use actual period end to determine follicular start
-  let follicularStart = pl + 1;
-  if (lastPeriod.end) {
-    follicularStart = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
+  // Use actual period length for current cycle, average for wrapped
+  const isCurrentCycle = cycleDay <= cl;
+  let effectivePL = pl;
+  if (isCurrentCycle && lastPeriod.end) {
+    effectivePL = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
   }
 
-  if (adjDay < follicularStart) return 'menstrual';
+  if (adjDay <= effectivePL) return 'menstrual';
   if (adjDay < ovD-1) return 'follicular';
   if (adjDay <= ovD+1) return 'ovulation';
   return 'luteal';
@@ -2457,7 +2454,7 @@ function renderInsights() {
     <div class="insight-row"><span class="insight-label">Longest cycle</span><span class="insight-value">${maxCL} days</span></div>
     <div class="insight-row"><span class="insight-label">Cycles tracked</span><span class="insight-value">${sorted.length}</span></div>`;
 
-  const follLen=ovD-pl, lutLen=cl-(ovD+1), total=pl+follLen+3+lutLen;
+  const follLen=ovD-1-pl, lutLen=cl-(ovD+1), total=pl+follLen+3+lutLen;
   const phases=[
     {name:'Menstrual', days:pl,       color:'var(--menstrual)'},
     {name:'Follicular',days:follLen,  color:'var(--follicular)'},
@@ -2535,10 +2532,12 @@ function renderSymptomInsights() {
     }
     if (!lastPeriod) return null;
     const cycleStart = parse(lastPeriod.start);
-    const ad = diffDays(cycleStart, parse(dateStr)) + 1;
-    let follStart = pl + 1;
-    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
-    if (ad < follStart) return 'menstrual';
+    const cd = diffDays(cycleStart, parse(dateStr)) + 1;
+    const ad = ((cd-1)%cl)+1;
+    const isCurrent = cd <= cl;
+    let ePL = pl;
+    if (isCurrent && lastPeriod.end) ePL = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
+    if (ad <= ePL) return 'menstrual';
     if (ad<ovD-1) return 'follicular';
     if (ad<=ovD+1) return 'ovulation';
     return 'luteal';
@@ -2551,11 +2550,13 @@ function renderSymptomInsights() {
     }
     if (!lastPeriod) return null;
     const cycleStart = parse(lastPeriod.start);
-    const ad = diffDays(cycleStart, parse(dateStr)) + 1;
-    let follStart = pl + 1;
-    if (lastPeriod.end) follStart = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
-    if (ad < follStart) return ad;
-    if (ad<ovD-1) return ad - follStart + 1;
+    const cd = diffDays(cycleStart, parse(dateStr)) + 1;
+    const ad = ((cd-1)%cl)+1;
+    const isCurrent = cd <= cl;
+    let ePL = pl;
+    if (isCurrent && lastPeriod.end) ePL = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
+    if (ad <= ePL) return ad;
+    if (ad<ovD-1) return ad - ePL;
     if (ad<=ovD+1) return ad-(ovD-2);
     return ad-(ovD+1);
   }
