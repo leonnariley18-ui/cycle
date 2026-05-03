@@ -1864,12 +1864,19 @@ function startPeriod() {
   goTo('today', document.querySelector('.nav-btn'));
 }
 
+function stripFlowAfterEnd(period) {
+  if (!period.end) return;
+  period.dailyFlow = period.dailyFlow.filter(f => f.date <= period.end);
+}
+
 function endPeriod() {
   haptic('success');
   const active = getActivePeriod();
   if (!active) return;
   active.end = fmt(today());
+  active.endedByUser = true;
   appData.activePeriod = null;
+  stripFlowAfterEnd(active);
   save();
   updateAverages();
   renderAll();
@@ -1937,20 +1944,30 @@ function getCurrentCycleInfo() {
     phase='menstrual';
     dayInPhase = diffDays(parse(active.start), now) + 1;
     phaseDur = pl;
+  } else if (lastPeriod.endedByUser) {
+    // User explicitly ended — always move to follicular immediately, trust their action
+    const effectivePL = actualPL;
+    const daysSinceEnd = diffDays(parse(lastPeriod.end), now);
+    if (adjDay < ovD - 1) {
+      phase='follicular';
+      dayInPhase = Math.max(1, daysSinceEnd + 1);
+      phaseDur = Math.max(1, ovD - 1 - effectivePL);
+    } else if (adjDay <= ovD + 1) {
+      phase='ovulation'; dayInPhase=adjDay-(ovD-2); phaseDur=3;
+    } else {
+      phase='luteal'; dayInPhase=adjDay-(ovD+1); phaseDur=Math.max(1, cl-(ovD+1));
+    }
   } else if (lastPeriod.end && now <= parse(lastPeriod.end)) {
     phase='menstrual'; dayInPhase=adjDay; phaseDur=actualPL;
   } else if (adjDay <= pl && !lastPeriod.end) {
     phase='menstrual'; dayInPhase=adjDay; phaseDur=pl;
   } else {
-    // Use actual period length for current cycle, average for wrapped cycles
     const isCurrentCycle = cycleDay <= cl;
     const effectivePL = (isCurrentCycle && lastPeriod.end) ? actualPL : pl;
-    const follicularStart = effectivePL + 1;
-    
     if (adjDay <= effectivePL) {
       phase='menstrual'; dayInPhase=adjDay; phaseDur=effectivePL;
     } else if (adjDay < ovD - 1) {
-      phase='follicular'; 
+      phase='follicular';
       dayInPhase = adjDay - effectivePL;
       phaseDur = Math.max(1, ovD - 1 - effectivePL);
     } else if (adjDay <= ovD + 1) {
@@ -2483,7 +2500,13 @@ function saveEditPeriod(id) {
   const startEl = document.getElementById(`edit-start-${id}`);
   const endEl = document.getElementById(`edit-end-${id}`);
   if (startEl && startEl.value) p.start = startEl.value;
-  if (endEl) p.end = endEl.value || null;
+  if (endEl) {
+    p.end = endEl.value || null;
+    if (p.end) {
+      p.endedByUser = true;
+      stripFlowAfterEnd(p);
+    }
+  }
   editingPeriodId = null;
   save();
   updateAverages();
@@ -2496,6 +2519,7 @@ function reopenPeriod(id) {
   const p = appData.periods.find(p=>p.id===id);
   if (!p) return;
   p.end = null;
+  p.endedByUser = false;
   appData.activePeriod = id;
   editingPeriodId = null;
   save();
@@ -2790,6 +2814,10 @@ async function manualSync() {
   showToast('Syncing…');
   appData = await loadFromSupabase();
   if (!appData.symptoms) appData.symptoms = {};
+  // Backfill endedByUser for any period with an end date that isn't TempDrop
+  appData.periods.forEach(p => {
+    if (p.end && !p.source && p.endedByUser === undefined) p.endedByUser = true;
+  });
   renderAll();
   showToast('Synced ✨');
 }
