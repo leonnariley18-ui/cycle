@@ -635,6 +635,79 @@ body {
 }
 .del-btn { background: none; border: none; color: var(--text-xsoft); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; transition: color 0.2s; }
 .del-btn:hover { color: var(--accent); }
+.edit-btn { background: none; border: none; color: var(--text-xsoft); cursor: pointer; font-size: 13px; line-height: 1; padding: 4px; transition: color 0.2s; }
+.edit-btn:hover { color: var(--accent); }
+
+.edit-form {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.edit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.edit-row label {
+  font-size: 11px;
+  color: var(--text-xsoft);
+  width: 40px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.edit-row input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  color-scheme: dark;
+}
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.edit-save {
+  flex: 1;
+  padding: 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+.edit-reopen {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent-soft);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+.edit-cancel {
+  padding: 10px;
+  background: transparent;
+  color: var(--text-xsoft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
 
 /* Insights */
 .insight-row {
@@ -2394,6 +2467,43 @@ function renderCalendar() {
 }
 
 // ── HISTORY ────────────────────────────────────────────────────────────────
+let editingPeriodId = null;
+
+function toggleEditPeriod(id) {
+  haptic('light');
+  editingPeriodId = editingPeriodId === id ? null : id;
+  renderHistory();
+  renderLogTab();
+}
+
+function saveEditPeriod(id) {
+  haptic('medium');
+  const p = appData.periods.find(p=>p.id===id);
+  if (!p) return;
+  const startEl = document.getElementById(`edit-start-${id}`);
+  const endEl = document.getElementById(`edit-end-${id}`);
+  if (startEl && startEl.value) p.start = startEl.value;
+  if (endEl) p.end = endEl.value || null;
+  editingPeriodId = null;
+  save();
+  updateAverages();
+  renderAll();
+  showToast('Period updated ✨');
+}
+
+function reopenPeriod(id) {
+  haptic('medium');
+  const p = appData.periods.find(p=>p.id===id);
+  if (!p) return;
+  p.end = null;
+  appData.activePeriod = id;
+  editingPeriodId = null;
+  save();
+  renderAll();
+  showToast('Period reopened 🌑');
+  goTo('today', document.querySelector('.nav-btn'));
+}
+
 function renderHistory() {
   const el=document.getElementById('history-list');
   const sorted=[...appData.periods].sort((a,b)=>b.start.localeCompare(a.start));
@@ -2404,12 +2514,34 @@ function renderHistory() {
   const pl=avgPeriodLength();
   el.innerHTML=sorted.map(p=>{
     const isActive=p.id===appData.activePeriod;
+    const isTD=p.source==='tempdrop';
+    const isEditing=editingPeriodId===p.id;
     const dur=p.end?diffDays(parse(p.start),parse(p.end))+' days':isActive?'in progress':`~${pl} days`;
     const flowTags=p.dailyFlow.length
       ? p.dailyFlow.sort((a,b)=>a.date.localeCompare(b.date))
           .map(f=>`<span class="he-flow-day">${fmtDisplay(f.date)}: ${f.flow}</span>`).join('')
       : '';
-    return `<div class="history-entry">
+    
+    let editForm = '';
+    if (isEditing && !isTD) {
+      editForm = `<div class="edit-form">
+        <div class="edit-row">
+          <label>start</label>
+          <input type="date" id="edit-start-${p.id}" value="${p.start}" style="color-scheme:dark">
+        </div>
+        <div class="edit-row">
+          <label>end</label>
+          <input type="date" id="edit-end-${p.id}" value="${p.end||''}" style="color-scheme:dark">
+        </div>
+        <div class="edit-actions">
+          <button class="edit-save" onclick="saveEditPeriod(${p.id})">Save</button>
+          ${p.end && !isActive ? `<button class="edit-reopen" onclick="reopenPeriod(${p.id})">Reopen</button>` : ''}
+          <button class="edit-cancel" onclick="toggleEditPeriod(null)">Cancel</button>
+        </div>
+      </div>`;
+    }
+
+    return `<div class="history-entry" style="flex-wrap:wrap">
       <div style="flex:1;min-width:0">
         <div class="he-dates">${fmtDisplay(p.start)}${p.end?' → '+fmtDisplay(p.end):''}</div>
         <div class="he-meta">${dur}${p.notes?' · '+p.notes:''}</div>
@@ -2417,10 +2549,12 @@ function renderHistory() {
       </div>
       <div class="he-right">
         ${isActive?`<span class="flow-tag" style="background:#EBF4F0;color:var(--follicular)">active</span>`:''}
-        ${p.source==='tempdrop'
+        ${isTD
           ? `<span class="flow-tag" style="background:#F0F0F8;color:#9090B8;font-size:9px;letter-spacing:0.06em">tempdrop</span>`
-          : `<button class="del-btn" onclick="deletePeriod(${p.id})">×</button>`}
+          : `<button class="edit-btn" onclick="toggleEditPeriod(${p.id})">✏️</button>
+             <button class="del-btn" onclick="deletePeriod(${p.id})">×</button>`}
       </div>
+      ${editForm ? `<div style="width:100%">${editForm}</div>` : ''}
     </div>`;
   }).join('');
 }
