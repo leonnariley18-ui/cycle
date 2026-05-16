@@ -1818,7 +1818,12 @@ function showToast(msg) {
 }
 
 function fmtDisplay(s) {
-  return parse(s).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const d = parse(s);
+  const currentYear = new Date().getFullYear();
+  if (d.getFullYear() !== currentYear) {
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 
 function dayName(s) {
