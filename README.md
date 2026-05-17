@@ -60,20 +60,23 @@ A morning commute journal. Built for the train ride between your private world a
 
 ## question bank
 
-The transitions question bank has 9 questions across 7 categories, surfaced by vibe:
+The transitions question bank has 8 questions across 7 categories, surfaced by vibe. The anchor question lives outside the bank — it appears every single morning automatically, before anything else.
 
-| # | question | category | vibe |
+**anchor — every morning, always:**
+*What do I want to protect about my energy today?* — category: protection
+
+**second question — picked from the bank based on your vibe:**
+
+| # | question | category | surfaces for |
 |---|---|---|---|
-| anchor | Is there anything my body is still carrying that I can consciously release? | — | all |
-| Q1 | What do I want to protect about my energy today? | protection | anchor |
-| Q2 | What would good enough look like today? | self-compassion | scattered · heavy · okay |
-| Q3 | What's one thing I'm bringing my full attention to today? | intention | scattered · clear |
-| Q4 | What do I want to leave at the door before I walk in? | boundary | anxious · okay |
-| Q5 | How do I want to feel by the time I arrive? | body scan | anxious |
-| Q6 | What moment today am I most looking forward to? | presence | clear · okay |
-| Q7 | Where am I most likely to lose myself today, and can I stay a little more present there? | awareness | clear |
-| Q8 | What's one thing already in place today that I don't have to figure out? | grounding | scattered · anxious |
-| Q9 | Is there anything I'm carrying from yesterday that isn't mine to carry today? | release | heavy |
+| Q1 | What would good enough look like today? | self-compassion | scattered · heavy · okay |
+| Q2 | What's one thing I'm bringing my full attention to today? | intention | scattered · clear |
+| Q3 | What do I want to leave at the door before I walk in? | boundary | anxious · okay |
+| Q4 | How do I want to feel by the time I arrive? | body scan | anxious |
+| Q5 | What moment today am I most looking forward to? | presence | clear · okay |
+| Q6 | Where am I most likely to lose myself today, and can I stay a little more present there? | awareness | clear |
+| Q7 | What's one thing already in place today that I don't have to figure out? | grounding | scattered · anxious |
+| Q8 | Is there anything I'm carrying from yesterday that isn't mine to carry today? | release | heavy |
 
 ---
 
