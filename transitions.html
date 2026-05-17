@@ -8,6 +8,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="light-content">
 <meta name="theme-color" content="#F0F2FA">
 <title>transitions</title>
+<link rel="manifest" href="./transitions-manifest.json">
+<link rel="apple-touch-icon" href="./transitions-icon-192.png">
+<meta name="apple-mobile-web-app-title" content="transitions">
+<meta name="application-name" content="transitions">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Montserrat:wght@300;400;500&family=Poppins:wght@300;400;500&family=Raleway:wght@300;400;500&family=Merriweather:ital,wght@0,300;0,400;1,300;1,400&family=Oswald:wght@300;400;500&family=Roboto+Slab:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Bebas+Neue&family=Chewy&family=Bagel+Fat+One&family=Dancing+Script:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -234,6 +238,15 @@ body { font-family: var(--font-body); font-weight: 300; color: var(--text); over
   transition: all 0.2s; font-weight: 300;
 }
 .export-btn:hover { background: var(--bg3); }
+
+.draft-discard {
+  font-size: 11px; color: var(--text-muted);
+  font-family: var(--font-body); font-weight: 300;
+  letter-spacing: 0.04em; cursor: pointer;
+  border-right: 0.5px solid var(--border);
+  padding-right: 10px; transition: color 0.15s;
+}
+.draft-discard:active { color: #C46060; }
 
 .back-row {
   display: flex; align-items: center; gap: 8px;
@@ -486,10 +499,10 @@ body { font-family: var(--font-body); font-weight: 300; color: var(--text); over
 .sync-dot {
   position: fixed; top: 14px; right: 16px;
   width: 7px; height: 7px; border-radius: 50%;
-  background: var(--accent); opacity: 0.5; z-index: 50;
+  background: #5A9A6A; opacity: 0.7; z-index: 50;
   transition: background 0.3s;
 }
-.sync-dot.syncing { background: #C4722A; animation: sdpulse 1s ease infinite; opacity: 0.8; }
+.sync-dot.syncing { background: #C4A02A; animation: sdpulse 1s ease infinite; opacity: 0.8; }
 .sync-dot.error { background: #C46060; opacity: 1; }
 @keyframes sdpulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
 
@@ -511,6 +524,8 @@ body { font-family: var(--font-body); font-weight: 300; color: var(--text); over
   transition: all 0.15s;
 }
 .pin-key:active { background: var(--bg3); transform: scale(0.94); }
+
+.toast {
   position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%) translateY(10px);
   background: var(--text); color: #fff;
@@ -613,12 +628,15 @@ body { font-family: var(--font-body); font-weight: 300; color: var(--text); over
         <div class="date-line" id="home-date">—</div>
         <div class="entry-count" id="home-count">—</div>
 
-        <div id="draft-banner" style="display:none" onclick="resumeDraft()" class="draft-banner">
-          <div class="draft-banner-left">
+        <div id="draft-banner" style="display:none" class="draft-banner">
+          <div class="draft-banner-left" onclick="resumeDraft()">
             <span class="draft-dot"></span>
             <span class="draft-label">draft in progress</span>
           </div>
-          <span class="draft-action">continue →</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="draft-discard" onclick="discardDraft()">discard</span>
+            <span class="draft-action" onclick="resumeDraft()">continue →</span>
+          </div>
         </div>
 
         <div class="anchor-card" onclick="handleAnchorTap()">
@@ -1146,6 +1164,12 @@ function resumeDraft() {
 function clearDraft() {
   localStorage.removeItem('transitions_draft');
   document.getElementById('draft-banner').style.display = 'none';
+}
+
+function discardDraft() {
+  if (!confirm('Discard this draft? This can\'t be undone.')) return;
+  clearDraft();
+  showToast('draft discarded');
 }
 
 function handleAnchorTap() {
