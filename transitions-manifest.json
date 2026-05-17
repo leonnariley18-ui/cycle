@@ -1,0 +1,25 @@
+{
+  "name": "transitions",
+  "short_name": "transitions",
+  "description": "your morning commute journal",
+  "start_url": "/cycle/transitions.html",
+  "scope": "/cycle/",
+  "display": "standalone",
+  "background_color": "#0D0D1A",
+  "theme_color": "#F0F2FA",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "transitions-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "transitions-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
