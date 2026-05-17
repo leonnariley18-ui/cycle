@@ -76,8 +76,8 @@ All built by the same person, same stack, same philosophy:
 
 | app | repo | what it does |
 |---|---|---|
-| transitions | [leonnariley18-ui/transitions](https://github.com/leonnariley18-ui/transitions) | morning commute journal |
-| The Cloud | separate repo | private terpene journal |
+| transitions | [leonnariley18-ui/transitions](https://github.com/leonnariley18-ui/transitions) | morning commute journal + night randomizer |
+| The Cloud | [leonnariley18-ui/the-cloud](https://github.com/leonnariley18-ui/the-cloud) | private terpene journal |
 
 ---
 
