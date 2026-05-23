@@ -1924,6 +1924,10 @@ function renderLogTab() {
       ${dayRows}
       ${overAvg ? `<div style="font-size:12px;color:var(--text-xsoft);text-align:center;margin-top:12px;font-style:italic">past your average — still going? 🤔</div>` : ''}
       <button class="btn-end-period" onclick="endPeriod()">End period 🕊️</button>
+      <div style="height:1px;background:var(--border);margin:14px 0;"></div>
+      <button class="spotting-log-btn" onclick="openSpottingLog()">
+        <span style="opacity:0.5;font-size:15px;line-height:1;">·</span> log spotting
+      </button>
     </div>`;
   } else {
     title.textContent = 'log 🩸';
