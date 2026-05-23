@@ -1580,12 +1580,12 @@ const SYMPTOMS = [
   {id:'angry',            label:'Angry/bad attitude', cat:'mood'},
   {id:'anxious',          label:'Anxious/overwhelmed',cat:'mood'},
   {id:'wrong-side',       label:'Wrong side of bed',  cat:'mood'},
+  {id:'turned-off',       label:'Turned off',         cat:'mood'},
   {id:'at-peace',         label:'At peace',           cat:'good'},
   {id:'right-side',       label:'Right side of bed',  cat:'good'},
   {id:'confident',        label:'Feeling confident',  cat:'good'},
   {id:'outgoing',         label:'Outgoing',           cat:'good'},
   {id:'lusty',            label:'Feeling lusty',      cat:'good'},
-  {id:'turned-off',       label:'Turned off',         cat:'mood'},
 ];
 
 // ── SUPABASE CONFIG ────────────────────────────────────────────────────────
@@ -2882,18 +2882,26 @@ function renderHistory() {
     return;
   }
   const pl=avgPeriodLength();
+  // A period locks once a newer active period has been started.
+  // If no period is currently active, the most recent one stays editable.
+  const hasActivePeriod = !!appData.activePeriod;
+  const mostRecentId = chronological[chronological.length - 1]?.id;
+  // The second-most-recent is the one that just ended — lock it if a new one is active
+  const lockedFromId = hasActivePeriod ? appData.activePeriod : null;
   el.innerHTML=sorted.map(p=>{
     const cycleNum = chronological.findIndex(c => c.id === p.id) + 1;
     const isActive=p.id===appData.activePeriod;
     const isTD=p.source==='tempdrop';
     const isEditing=editingPeriodId===p.id;
+    // Editable if: not tempdrop AND (it's the active period OR it's the most recent completed period when no new period is active)
+    const isEditable = !isTD && (isActive || (!hasActivePeriod && p.id === mostRecentId));
     const dur=p.end?diffDays(parse(p.start),parse(p.end))+' days':isActive?'in progress':`~${pl} days`;
     const flowTags=p.dailyFlow.length
       ? p.dailyFlow.sort((a,b)=>a.date.localeCompare(b.date))
           .map(f=>`<span class="he-flow-day">${fmtDisplay(f.date)}: ${f.flow}</span>`).join('')
       : '';
     let editForm = '';
-    if (isEditing && !isTD) {
+    if (isEditing && isEditable) {
       editForm = `<div class="edit-form">
         <div class="edit-row">
           <label>start</label>
@@ -2923,8 +2931,10 @@ function renderHistory() {
         ${isActive?`<span class="flow-tag" style="background:#EBF4F0;color:var(--follicular)">active</span>`:''}
         ${isTD
           ? `<span class="flow-tag" style="background:#F0F0F8;color:#9090B8;font-size:9px;letter-spacing:0.06em">tempdrop</span>`
-          : `<button class="edit-btn" onclick="toggleEditPeriod(${p.id})">✏️</button>
-             <button class="del-btn" onclick="deletePeriod(${p.id})">×</button>`}
+          : isEditable
+            ? `<button class="edit-btn" onclick="toggleEditPeriod(${p.id})">✏️</button>
+               <button class="del-btn" onclick="deletePeriod(${p.id})">×</button>`
+            : ''}
       </div>
       ${editForm ? `<div style="width:100%">${editForm}</div>` : ''}
     </div>`;
@@ -2958,7 +2968,7 @@ function renderInsights() {
     <div class="insight-row"><span class="insight-label">Avg period length</span><span class="insight-value">${pl} days</span></div>
     <div class="insight-row"><span class="insight-label">Shortest cycle</span><span class="insight-value">${minCL} days</span></div>
     <div class="insight-row"><span class="insight-label">Longest cycle</span><span class="insight-value">${maxCL} days</span></div>
-    <div class="insight-row"><span class="insight-label">Cycles tracked</span><span class="insight-value">${sorted.length}</span></div>`;
+    <div class="insight-row"><span class="insight-label">Periods tracked</span><span class="insight-value">${sorted.length}</span></div>`;
 
   const follLen=ovD-1-pl, lutLen=cl-(ovD+1), total=pl+follLen+3+lutLen;
   const phases=[
@@ -3246,17 +3256,6 @@ function saveSpottingLog() {
   haptic('medium');
   const dateVal = document.getElementById('spotting-date').value;
   if (!dateVal) { showToast('add a date first'); return; }
-
-  // Conflict check — does this date fall inside a logged period?
-  const spottingDate = parse(dateVal);
-  for (const p of appData.periods) {
-    const ps = parse(p.start);
-    const pe = p.end ? parse(p.end) : null;
-    if (pe && spottingDate >= ps && spottingDate <= pe) {
-      showToast('that date overlaps a logged period — log flow instead?');
-      return;
-    }
-  }
 
   const entry = {
     id: Date.now(),
