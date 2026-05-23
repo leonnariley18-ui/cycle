@@ -147,6 +147,7 @@ body {
   color: var(--text-xsoft);
   transition: color 0.2s;
   font-family: 'DM Sans', sans-serif;
+  position: relative;
 }
 .nav-btn.active { color: var(--accent); }
 .nav-btn svg { width: 22px; height: 22px; stroke-width: 1.5; }
@@ -3180,7 +3181,7 @@ function generateWrapped(period, nextPeriodStart) {
   const narrativeEntries = phaseOrder.map(ph => journalByPhase[ph]).filter(Boolean)
     .sort((a,b) => a.date.localeCompare(b.date));
 
-  // Symptoms in cycle window — grouped by phase
+  // Symptoms in cycle window — store ids by phase only
   const symptomsInCycle = {};
   Object.entries(appData.symptoms || {}).forEach(([date, syms]) => {
     if (date >= cycleStart && date < cycleEnd) symptomsInCycle[date] = syms;
@@ -3198,18 +3199,17 @@ function generateWrapped(period, nextPeriodStart) {
       }
     });
     const topPhase = Object.entries(phaseCounts).sort((a,b)=>b[1]-a[1])[0]?.[0];
-    if (topPhase && phaseCounts[topPhase] > 0) symsByPhase[topPhase].push(sym);
+    if (topPhase && phaseCounts[topPhase] > 0) symsByPhase[topPhase].push(sid);
   });
 
-  // Mood + good symptoms for emotional texture pills
-  const textureSymptomsAll = allSymIds
-    .map(sid => SYMPTOMS.find(s => s.id === sid))
-    .filter(s => s && (s.cat === 'mood' || s.cat === 'good'));
+  // Mood + good symptom ids for emotional texture
+  const textureSymIds = allSymIds
+    .filter(sid => { const s = SYMPTOMS.find(x=>x.id===sid); return s && (s.cat==='mood'||s.cat==='good'); });
 
-  // Spotting in cycle window
-  const spottingInCycle = (appData.spotting || [])
+  // Spotting event ids in cycle window
+  const spottingIds = (appData.spotting || [])
     .filter(e => e.date >= cycleStart && e.date < cycleEnd)
-    .sort((a,b) => a.date.localeCompare(b.date));
+    .map(e => e.id);
 
   const wrap = {
     id:              `wrap_${period.id}`,
@@ -3220,8 +3220,9 @@ function generateWrapped(period, nextPeriodStart) {
     thisLutealLen,
     avgRecentCycle, avgRecentPeriod,
     narrativeEntries,
-    symsByPhase, textureSymptomsAll, spottingInCycle,
-    dailyFlow: period.dailyFlow || [],
+    symsByPhase,
+    textureSymIds,
+    spottingIds,
   };
   appData.wraps.push(wrap);
 }
@@ -3322,8 +3323,8 @@ function renderWrappedPage(wrap) {
   // Comparisons
   const comparisons = [];
   const prevWraps = (appData.wraps || []).filter(w => w.id !== wrap.id);
-  const prevWithSpotting = prevWraps.filter(w => w.spottingInCycle?.length > 0);
-  if (wrap.spottingInCycle.length > 0 && prevWithSpotting.length >= 1) {
+  const prevWithSpotting = prevWraps.filter(w => (w.spottingIds||w.spottingInCycle||[]).length > 0);
+  if (spottingInCycle.length > 0 && prevWithSpotting.length >= 1) {
     comparisons.push({ color:'#C07840', text:`spotting showed up again — consistent with ${prevWithSpotting.length > 1 ? 'the last '+prevWithSpotting.length+' cycles' : 'last cycle'}. it\'s becoming a pattern.` });
   }
   if (lutealDiff >= 2) {
@@ -3336,7 +3337,18 @@ function renderWrappedPage(wrap) {
     comparisons.push({ color:'var(--follicular)', text:`shorter period than usual at ${wrap.periodDays} days. wrapped up faster than your recent average.` });
   }
 
-  // Texture quote — longest entry from most emotionally charged phase
+  // Resolve full objects from stored ids
+  const symsByPhaseFull = {};
+  Object.entries(wrap.symsByPhase || {}).forEach(([ph, ids]) => {
+    symsByPhaseFull[ph] = ids.map(sid => SYMPTOMS.find(s=>s.id===sid)).filter(Boolean);
+  });
+  const textureSymptomsAll = (wrap.textureSymIds || [])
+    .map(sid => SYMPTOMS.find(s=>s.id===sid)).filter(Boolean);
+  const spottingInCycle = (appData.spotting || [])
+    .filter(e => (wrap.spottingIds||[]).includes(e.id))
+    .sort((a,b) => a.date.localeCompare(b.date));
+  const period = appData.periods.find(p => p.id === wrap.periodId);
+  const flowDays = (period?.dailyFlow || []).sort((a,b)=>a.date.localeCompare(b.date));
   const textureEntry = wrap.narrativeEntries.slice()
     .sort((a,b) => {
       const ps = {luteal:3,menstrual:2,follicular:1,ovulation:0};
@@ -3373,7 +3385,7 @@ function renderWrappedPage(wrap) {
   }
 
   // Emotional texture
-  const texturePills = wrap.textureSymptomsAll.map(s => {
+  const texturePills = textureSymptomsAll.map(s => {
     const st = SYM_STYLE_W[s.cat]||SYM_STYLE_W.mood;
     return `<span class="wrapped-texture-pill" style="background:${st.bg};color:${st.color};">${s.label}</span>`;
   }).join('');
@@ -3386,7 +3398,6 @@ function renderWrappedPage(wrap) {
   }
 
   // Flow intensity
-  const flowDays = wrap.dailyFlow.sort((a,b)=>a.date.localeCompare(b.date));
   if (flowDays.length) {
     html += `<div class="wrapped-card"><div class="wrapped-eyebrow">flow intensity · ${flowDays.length} day${flowDays.length>1?'s':''}</div>
       ${flowDays.map(f=>{
@@ -3415,10 +3426,10 @@ function renderWrappedPage(wrap) {
   }
 
   // Symptoms by phase
-  const hasSyms = Object.values(wrap.symsByPhase).some(a=>a.length>0);
+  const hasSyms = Object.values(symsByPhaseFull).some(a=>a.length>0);
   if (hasSyms) {
     html += `<div class="wrapped-card"><div class="wrapped-eyebrow">symptoms by phase</div>
-      ${Object.entries(wrap.symsByPhase).filter(([,s])=>s.length>0).map(([ph,syms],i,arr)=>{
+      ${Object.entries(symsByPhaseFull).filter(([,s])=>s.length>0).map(([ph,syms],i)=>{
         const pc=PHASE_COLORS[ph];
         return `${i>0?'<div style="margin-top:12px;"></div>':''}
           <div class="wrapped-sym-section">
@@ -3430,9 +3441,9 @@ function renderWrappedPage(wrap) {
   }
 
   // Spotting
-  if (wrap.spottingInCycle.length) {
-    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">spotting · ${wrap.spottingInCycle.length} event${wrap.spottingInCycle.length>1?'s':''}</div>
-      ${wrap.spottingInCycle.map(ev=>{
+  if (spottingInCycle.length) {
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">spotting · ${spottingInCycle.length} event${spottingInCycle.length>1?'s':''}</div>
+      ${spottingInCycle.map(ev=>{
         const pip=COLOR_HEX_W[ev.color]||'#888';
         const dl=parse(ev.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
         const when=ev.when==='before'?'pre-period':ev.when==='mid'?'mid-cycle':ev.when==='after'?'post-period':'';
