@@ -1238,6 +1238,113 @@ body {
 .spotting-show-more-arrow.open { transform: rotate(180deg); }
 .spotting-more-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
 .spotting-more-body.open { max-height: 2000px; }
+
+/* ── Wrapped feature ── */
+.wrapped-nudge {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; margin-bottom: 12px;
+  background: var(--bg2); border: 0.5px solid var(--accent-mid);
+  border-radius: var(--radius-sm); cursor: pointer; transition: opacity 0.15s;
+}
+.wrapped-nudge:active { opacity: 0.7; }
+.wrapped-nudge-icon { font-size: 16px; flex-shrink: 0; }
+.wrapped-nudge-text { flex: 1; font-size: 11px; color: var(--text-soft); font-weight: 300; }
+.wrapped-nudge-text strong { color: var(--accent); font-weight: 400; }
+.wrapped-nudge-arrow { font-size: 14px; color: var(--text-muted); }
+
+.nav-notif {
+  position: absolute; top: 7px; right: 9px;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent); opacity: 0.9;
+  animation: notifPulse 2.5s ease-in-out infinite;
+}
+@keyframes notifPulse {
+  0%,100% { opacity: 0.9; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* wrapped detail page */
+.wrapped-hero {
+  background: linear-gradient(160deg, #3A1828 0%, #221030 60%, #140820 100%);
+  border: 1px solid var(--accent-mid); border-radius: var(--radius);
+  padding: 24px 20px; margin-bottom: 14px; text-align: center;
+  box-shadow: 0 0 40px rgba(224,144,168,0.15);
+}
+.wrapped-hero-eyebrow { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); opacity: 0.7; margin-bottom: 8px; font-weight: 400; }
+.wrapped-hero-title { font-family: 'Lora', serif; font-size: 32px; color: var(--text); font-weight: 400; margin-bottom: 4px; }
+.wrapped-hero-dates { font-size: 12px; color: var(--text-muted); font-weight: 300; letter-spacing: 0.04em; }
+
+.wrapped-opener {
+  background: var(--bg2); border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 12px;
+  font-family: 'Lora', serif; font-size: 14px; font-style: italic;
+  color: var(--text-soft); line-height: 1.75;
+}
+.wrapped-opener strong { color: var(--accent); font-style: normal; font-weight: 400; }
+
+.wrapped-stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.wrapped-stat-cell { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 10px; text-align: center; box-shadow: var(--shadow); }
+.wrapped-stat-num { font-family: 'Lora', serif; font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 3px; }
+.wrapped-stat-label { font-size: 10px; color: var(--text-muted); font-weight: 300; line-height: 1.4; }
+.wrapped-stat-compare { font-size: 9px; margin-top: 3px; font-style: italic; }
+.wrapped-stat-compare.longer { color: #C07840; }
+.wrapped-stat-compare.typical { color: var(--follicular); }
+.wrapped-stat-compare.shorter { color: var(--follicular); }
+
+.wrapped-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.wrapped-eyebrow { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); font-weight: 400; margin-bottom: 10px; }
+.wrapped-body { font-size: 13px; color: var(--text-soft); font-weight: 300; line-height: 1.75; }
+.wrapped-body em { font-family: 'Lora', serif; font-style: italic; color: var(--text); }
+.wrapped-body strong { color: var(--text); font-weight: 400; }
+
+.wrapped-comparison-line {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 0; border-bottom: 0.5px solid var(--border-soft);
+  font-size: 12px; color: var(--text-muted); font-weight: 300; line-height: 1.55;
+}
+.wrapped-comparison-line:last-child { border-bottom: none; padding-bottom: 0; }
+.wrapped-comparison-pip { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+
+.wrapped-texture-quote { font-family: 'Lora', serif; font-size: 15px; font-style: italic; color: var(--text-soft); line-height: 1.65; margin-bottom: 6px; border-left: 2px solid var(--accent-mid); padding-left: 14px; }
+.wrapped-texture-meta { font-size: 10px; color: var(--text-muted); letter-spacing: 0.04em; margin-bottom: 12px; padding-left: 16px; }
+.wrapped-texture-read { font-size: 12px; color: var(--text-muted); font-weight: 300; line-height: 1.7; margin-bottom: 12px; }
+.wrapped-texture-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.wrapped-texture-pill { font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 300; }
+
+.wrapped-flow-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.wrapped-flow-label { font-size: 11px; color: var(--text-muted); width: 48px; flex-shrink: 0; font-weight: 300; }
+.wrapped-flow-track { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.wrapped-flow-fill { height: 100%; border-radius: 3px; background: var(--menstrual); opacity: 0.8; }
+
+.wrapped-journey-entry { padding: 13px 0; border-bottom: 0.5px solid var(--border-soft); }
+.wrapped-journey-entry:last-child { border-bottom: none; padding-bottom: 0; }
+.wrapped-journey-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.wrapped-journey-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; padding: 2px 9px; border-radius: 20px; }
+.wrapped-journey-day { font-size: 10px; color: var(--text-muted); letter-spacing: 0.04em; }
+.wrapped-journey-quote { font-family: 'Lora', serif; font-size: 13px; font-style: italic; color: var(--text-soft); line-height: 1.7; border-left: 2px solid var(--border); padding-left: 12px; }
+
+.wrapped-sym-section { margin-bottom: 12px; }
+.wrapped-sym-section:last-child { margin-bottom: 0; }
+.wrapped-sym-heading { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+.wrapped-sym-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.wrapped-sym-pill { font-size: 11px; padding: 4px 11px; border-radius: 20px; font-weight: 300; }
+
+.wrapped-spot-event { padding: 10px 0; border-bottom: 0.5px solid var(--border-soft); }
+.wrapped-spot-event:last-child { border-bottom: none; padding-bottom: 0; }
+.wrapped-spot-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.wrapped-spot-pip { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.wrapped-spot-meta { font-size: 12px; color: var(--text-soft); font-weight: 300; }
+.wrapped-spot-notes { font-size: 11px; color: var(--text-muted); font-weight: 300; margin: 4px 0 6px; padding-left: 16px; line-height: 1.55; }
+.wrapped-spot-vibes { display: flex; gap: 5px; flex-wrap: wrap; padding-left: 16px; }
+.wrapped-spot-vibe { font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 300; }
+
+.wrapped-close { text-align: center; padding: 24px 10px 4px; font-size: 24px; }
+
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+#page-wrapped.active { animation: slideInFromRight 0.28s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
 </style>
 </head>
 <body>
@@ -1452,10 +1559,6 @@ body {
       <div class="card-label">Symptom patterns 💡</div>
       <div id="symptom-patterns-list"></div>
     </div>
-    <div class="card" id="insights-symptom-phases" style="display:none">
-      <div class="card-label">Symptoms by phase 🗂️</div>
-      <div id="symptom-phases-list"></div>
-    </div>
   </div>
 
   <!-- SPOTTING INSIGHTS PAGE -->
@@ -1483,10 +1586,20 @@ body {
         <div class="data-coll-inner">
           <div class="data-row"><span>cloud sync</span><button class="data-action" onclick="manualSync()">sync now ↻</button></div>
           <div class="data-row"><span>export backup</span><button class="data-action" onclick="exportData()">download</button></div>
+          <div class="data-row" id="backfill-wrap-row" style="display:none"><span>generate missing wraps</span><button class="data-action" onclick="backfillWraps()">generate 🪷</button></div>
           <div class="data-row danger"><span>reset to baseline</span><button class="data-action danger" id="clear-btn" onclick="confirmClear()">reset</button></div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- WRAPPED DETAIL PAGE -->
+  <div class="screen page" id="page-wrapped">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:22px;cursor:pointer;" onclick="goBackFromWrapped()">
+      <span style="font-size:22px;color:var(--text-xsoft);">‹</span>
+      <span style="font-size:12px;color:var(--text-xsoft);letter-spacing:0.04em;">log</span>
+    </div>
+    <div id="wrapped-page-body"></div>
   </div>
 
   <nav class="nav">
@@ -1498,7 +1611,8 @@ body {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       <span class="nav-label">Calendar</span>
     </button>
-    <button class="nav-btn" onclick="goTo('log',this)">
+    <button class="nav-btn" id="log-nav-btn" onclick="goTo('log',this)">
+      <div class="nav-notif" id="wrap-notif-dot" style="display:none;"></div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
       <span class="nav-label">Log</span>
     </button>
@@ -1734,6 +1848,7 @@ async function launchApp() {
     if (!appData.symptoms) appData.symptoms = {};
     if (!appData.journal)  appData.journal  = {};
     if (!appData.spotting) appData.spotting  = [];
+    if (!appData.wraps)    appData.wraps     = [];
     setSyncDot('');
   } catch(e) {
     setSyncDot('error');
@@ -1775,6 +1890,7 @@ async function loadFromSupabase() {
         symptoms:     row.symptoms     || {},
         journal:      row.journal      || {},
         spotting:     row.spotting     || [],
+        wraps:        row.wraps        || [],
         activePeriod: row.active_period || null,
         settings:     row.settings     || TEMPDROP_DEFAULT.settings
       };
@@ -1796,6 +1912,7 @@ async function saveToSupabase(data) {
       symptoms:      data.symptoms || {},
       journal:       data.journal  || {},
       spotting:      data.spotting || [],
+      wraps:         data.wraps    || [],
       active_period: data.activePeriod || null,
       settings:      data.settings,
       updated_at:    new Date().toISOString()
@@ -1907,6 +2024,8 @@ function renderAll() {
   renderInsights();
   renderSymptomGrid();
   renderJournalTab();
+  updateWrapNotif();
+  updateBackfillRow();
 }
 
 // ── LOG TAB ────────────────────────────────────────────────────────────────
@@ -2033,11 +2152,23 @@ function startPeriod() {
   const start = startEl ? startEl.value : fmt(new Date());
   const notes = notesEl ? notesEl.value.trim() : '';
   if (!start) { showToast('Please add a start date'); return; }
+
+  // Generate wrapped for the most recent completed period before adding new one
+  const sorted = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const lastCompleted = [...sorted].reverse().find(p => p.end && !p.source);
+  if (lastCompleted) {
+    const alreadyWrapped = (appData.wraps || []).find(w => w.periodId === lastCompleted.id);
+    if (!alreadyWrapped) {
+      generateWrapped(lastCompleted, start);
+    }
+  }
+
   const entry = { id: Date.now(), start, end: null, dailyFlow: [], notes };
   appData.periods.push(entry);
   appData.activePeriod = entry.id;
   save();
   renderAll();
+  updateWrapNotif();
   showToast('Period started 🌑');
   goTo('today', document.querySelector('.nav-btn'));
 }
@@ -2880,7 +3011,451 @@ function reopenPeriod(id) {
   goTo('today', document.querySelector('.nav-btn'));
 }
 
-// ── CYCLE NUMBER ───────────────────────────────────────────────────────────
+function renderHistory() {
+  const el=document.getElementById('history-list');
+  const chronological=[...appData.periods].sort((a,b)=>a.start.localeCompare(b.start));
+  const sorted=[...appData.periods].sort((a,b)=>b.start.localeCompare(a.start));
+  if(!sorted.length){
+    el.innerHTML='<div class="empty"><div class="empty-big">nothing logged yet</div><div class="empty-small">start your first period above</div></div>';
+    return;
+  }
+  const pl=avgPeriodLength();
+  const mostRecentId = chronological[chronological.length - 1]?.id;
+  const hasActivePeriod = !!appData.activePeriod;
+
+  // Wrapped nudge — show if any unviewed wraps exist
+  const wraps = appData.wraps || [];
+  const unviewed = wraps.filter(w => !w.viewed);
+  let nudgeHtml = '';
+  if (unviewed.length) {
+    const newest = unviewed[unviewed.length - 1];
+    const wrapNum = wraps.indexOf(wraps.find(w => w.id === newest.id)) + 1;
+    const pNum = chronological.findIndex(p => p.id === newest.periodId) + 1;
+    nudgeHtml = `<div class="wrapped-nudge" onclick="openWrapped('${newest.id}')">
+      <div class="wrapped-nudge-icon">🪷</div>
+      <div class="wrapped-nudge-text"><strong>wrapped ${wrapNum}</strong> is ready — period ${pNum}</div>
+      <div class="wrapped-nudge-arrow">›</div>
+    </div>`;
+  }
+
+  const rowsHtml = sorted.map(p=>{
+    const periodNum = chronological.findIndex(c => c.id === p.id) + 1;
+    const isActive=p.id===appData.activePeriod;
+    const isTD=p.source==='tempdrop';
+    const isEditable = !isTD && (isActive || (!hasActivePeriod && p.id === mostRecentId));
+    const isEditing=editingPeriodId===p.id;
+    const dur=p.end?diffDays(parse(p.start),parse(p.end))+' days':isActive?'in progress':`~${pl} days`;
+    const flowTags=p.dailyFlow.length
+      ? p.dailyFlow.sort((a,b)=>a.date.localeCompare(b.date))
+          .map(f=>`<span class="he-flow-day">${fmtDisplay(f.date)}: ${f.flow}</span>`).join('')
+      : '';
+
+    // Wrapped tag
+    const wrap = wraps.find(w => w.periodId === p.id);
+    const wrapNum = wrap ? wraps.indexOf(wrap) + 1 : null;
+    const wrapTag = wrap
+      ? `<span class="he-tag" style="background:var(--accent-xsoft);color:var(--accent);border:1px solid var(--accent-mid);cursor:pointer;" onclick="openWrapped('${wrap.id}')">🪷 wrapped ${wrapNum}</span>`
+      : '';
+
+    const hasWrap = !!wrap;
+
+    let editForm = '';
+    if (isEditing && isEditable) {
+      editForm = `<div class="edit-form">
+        <div class="edit-row">
+          <label>start</label>
+          <input type="date" id="edit-start-${p.id}" value="${p.start}" style="color-scheme:dark">
+        </div>
+        <div class="edit-row">
+          <label>end</label>
+          <input type="date" id="edit-end-${p.id}" value="${p.end||''}" style="color-scheme:dark">
+        </div>
+        <div class="edit-actions">
+          <button class="edit-save" onclick="saveEditPeriod(${p.id})">Save</button>
+          ${p.end && !isActive ? `<button class="edit-reopen" onclick="reopenPeriod(${p.id})">Reopen</button>` : ''}
+          <button class="edit-cancel" onclick="toggleEditPeriod(null)">Cancel</button>
+        </div>
+      </div>`;
+    }
+
+    return `<div class="history-entry${hasWrap?' has-wrap':''}" style="flex-wrap:wrap;${hasWrap?'border-color:#4A3050;':''}" ${hasWrap&&!isEditing?`onclick="openWrapped('${wrap.id}')"`:''}>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px;">
+          <div class="he-dates">${fmtDisplay(p.start)}${p.end?' → '+fmtDisplay(p.end):''}</div>
+          <span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-xsoft);flex-shrink:0;">period ${periodNum}</span>
+        </div>
+        <div class="he-meta">${dur}${p.notes?' · '+p.notes:''}</div>
+        <div class="he-tags" style="margin-top:4px;">
+          ${wrapTag}
+          ${flowTags?`<div class="he-flows" style="margin-top:${wrapTag?'4px':'0'}">${flowTags}</div>`:''}
+        </div>
+      </div>
+      <div class="he-right" onclick="event.stopPropagation()">
+        ${isActive?`<span class="flow-tag" style="background:#EBF4F0;color:var(--follicular)">active</span>`:''}
+        ${isTD
+          ? `<span class="flow-tag" style="background:#F0F0F8;color:#9090B8;font-size:9px;letter-spacing:0.06em">tempdrop</span>`
+          : isEditable
+            ? `<button class="edit-btn" onclick="toggleEditPeriod(${p.id})">✏️</button>
+               <button class="del-btn" onclick="deletePeriod(${p.id})">×</button>`
+            : ''}
+      </div>
+      ${editForm ? `<div style="width:100%" onclick="event.stopPropagation()">${editForm}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  el.innerHTML = nudgeHtml + rowsHtml;
+}
+
+// ── WRAPPED ────────────────────────────────────────────────────────────────
+
+const PHASE_COLORS = {
+  menstrual:  { bg: 'var(--menstrual-bg)',  color: 'var(--menstrual)',  label: '🌑 menstrual',  hex: '#8B3A50' },
+  follicular: { bg: 'var(--follicular-bg)', color: 'var(--follicular)', label: '🌱 follicular', hex: '#2A6B4A' },
+  ovulation:  { bg: 'var(--ovulation-bg)',  color: 'var(--ovulation)',  label: '✨ ovulation',  hex: '#8B5230' },
+  luteal:     { bg: 'var(--luteal-bg)',      color: 'var(--luteal)',     label: '🌙 luteal',     hex: '#243870' },
+};
+const FLOW_MAP = { spotting: 0.1, light: 0.35, medium: 0.65, heavy: 1.0 };
+const COLOR_HEX_W = { red:'#8A3A3A', brown:'#C07840', pink:'#C07090', dark:'#4A3A4A' };
+const SYM_STYLE_W = {
+  physical: { bg:'var(--menstrual-bg)',  color:'var(--menstrual)'  },
+  energy:   { bg:'var(--follicular-bg)', color:'var(--follicular)' },
+  mood:     { bg:'var(--luteal-bg)',      color:'var(--luteal)'     },
+  good:     { bg:'var(--ovulation-bg)',  color:'var(--ovulation)'  },
+};
+
+function generateWrapped(period, nextPeriodStart) {
+  if (!appData.wraps) appData.wraps = [];
+  const cycleStart = period.start;
+  const cycleEnd   = nextPeriodStart;
+  const cycleDays  = diffDays(parse(cycleStart), parse(cycleEnd));
+  const periodDays = period.end ? diffDays(parse(period.start), parse(period.end)) + 1 : null;
+
+  const cl = avgCycleLength(), pl = avgPeriodLength(), ovD = cl - 14;
+  const thisCycleFollLen = Math.max(ovD - 1 - (periodDays || pl), 1);
+  const thisLutealLen = Math.max(cycleDays - (periodDays || pl) - thisCycleFollLen - 3, 0);
+
+  const completedSorted = [...appData.periods]
+    .filter(p => p.end && p.id !== period.id)
+    .sort((a,b) => a.start.localeCompare(b.start));
+
+  const recentCycleLengths = completedSorted.slice(-5).map((p,i,arr) => {
+    if (i === 0) return null;
+    return diffDays(parse(arr[i-1].start), parse(p.start));
+  }).filter(Boolean);
+  const avgRecentCycle = recentCycleLengths.length
+    ? Math.round(recentCycleLengths.reduce((a,b)=>a+b,0)/recentCycleLengths.length)
+    : cl;
+
+  const recentPeriodLengths = completedSorted.slice(-4)
+    .map(p => diffDays(parse(p.start), parse(p.end)) + 1)
+    .filter(d => d > 0 && d < 14);
+  const avgRecentPeriod = recentPeriodLengths.length
+    ? Math.round(recentPeriodLengths.reduce((a,b)=>a+b,0)/recentPeriodLengths.length)
+    : pl;
+
+  // Journal entries in cycle window — one per phase, longest wins, no duplicates
+  const journalEntries = Object.entries(appData.journal || {})
+    .filter(([date]) => date >= cycleStart && date < cycleEnd)
+    .map(([date, text]) => {
+      const info = getCycleDayForDate(date);
+      return { date, text, phase: info?.phase || 'luteal', dayInPhase: info?.dayInPhase || 0 };
+    })
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  const phaseOrder = ['menstrual','follicular','ovulation','luteal'];
+  const usedDates = new Set();
+  const journalByPhase = {};
+  phaseOrder.forEach(ph => {
+    const candidates = journalEntries
+      .filter(e => e.phase === ph && !usedDates.has(e.date))
+      .sort((a,b) => b.text.length - a.text.length);
+    if (candidates.length) { journalByPhase[ph] = candidates[0]; usedDates.add(candidates[0].date); }
+  });
+  phaseOrder.forEach(ph => {
+    if (!journalByPhase[ph]) {
+      const unused = journalEntries.filter(e => !usedDates.has(e.date)).sort((a,b) => b.text.length - a.text.length);
+      if (unused.length) { journalByPhase[ph] = unused[0]; usedDates.add(unused[0].date); }
+    }
+  });
+  const narrativeEntries = phaseOrder.map(ph => journalByPhase[ph]).filter(Boolean)
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  // Symptoms in cycle window — grouped by phase
+  const symptomsInCycle = {};
+  Object.entries(appData.symptoms || {}).forEach(([date, syms]) => {
+    if (date >= cycleStart && date < cycleEnd) symptomsInCycle[date] = syms;
+  });
+  const allSymIds = [...new Set(Object.values(symptomsInCycle).flat())];
+  const symsByPhase = { menstrual:[], follicular:[], ovulation:[], luteal:[] };
+  allSymIds.forEach(sid => {
+    const sym = SYMPTOMS.find(s => s.id === sid);
+    if (!sym) return;
+    let phaseCounts = { menstrual:0, follicular:0, ovulation:0, luteal:0 };
+    Object.entries(symptomsInCycle).forEach(([date, syms]) => {
+      if (syms.includes(sid)) {
+        const ph = getPhaseForDay(date);
+        if (ph && phaseCounts[ph] !== undefined) phaseCounts[ph]++;
+      }
+    });
+    const topPhase = Object.entries(phaseCounts).sort((a,b)=>b[1]-a[1])[0]?.[0];
+    if (topPhase && phaseCounts[topPhase] > 0) symsByPhase[topPhase].push(sym);
+  });
+
+  // Mood + good symptoms for emotional texture pills
+  const textureSymptomsAll = allSymIds
+    .map(sid => SYMPTOMS.find(s => s.id === sid))
+    .filter(s => s && (s.cat === 'mood' || s.cat === 'good'));
+
+  // Spotting in cycle window
+  const spottingInCycle = (appData.spotting || [])
+    .filter(e => e.date >= cycleStart && e.date < cycleEnd)
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  const wrap = {
+    id:              `wrap_${period.id}`,
+    periodId:        period.id,
+    generatedAt:     new Date().toISOString(),
+    viewed:          false,
+    cycleStart, cycleEnd, cycleDays, periodDays,
+    thisLutealLen,
+    avgRecentCycle, avgRecentPeriod,
+    narrativeEntries,
+    symsByPhase, textureSymptomsAll, spottingInCycle,
+    dailyFlow: period.dailyFlow || [],
+  };
+  appData.wraps.push(wrap);
+}
+
+function updateWrapNotif() {
+  const dot = document.getElementById('wrap-notif-dot');
+  if (!dot) return;
+  const unviewed = (appData.wraps || []).filter(w => !w.viewed);
+  dot.style.display = unviewed.length ? 'block' : 'none';
+}
+
+function updateBackfillRow() {
+  const row = document.getElementById('backfill-wrap-row');
+  if (!row) return;
+  // Show if any completed app-logged period (non-tempdrop) lacks a wrap,
+  // AND there is a subsequent period start to use as the cycle end boundary
+  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const eligible = chronological.filter((p, i) => {
+    if (!p.end || p.source === 'tempdrop') return false;
+    const hasNextPeriod = chronological[i + 1];
+    const alreadyWrapped = (appData.wraps || []).find(w => w.periodId === p.id);
+    return hasNextPeriod && !alreadyWrapped;
+  });
+  row.style.display = eligible.length ? 'flex' : 'none';
+}
+
+function backfillWraps() {
+  haptic('medium');
+  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  let generated = 0;
+  chronological.forEach((p, i) => {
+    if (!p.end || p.source === 'tempdrop') return;
+    const nextPeriod = chronological[i + 1];
+    if (!nextPeriod) return;
+    const alreadyWrapped = (appData.wraps || []).find(w => w.periodId === p.id);
+    if (alreadyWrapped) return;
+    generateWrapped(p, nextPeriod.start);
+    generated++;
+  });
+  if (generated > 0) {
+    save();
+    renderAll();
+    showToast(`${generated} wrap${generated > 1 ? 's' : ''} generated 🪷`);
+  } else {
+    showToast('nothing to generate');
+  }
+}
+
+function openWrapped(wrapId) {
+  haptic('light');
+  const wrap = (appData.wraps || []).find(w => w.id === wrapId);
+  if (!wrap) return;
+  if (!wrap.viewed) { wrap.viewed = true; save(); updateWrapNotif(); renderHistory(); }
+  renderWrappedPage(wrap);
+  showPage('page-wrapped');
+}
+
+function goBackFromWrapped() {
+  haptic('light');
+  showPage('page-log');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('log-nav-btn').classList.add('active');
+}
+
+function renderWrappedPage(wrap) {
+  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const periodNum = chronological.findIndex(p => p.id === wrap.periodId) + 1;
+  const wrapNum   = (appData.wraps || []).indexOf(wrap) + 1;
+
+  const cl = avgCycleLength(), pl = avgPeriodLength(), ovD = cl - 14;
+  const cycleDiff  = wrap.cycleDays - wrap.avgRecentCycle;
+  const periodDiff = wrap.periodDays ? wrap.periodDays - wrap.avgRecentPeriod : 0;
+  const lutealDiff = wrap.thisLutealLen - Math.max(cl - (ovD + 1), 1);
+
+  // Opening line
+  let opener = '';
+  if (Math.abs(lutealDiff) >= 2) {
+    opener = lutealDiff > 0
+      ? `your luteal phase ran <strong>${lutealDiff} days longer than usual</strong> — and your body told you before flow even started. this was a cycle that took its time.`
+      : `luteal was <strong>${Math.abs(lutealDiff)} days shorter than usual</strong> — your period arrived a little earlier than expected.`;
+  } else if (cycleDiff > 2) {
+    opener = `a <strong>longer cycle than your recent average</strong> — ${wrap.cycleDays} days vs your usual ${wrap.avgRecentCycle}. your body moved at its own pace this month.`;
+  } else if (cycleDiff < -2) {
+    opener = `a <strong>shorter cycle than usual</strong> — ${wrap.cycleDays} days this time vs your average ${wrap.avgRecentCycle}. things moved a little faster.`;
+  } else if (wrap.periodDays && periodDiff >= 2) {
+    opener = `your period ran <strong>${periodDiff} days longer than your recent average</strong>. heavier and more sustained than usual.`;
+  } else {
+    opener = `a <strong>steady cycle</strong> — ${wrap.cycleDays} days, close to your average. your body ran close to its own clock this month.`;
+  }
+
+  // Stats compare labels
+  const cmpLabel = (diff, unit='d') => Math.abs(diff) < 1
+    ? `<div class="wrapped-stat-compare typical">typical</div>`
+    : diff > 0
+      ? `<div class="wrapped-stat-compare longer">+${diff}${unit} vs avg</div>`
+      : `<div class="wrapped-stat-compare shorter">${diff}${unit} vs avg</div>`;
+
+  // Comparisons
+  const comparisons = [];
+  const prevWraps = (appData.wraps || []).filter(w => w.id !== wrap.id);
+  const prevWithSpotting = prevWraps.filter(w => w.spottingInCycle?.length > 0);
+  if (wrap.spottingInCycle.length > 0 && prevWithSpotting.length >= 1) {
+    comparisons.push({ color:'#C07840', text:`spotting showed up again — consistent with ${prevWithSpotting.length > 1 ? 'the last '+prevWithSpotting.length+' cycles' : 'last cycle'}. it\'s becoming a pattern.` });
+  }
+  if (lutealDiff >= 2) {
+    comparisons.push({ color:'var(--luteal)', text:`luteal ran ${lutealDiff} days longer than your average. the extra days showed up in how you felt toward the end.` });
+  }
+  if (wrap.periodDays && periodDiff >= 2) {
+    const last2 = chronological.slice(-3, -1).map(p => p.end ? diffDays(parse(p.start), parse(p.end)) + 1 : null).filter(Boolean);
+    if (last2.length) comparisons.push({ color:'var(--menstrual)', text:`period up to ${wrap.periodDays} days — your last ${last2.length>1?'two were '+last2.join(' and '):'was '+last2[0]}. heavier than recent cycles.` });
+  } else if (wrap.periodDays && periodDiff <= -2) {
+    comparisons.push({ color:'var(--follicular)', text:`shorter period than usual at ${wrap.periodDays} days. wrapped up faster than your recent average.` });
+  }
+
+  // Texture quote — longest entry from most emotionally charged phase
+  const textureEntry = wrap.narrativeEntries.slice()
+    .sort((a,b) => {
+      const ps = {luteal:3,menstrual:2,follicular:1,ovulation:0};
+      return (ps[b.phase]||0)-(ps[a.phase]||0) || b.text.length-a.text.length;
+    })[0];
+
+  const startDisp = parse(wrap.cycleStart).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
+  const endDisp   = parse(wrap.cycleEnd).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
+
+  let html = '';
+
+  // Hero
+  html += `<div class="wrapped-hero">
+    <div class="wrapped-hero-eyebrow">wrapped ${wrapNum} 🪷</div>
+    <div class="wrapped-hero-title">period ${periodNum}</div>
+    <div class="wrapped-hero-dates">${startDisp} — ${endDisp} · ${wrap.cycleDays} days</div>
+  </div>`;
+
+  // Opener
+  html += `<div class="wrapped-opener">${opener}</div>`;
+
+  // Stats
+  html += `<div class="wrapped-stat-row">
+    <div class="wrapped-stat-cell"><div class="wrapped-stat-num">${wrap.cycleDays}d</div><div class="wrapped-stat-label">cycle length</div>${cmpLabel(cycleDiff)}</div>
+    <div class="wrapped-stat-cell"><div class="wrapped-stat-num">${wrap.periodDays||'—'}d</div><div class="wrapped-stat-label">period length</div>${cmpLabel(periodDiff)}</div>
+    <div class="wrapped-stat-cell"><div class="wrapped-stat-num">${wrap.thisLutealLen>0?wrap.thisLutealLen+'d':'—'}</div><div class="wrapped-stat-label">luteal length</div>${cmpLabel(lutealDiff)}</div>
+  </div>`;
+
+  // Comparisons
+  if (comparisons.length) {
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">how this cycle compared</div>
+      ${comparisons.map(c=>`<div class="wrapped-comparison-line"><div class="wrapped-comparison-pip" style="background:${c.color};"></div><span>${c.text}</span></div>`).join('')}
+    </div>`;
+  }
+
+  // Emotional texture
+  const texturePills = wrap.textureSymptomsAll.map(s => {
+    const st = SYM_STYLE_W[s.cat]||SYM_STYLE_W.mood;
+    return `<span class="wrapped-texture-pill" style="background:${st.bg};color:${st.color};">${s.label}</span>`;
+  }).join('');
+  if (textureEntry || texturePills) {
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">emotional texture</div>
+      ${textureEntry?`<div class="wrapped-texture-quote">"${textureEntry.text}"</div>
+      <div class="wrapped-texture-meta">${parse(textureEntry.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase()} · ${textureEntry.phase} · day ${textureEntry.dayInPhase}</div>`:''}
+      ${texturePills?`<div class="wrapped-texture-pills">${texturePills}</div>`:''}
+    </div>`;
+  }
+
+  // Flow intensity
+  const flowDays = wrap.dailyFlow.sort((a,b)=>a.date.localeCompare(b.date));
+  if (flowDays.length) {
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">flow intensity · ${flowDays.length} day${flowDays.length>1?'s':''}</div>
+      ${flowDays.map(f=>{
+        const pct=Math.round((FLOW_MAP[f.flow]||0.1)*100);
+        const lbl=parse(f.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
+        return `<div class="wrapped-flow-row"><span class="wrapped-flow-label">${lbl}</span><div class="wrapped-flow-track"><div class="wrapped-flow-fill" style="width:${pct}%;"></div></div></div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // Narrative journey
+  if (wrap.narrativeEntries.length) {
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">in your own words</div>
+      ${wrap.narrativeEntries.map(e=>{
+        const pc=PHASE_COLORS[e.phase]||PHASE_COLORS.luteal;
+        const dl=parse(e.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
+        return `<div class="wrapped-journey-entry">
+          <div class="wrapped-journey-header">
+            <span class="wrapped-journey-tag" style="background:${pc.bg};color:${pc.color};">${e.phase}</span>
+            <span class="wrapped-journey-day">${dl} · day ${e.dayInPhase}</span>
+          </div>
+          <div class="wrapped-journey-quote">"${e.text}"</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // Symptoms by phase
+  const hasSyms = Object.values(wrap.symsByPhase).some(a=>a.length>0);
+  if (hasSyms) {
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">symptoms by phase</div>
+      ${Object.entries(wrap.symsByPhase).filter(([,s])=>s.length>0).map(([ph,syms],i,arr)=>{
+        const pc=PHASE_COLORS[ph];
+        return `${i>0?'<div style="margin-top:12px;"></div>':''}
+          <div class="wrapped-sym-section">
+            <div class="wrapped-sym-heading" style="color:${pc.color};">${pc.label}</div>
+            <div class="wrapped-sym-pills">${syms.map(s=>`<span class="wrapped-sym-pill" style="background:${pc.bg};color:${pc.color};">${s.label}</span>`).join('')}</div>
+          </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // Spotting
+  if (wrap.spottingInCycle.length) {
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">spotting · ${wrap.spottingInCycle.length} event${wrap.spottingInCycle.length>1?'s':''}</div>
+      ${wrap.spottingInCycle.map(ev=>{
+        const pip=COLOR_HEX_W[ev.color]||'#888';
+        const dl=parse(ev.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
+        const when=ev.when==='before'?'pre-period':ev.when==='mid'?'mid-cycle':ev.when==='after'?'post-period':'';
+        const daySyms=appData.symptoms?.[ev.date]||[];
+        const vibes=daySyms.length?`<div class="wrapped-spot-vibes">${daySyms.map(sid=>{
+          const sym=SYMPTOMS.find(s=>s.id===sid); if(!sym) return '';
+          const st=SYM_STYLE_W[sym.cat]||SYM_STYLE_W.mood;
+          return `<span class="wrapped-spot-vibe" style="background:${st.bg};color:${st.color};">${sym.label}</span>`;
+        }).join('')}</div>`:'';
+        return `<div class="wrapped-spot-event">
+          <div class="wrapped-spot-top"><div class="wrapped-spot-pip" style="background:${pip};"></div>
+          <span class="wrapped-spot-meta">${dl}${ev.color?' · '+ev.color:''}${when?' · '+when:''}</span></div>
+          ${ev.notes?`<div class="wrapped-spot-notes">${ev.notes}</div>`:''}
+          ${vibes}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  html += `<div class="wrapped-close">🌙</div>`;
+  document.getElementById('wrapped-page-body').innerHTML = html;
+}
+
 // Returns the 1-based cycle number for a given period id, based on chronological order of all periods.
 function getCycleNumber(periodId) {
   const sorted = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
@@ -3043,17 +3618,13 @@ function renderInsights() {
 
 function renderSymptomInsights() {
   const patternEl = document.getElementById('insights-symptom-patterns');
-  const phaseEl   = document.getElementById('insights-symptom-phases');
   const symptoms  = appData.symptoms || {};
   const dates     = Object.keys(symptoms);
 
   if (!dates.length) {
     document.getElementById('symptom-patterns-list').innerHTML =
       '<div class="symptom-insights-empty">log symptoms to see your patterns 🫶🏾</div>';
-    document.getElementById('symptom-phases-list').innerHTML =
-      '<div class="symptom-insights-empty">log symptoms to see how they map to your phases</div>';
     patternEl.style.display='block';
-    phaseEl.style.display='block';
     return;
   }
 
@@ -3073,7 +3644,7 @@ function renderSymptomInsights() {
     if (!lastPeriod) return null;
     const cycleStart = parse(lastPeriod.start);
     const cd = diffDays(cycleStart, parse(dateStr)) + 1;
-    const ad = cd; // no modulo — consistent with fix
+    const ad = cd;
     let ePL = pl;
     if (lastPeriod.end) ePL = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
     if (ad <= ePL) return 'menstrual';
@@ -3090,7 +3661,7 @@ function renderSymptomInsights() {
     if (!lastPeriod) return null;
     const cycleStart = parse(lastPeriod.start);
     const cd = diffDays(cycleStart, parse(dateStr)) + 1;
-    const ad = cd; // no modulo
+    const ad = cd;
     let ePL = pl;
     if (lastPeriod.end) ePL = diffDays(cycleStart, parse(lastPeriod.end)) + 1;
     if (ad <= ePL) return ad;
@@ -3143,41 +3714,6 @@ function renderSymptomInsights() {
       '<div class="symptom-insights-empty">patterns will appear as you log more</div>';
     patternEl.style.display='block';
   }
-
-  const phaseColors = {
-    menstrual:  {bg:'var(--menstrual-bg)',  color:'var(--menstrual)',  label:'Menstrual'},
-    follicular: {bg:'var(--follicular-bg)', color:'var(--follicular)', label:'Follicular'},
-    ovulation:  {bg:'var(--ovulation-bg)',  color:'var(--ovulation)',  label:'Ovulation'},
-    luteal:     {bg:'var(--luteal-bg)',      color:'var(--luteal)',     label:'Luteal'},
-  };
-
-  const phaseSymptoms = {menstrual:[],follicular:[],ovulation:[],luteal:[]};
-  SYMPTOMS.forEach(s => {
-    ['menstrual','follicular','ovulation','luteal'].forEach(phase => {
-      if (symptomPhaseMap[s.id][phase].length > 0) phaseSymptoms[phase].push(s);
-    });
-  });
-
-  const hasAny = Object.values(phaseSymptoms).some(arr=>arr.length>0);
-  if (hasAny) {
-    document.getElementById('symptom-phases-list').innerHTML =
-      ['menstrual','follicular','ovulation','luteal'].map(phase => {
-        const syms = phaseSymptoms[phase];
-        if (!syms.length) return '';
-        const pc = phaseColors[phase];
-        return `<div class="symptom-phase-section">
-          <div class="symptom-phase-heading" style="color:${pc.color}">${pc.label}</div>
-          <div class="symptom-phase-pills">
-            ${syms.map(s=>`<span class="symptom-phase-pill" style="background:${pc.bg};color:${pc.color}">${s.label}</span>`).join('')}
-          </div>
-        </div>`;
-      }).join('');
-    phaseEl.style.display='block';
-  } else {
-    document.getElementById('symptom-phases-list').innerHTML =
-      '<div class="symptom-insights-empty">log symptoms to see how they map to your phases</div>';
-    phaseEl.style.display='block';
-  }
 }
 
 // ── SETTINGS & DATA ────────────────────────────────────────────────────────
@@ -3187,6 +3723,7 @@ async function manualSync() {
   if (!appData.symptoms) appData.symptoms = {};
   if (!appData.journal)  appData.journal  = {};
   if (!appData.spotting) appData.spotting  = [];
+  if (!appData.wraps)    appData.wraps     = [];
   appData.periods.forEach(p => {
     if (p.end && !p.source && p.endedByUser === undefined) p.endedByUser = true;
   });
@@ -3225,6 +3762,7 @@ function clearAll(){
   appData.symptoms = {};
   appData.journal  = {};
   appData.spotting = [];
+  appData.wraps    = [];
   appData.settings = fresh.settings;
   symptomViewDate = fmt(new Date());
   save(); renderAll(); showToast('Reset to baseline 🌑');
