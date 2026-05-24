@@ -1113,7 +1113,52 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Crystal ball glow ── */
+/* ── Blood drop glow ── */
+.blood-drop-emoji {
+  display: inline-block; cursor: pointer; user-select: none;
+  vertical-align: middle;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  filter: drop-shadow(0 0 10px rgba(224,144,168,0.5)) drop-shadow(0 0 24px rgba(224,144,168,0.22));
+  animation: bloodDropPulse 3s ease-in-out infinite;
+}
+.blood-drop-emoji:active { transform: scale(0.88); }
+@keyframes bloodDropPulse {
+  0%,100% { filter: drop-shadow(0 0 8px rgba(224,144,168,0.4)) drop-shadow(0 0 20px rgba(224,144,168,0.18)); }
+  50%      { filter: drop-shadow(0 0 16px rgba(224,144,168,0.75)) drop-shadow(0 0 36px rgba(224,144,168,0.35)); }
+}
+
+/* ── Wrapped archive rows ── */
+.wrap-archive-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: opacity 0.15s; user-select: none;
+}
+.wrap-archive-row:last-child { border-bottom: none; padding-bottom: 0; }
+.wrap-archive-row:active { opacity: 0.6; }
+.wrap-archive-left { display: flex; flex-direction: column; gap: 3px; }
+.wrap-archive-num { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-xsoft); font-weight: 500; }
+.wrap-archive-period { font-family: 'Lora', serif; font-size: 19px; color: var(--text); font-weight: 400; }
+.wrap-archive-dates { font-size: 11px; color: var(--text-muted); font-weight: 300; }
+.wrap-archive-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.wrap-archive-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:0.9;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+.wrap-archive-chevron { font-size: 18px; color: var(--text-muted); }
+
+.wrap-archive-future {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; opacity: 0.3;
+}
+.wrap-archive-future-period { font-family: 'Lora', serif; font-size: 19px; color: var(--text-muted); font-weight: 400; }
+.wrap-archive-future-sub { font-size: 11px; color: var(--text-xmuted); font-style: italic; font-weight: 300; margin-top: 2px; }
+
+/* ── Wrapped detail page — slide in from archive ── */
+@keyframes slideInFromRight2 {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+#page-wrapped-home.active { animation: slideInFromRight 0.28s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+#page-wrapped-detail.active { animation: slideInFromRight2 0.28s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+
 .crystal-ball-emoji {
   display: inline-block; cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
@@ -1241,17 +1286,7 @@ body {
 .spotting-more-body.open { max-height: 2000px; }
 
 /* ── Wrapped feature ── */
-.wrapped-nudge {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; margin-bottom: 12px;
-  background: var(--bg2); border: 0.5px solid var(--accent-mid);
-  border-radius: var(--radius-sm); cursor: pointer; transition: opacity 0.15s;
-}
-.wrapped-nudge:active { opacity: 0.7; }
-.wrapped-nudge-icon { font-size: 16px; flex-shrink: 0; }
-.wrapped-nudge-text { flex: 1; font-size: 11px; color: var(--text-soft); font-weight: 300; }
-.wrapped-nudge-text strong { color: var(--accent); font-weight: 400; }
-.wrapped-nudge-arrow { font-size: 14px; color: var(--text-muted); }
+
 
 .nav-notif {
   position: absolute; top: 7px; right: 9px;
@@ -1469,7 +1504,10 @@ body {
 
   <!-- LOG -->
   <div class="screen page" id="page-log">
-    <div class="page-title" id="log-page-title">log 🩸</div>
+    <div class="app-name">cycle</div>
+    <div style="text-align:center;margin-bottom:4px;">
+      <span style="font-family:'Lora',serif;font-size:30px;font-weight:400;color:var(--text);" id="log-page-title">log </span><span class="blood-drop-emoji" onclick="openWrappedHome()" id="log-drop">🩸</span>
+    </div>
     <div class="page-sub" id="log-page-sub">start a new period</div>
     <div id="log-dynamic-card"></div>
     <div style="margin-top: 6px;">
@@ -1594,14 +1632,31 @@ body {
     </div>
   </div>
 
-  <!-- WRAPPED DETAIL PAGE -->
-  <div class="screen page" id="page-wrapped">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:22px;cursor:pointer;" onclick="goBackFromWrapped()">
+  <!-- WRAPPED HOME — archive -->
+  <div class="screen page" id="page-wrapped-home">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:22px;cursor:pointer;" onclick="goBackFromWrappedHome()">
       <span style="font-size:22px;color:var(--text-xsoft);">‹</span>
       <span style="font-size:12px;color:var(--text-xsoft);letter-spacing:0.04em;">log</span>
     </div>
-    <div id="wrapped-page-body"></div>
+    <div style="text-align:center;margin-bottom:4px;">
+      <span style="font-family:'Lora',serif;font-size:30px;font-weight:400;color:var(--text);">wrapped </span><span style="font-size:28px;vertical-align:middle;">🪷</span>
+    </div>
+    <div class="page-sub">your cycle archive</div>
+    <div class="card" id="wrapped-home-body">
+      <div class="empty"><div class="empty-big">nothing yet</div><div class="empty-small">start a new period to generate your first wrap</div></div>
+    </div>
   </div>
+
+  <!-- WRAPPED DETAIL -->
+  <div class="screen page" id="page-wrapped-detail">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:22px;cursor:pointer;" onclick="goBackFromWrappedDetail()">
+      <span style="font-size:22px;color:var(--text-xsoft);">‹</span>
+      <span style="font-size:12px;color:var(--text-xsoft);letter-spacing:0.04em;">wrapped</span>
+    </div>
+    <div id="wrapped-detail-body"></div>
+  </div>
+
+
 
   <nav class="nav">
     <button class="nav-btn active" onclick="goTo('today',this)">
@@ -2037,17 +2092,16 @@ function renderAll() {
   renderJournalTab();
   updateWrapNotif();
   updateBackfillRow();
+  renderWrappedHome();
 }
 
 // ── LOG TAB ────────────────────────────────────────────────────────────────
 function renderLogTab() {
   const dynCard = document.getElementById('log-dynamic-card');
-  const title   = document.getElementById('log-page-title');
   const sub     = document.getElementById('log-page-sub');
   const active  = getActivePeriod();
 
   if (active) {
-    title.textContent = 'log 🩸';
     sub.textContent = 'your current period';
     const todayStr = fmt(today());
     const startDate = parse(active.start);
@@ -2083,7 +2137,6 @@ function renderLogTab() {
       </button>
     </div>`;
   } else {
-    title.textContent = 'log 🩸';
     sub.textContent = 'start a new period';
     dynCard.innerHTML = `<div class="card">
       <div class="card-label">new period</div>
@@ -3022,107 +3075,6 @@ function reopenPeriod(id) {
   goTo('today', document.querySelector('.nav-btn'));
 }
 
-function renderHistory() {
-  const el=document.getElementById('history-list');
-  const chronological=[...appData.periods].sort((a,b)=>a.start.localeCompare(b.start));
-  const sorted=[...appData.periods].sort((a,b)=>b.start.localeCompare(a.start));
-  if(!sorted.length){
-    el.innerHTML='<div class="empty"><div class="empty-big">nothing logged yet</div><div class="empty-small">start your first period above</div></div>';
-    return;
-  }
-  const pl=avgPeriodLength();
-  const mostRecentId = chronological[chronological.length - 1]?.id;
-  const hasActivePeriod = !!appData.activePeriod;
-
-  // Wrapped nudge — show if any unviewed wraps exist
-  const wraps = appData.wraps || [];
-  const unviewed = wraps.filter(w => !w.viewed);
-  let nudgeHtml = '';
-  if (unviewed.length) {
-    const newest = unviewed[unviewed.length - 1];
-    const wrapNum = wraps.indexOf(wraps.find(w => w.id === newest.id)) + 1;
-    const pNum = chronological.findIndex(p => 
-      String(p.id) === String(newest.periodId) ||
-      `wrap_${p.id}` === newest.id
-    ) + 1;
-    nudgeHtml = `<div class="wrapped-nudge" onclick="openWrapped('${newest.id}')">
-      <div class="wrapped-nudge-icon">🪷</div>
-      <div class="wrapped-nudge-text"><strong>wrapped ${wrapNum}</strong> is ready — period ${pNum}</div>
-      <div class="wrapped-nudge-arrow">›</div>
-    </div>`;
-  }
-
-  const rowsHtml = sorted.map(p=>{
-    const periodNum = chronological.findIndex(c => c.id === p.id) + 1;
-    const isActive=p.id===appData.activePeriod;
-    const isTD=p.source==='tempdrop';
-    const isEditable = !isTD && (isActive || (!hasActivePeriod && p.id === mostRecentId));
-    const isEditing=editingPeriodId===p.id;
-    const dur=p.end?diffDays(parse(p.start),parse(p.end))+' days':isActive?'in progress':`~${pl} days`;
-    const flowTags=p.dailyFlow.length
-      ? p.dailyFlow.sort((a,b)=>a.date.localeCompare(b.date))
-          .map(f=>`<span class="he-flow-day">${fmtDisplay(f.date)}: ${f.flow}</span>`).join('')
-      : '';
-
-    // Wrapped tag — match by periodId with string coercion AND fallback to deriving from wrap.id
-    const wrap = wraps.find(w => 
-      String(w.periodId) === String(p.id) || 
-      w.id === `wrap_${p.id}` ||
-      w.id === `wrap_${String(p.id)}`
-    );
-    const wrapNum = wrap ? wraps.indexOf(wrap) + 1 : null;
-    const wrapTag = wrap
-      ? `<span class="he-tag" style="background:var(--accent-xsoft);color:var(--accent);border:1px solid var(--accent-mid);cursor:pointer;" onclick="openWrapped('${wrap.id}')">🪷 wrapped ${wrapNum}</span>`
-      : '';
-
-    const hasWrap = !!wrap;
-
-    let editForm = '';
-    if (isEditing && isEditable) {
-      editForm = `<div class="edit-form">
-        <div class="edit-row">
-          <label>start</label>
-          <input type="date" id="edit-start-${p.id}" value="${p.start}" style="color-scheme:dark">
-        </div>
-        <div class="edit-row">
-          <label>end</label>
-          <input type="date" id="edit-end-${p.id}" value="${p.end||''}" style="color-scheme:dark">
-        </div>
-        <div class="edit-actions">
-          <button class="edit-save" onclick="saveEditPeriod(${p.id})">Save</button>
-          ${p.end && !isActive ? `<button class="edit-reopen" onclick="reopenPeriod(${p.id})">Reopen</button>` : ''}
-          <button class="edit-cancel" onclick="toggleEditPeriod(null)">Cancel</button>
-        </div>
-      </div>`;
-    }
-
-    return `<div class="history-entry${hasWrap?' has-wrap':''}" style="flex-wrap:wrap;${hasWrap?'border-color:#4A3050;':''}" ${hasWrap&&!isEditing?`onclick="openWrapped('${wrap.id}')"`:''}>
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px;">
-          <div class="he-dates">${fmtDisplay(p.start)}${p.end?' → '+fmtDisplay(p.end):''}</div>
-          <span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-xsoft);flex-shrink:0;">period ${periodNum}</span>
-        </div>
-        <div class="he-meta">${dur}${p.notes?' · '+p.notes:''}</div>
-        <div class="he-tags" style="margin-top:4px;">
-          ${wrapTag}
-          ${flowTags?`<div class="he-flows" style="margin-top:${wrapTag?'4px':'0'}">${flowTags}</div>`:''}
-        </div>
-      </div>
-      <div class="he-right" onclick="event.stopPropagation()">
-        ${isActive?`<span class="flow-tag" style="background:#EBF4F0;color:var(--follicular)">active</span>`:''}
-        ${isTD
-          ? `<span class="flow-tag" style="background:#F0F0F8;color:#9090B8;font-size:9px;letter-spacing:0.06em">tempdrop</span>`
-          : isEditable
-            ? `<button class="edit-btn" onclick="toggleEditPeriod(${p.id})">✏️</button>
-               <button class="del-btn" onclick="deletePeriod(${p.id})">×</button>`
-            : ''}
-      </div>
-      ${editForm ? `<div style="width:100%" onclick="event.stopPropagation()">${editForm}</div>` : ''}
-    </div>`;
-  }).join('');
-
-  el.innerHTML = nudgeHtml + rowsHtml;
-}
 
 // ── WRAPPED ────────────────────────────────────────────────────────────────
 
@@ -3254,13 +3206,11 @@ function updateWrapNotif() {
 function updateBackfillRow() {
   const row = document.getElementById('backfill-wrap-row');
   if (!row) return;
-  // Show if any completed app-logged period (non-tempdrop) lacks a wrap,
-  // AND there is a subsequent period start to use as the cycle end boundary
   const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
   const eligible = chronological.filter((p, i) => {
     if (!p.end || p.source === 'tempdrop') return false;
     const hasNextPeriod = chronological[i + 1];
-    const alreadyWrapped = (appData.wraps || []).find(w => String(w.periodId) === String(p.id));
+    const alreadyWrapped = (appData.wraps || []).find(w => String(w.periodId) === String(p.id) || w.id === `wrap_${p.id}`);
     return hasNextPeriod && !alreadyWrapped;
   });
   row.style.display = eligible.length ? 'flex' : 'none';
@@ -3274,7 +3224,7 @@ function backfillWraps() {
     if (!p.end || p.source === 'tempdrop') return;
     const nextPeriod = chronological[i + 1];
     if (!nextPeriod) return;
-    const alreadyWrapped = (appData.wraps || []).find(w => String(w.periodId) === String(p.id));
+    const alreadyWrapped = (appData.wraps || []).find(w => String(w.periodId) === String(p.id) || w.id === `wrap_${p.id}`);
     if (alreadyWrapped) return;
     generateWrapped(p, nextPeriod.start);
     generated++;
@@ -3288,20 +3238,90 @@ function backfillWraps() {
   }
 }
 
-function openWrapped(wrapId) {
+// ── WRAPPED NAVIGATION ─────────────────────────────────────────────────────
+function openWrappedHome() {
   haptic('light');
-  const wrap = (appData.wraps || []).find(w => w.id === wrapId);
-  if (!wrap) return;
-  if (!wrap.viewed) { wrap.viewed = true; save(); updateWrapNotif(); renderHistory(); }
-  renderWrappedPage(wrap);
-  showPage('page-wrapped');
+  renderWrappedHome();
+  showPage('page-wrapped-home');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('log-nav-btn').classList.add('active');
 }
 
-function goBackFromWrapped() {
+function goBackFromWrappedHome() {
   haptic('light');
   showPage('page-log');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('log-nav-btn').classList.add('active');
+}
+
+function openWrappedDetail(wrapId) {
+  haptic('light');
+  const wrap = (appData.wraps || []).find(w => w.id === wrapId);
+  if (!wrap) return;
+  if (!wrap.viewed) {
+    wrap.viewed = true;
+    save();
+    updateWrapNotif();
+    renderHistory();
+    renderWrappedHome();
+  }
+  renderWrappedPage(wrap);
+  showPage('page-wrapped-detail');
+}
+
+function goBackFromWrappedDetail() {
+  haptic('light');
+  showPage('page-wrapped-home');
+}
+
+// Aliases for backwards compat
+function openWrapped(wrapId) { openWrappedDetail(wrapId); }
+function goBackFromWrapped() { goBackFromWrappedHome(); }
+
+function renderWrappedHome() {
+  const body = document.getElementById('wrapped-home-body');
+  if (!body) return;
+  const wraps = (appData.wraps || []).slice().sort((a,b) => b.cycleStart.localeCompare(a.cycleStart));
+  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+
+  if (!wraps.length && !appData.activePeriod) {
+    body.innerHTML = '<div class="empty"><div class="empty-big">nothing yet</div><div class="empty-small">start a new period to generate your first wrap</div></div>';
+    return;
+  }
+
+  let html = '';
+  wraps.forEach(wrap => {
+    const wrapNum = (appData.wraps || []).indexOf(wrap) + 1;
+    const pNum = chronological.findIndex(p =>
+      String(p.id) === String(wrap.periodId) || p.id === parseInt(wrap.id.replace('wrap_',''))
+    ) + 1;
+    const startDisp = parse(wrap.cycleStart).toLocaleDateString('en-US', {month:'short', day:'numeric'}).toLowerCase();
+    const endDisp   = parse(wrap.cycleEnd).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}).toLowerCase();
+    html += `<div class="wrap-archive-row" onclick="openWrappedDetail('${wrap.id}')">
+      <div class="wrap-archive-left">
+        <span class="wrap-archive-num">wrapped ${wrapNum}</span>
+        <span class="wrap-archive-period">period ${pNum > 0 ? pNum : '—'}</span>
+        <span class="wrap-archive-dates">${startDisp} — ${endDisp}</span>
+      </div>
+      <div class="wrap-archive-right">
+        ${!wrap.viewed ? '<div class="wrap-archive-dot"></div>' : ''}
+        <span class="wrap-archive-chevron">›</span>
+      </div>
+    </div>`;
+  });
+
+  if (appData.activePeriod) {
+    const active = appData.periods.find(p => p.id === appData.activePeriod);
+    const activeNum = active ? chronological.findIndex(p => p.id === active.id) + 1 : '—';
+    html += `<div class="wrap-archive-future">
+      <div>
+        <div class="wrap-archive-future-period">period ${activeNum}</div>
+        <div class="wrap-archive-future-sub">in progress</div>
+      </div>
+    </div>`;
+  }
+
+  body.innerHTML = html || '<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--text-xsoft);font-style:italic;">no wraps yet</div>';
 }
 
 function renderWrappedPage(wrap) {
@@ -3485,7 +3505,8 @@ function renderWrappedPage(wrap) {
   }
 
   html += `<div class="wrapped-close">🌙</div>`;
-  document.getElementById('wrapped-page-body').innerHTML = html;
+  const detailEl = document.getElementById('wrapped-detail-body') || document.getElementById('wrapped-page-body');
+  if (detailEl) detailEl.innerHTML = html;
 }
 
 // Returns the 1-based cycle number for a given period id, based on chronological order of all periods.
@@ -3508,43 +3529,36 @@ function getCycleNumberForDate(dateStr) {
 }
 
 function renderHistory() {
-  const el=document.getElementById('history-list');
-  const chronological=[...appData.periods].sort((a,b)=>a.start.localeCompare(b.start));
-  const sorted=[...appData.periods].sort((a,b)=>b.start.localeCompare(a.start));
-  if(!sorted.length){
-    el.innerHTML='<div class="empty"><div class="empty-big">nothing logged yet</div><div class="empty-small">start your first period above</div></div>';
+  const el = document.getElementById('history-list');
+  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const sorted = [...appData.periods].sort((a,b) => b.start.localeCompare(a.start));
+  if (!sorted.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-big">nothing logged yet</div><div class="empty-small">start your first period above</div></div>';
     return;
   }
-  const pl=avgPeriodLength();
-  // A period locks once a newer active period has been started.
-  // If no period is currently active, the most recent one stays editable.
+  const pl = avgPeriodLength();
   const hasActivePeriod = !!appData.activePeriod;
   const mostRecentId = chronological[chronological.length - 1]?.id;
-  // The second-most-recent is the one that just ended — lock it if a new one is active
-  const lockedFromId = hasActivePeriod ? appData.activePeriod : null;
-  el.innerHTML=sorted.map(p=>{
-    const cycleNum = chronological.findIndex(c => c.id === p.id) + 1;
-    const isActive=p.id===appData.activePeriod;
-    const isTD=p.source==='tempdrop';
-    const isEditing=editingPeriodId===p.id;
-    // Editable if: not tempdrop AND (it's the active period OR it's the most recent completed period when no new period is active)
+  const wraps = appData.wraps || [];
+
+  el.innerHTML = sorted.map(p => {
+    const periodNum = chronological.findIndex(c => c.id === p.id) + 1;
+    const isActive = p.id === appData.activePeriod;
+    const isTD = p.source === 'tempdrop';
+    const isEditing = editingPeriodId === p.id;
     const isEditable = !isTD && (isActive || (!hasActivePeriod && p.id === mostRecentId));
-    const dur=p.end?diffDays(parse(p.start),parse(p.end))+' days':isActive?'in progress':`~${pl} days`;
-    const flowTags=p.dailyFlow.length
-      ? p.dailyFlow.sort((a,b)=>a.date.localeCompare(b.date))
-          .map(f=>`<span class="he-flow-day">${fmtDisplay(f.date)}: ${f.flow}</span>`).join('')
-      : '';
+    const dur = p.end ? diffDays(parse(p.start), parse(p.end)) + ' days' : isActive ? 'in progress' : `~${pl} days`;
+    const hasWrap = wraps.some(w =>
+      String(w.periodId) === String(p.id) ||
+      w.id === `wrap_${p.id}` ||
+      w.id === `wrap_${String(p.id)}`
+    );
+
     let editForm = '';
     if (isEditing && isEditable) {
       editForm = `<div class="edit-form">
-        <div class="edit-row">
-          <label>start</label>
-          <input type="date" id="edit-start-${p.id}" value="${p.start}" style="color-scheme:dark">
-        </div>
-        <div class="edit-row">
-          <label>end</label>
-          <input type="date" id="edit-end-${p.id}" value="${p.end||''}" style="color-scheme:dark">
-        </div>
+        <div class="edit-row"><label>start</label><input type="date" id="edit-start-${p.id}" value="${p.start}" style="color-scheme:dark"></div>
+        <div class="edit-row"><label>end</label><input type="date" id="edit-end-${p.id}" value="${p.end||''}" style="color-scheme:dark"></div>
         <div class="edit-actions">
           <button class="edit-save" onclick="saveEditPeriod(${p.id})">Save</button>
           ${p.end && !isActive ? `<button class="edit-reopen" onclick="reopenPeriod(${p.id})">Reopen</button>` : ''}
@@ -3552,22 +3566,22 @@ function renderHistory() {
         </div>
       </div>`;
     }
-    return `<div class="history-entry" style="flex-wrap:wrap">
-      <div style="flex:1;min-width:0">
+
+    return `<div class="history-entry" style="flex-wrap:wrap;${hasWrap ? 'border-color:#4A3050;' : ''}">
+      <div style="flex:1;min-width:0;">
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px;">
-          <div class="he-dates">${fmtDisplay(p.start)}${p.end?' → '+fmtDisplay(p.end):''}</div>
-          <span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-xsoft);flex-shrink:0;">period ${cycleNum}</span>
+          <div class="he-dates">${fmtDisplay(p.start)}${p.end ? ' → ' + fmtDisplay(p.end) : ''}</div>
+          <span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-xsoft);flex-shrink:0;">period ${periodNum}</span>
         </div>
-        <div class="he-meta">${dur}${p.notes?' · '+p.notes:''}</div>
-        ${flowTags?`<div class="he-flows">${flowTags}</div>`:''}
+        <div class="he-meta">${dur}${p.notes ? ' · ' + p.notes : ''}</div>
       </div>
       <div class="he-right">
-        ${isActive?`<span class="flow-tag" style="background:#EBF4F0;color:var(--follicular)">active</span>`:''}
+        ${isActive ? `<span class="flow-tag" style="background:#EBF4F0;color:var(--follicular)">active</span>` : ''}
         ${isTD
           ? `<span class="flow-tag" style="background:#F0F0F8;color:#9090B8;font-size:9px;letter-spacing:0.06em">tempdrop</span>`
           : isEditable
-            ? `<button class="edit-btn" onclick="toggleEditPeriod(${p.id})">✏️</button>
-               <button class="del-btn" onclick="deletePeriod(${p.id})">×</button>`
+            ? `<button class="edit-btn" onclick="event.stopPropagation();toggleEditPeriod(${p.id})">✏️</button>
+               <button class="del-btn" onclick="event.stopPropagation();deletePeriod(${p.id})">×</button>`
             : ''}
       </div>
       ${editForm ? `<div style="width:100%">${editForm}</div>` : ''}
@@ -3575,7 +3589,7 @@ function renderHistory() {
   }).join('');
 }
 
-// ── INSIGHTS ───────────────────────────────────────────────────────────────
+
 function renderInsights() {
   const sorted=[...appData.periods].filter(p=>p.end).sort((a,b)=>a.start.localeCompare(b.start));
   const statsEl=document.getElementById('insights-stats');
