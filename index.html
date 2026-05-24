@@ -1504,7 +1504,6 @@ body {
 
   <!-- LOG -->
   <div class="screen page" id="page-log">
-    <div class="app-name">cycle</div>
     <div style="text-align:center;margin-bottom:4px;">
       <span style="font-family:'Lora',serif;font-size:30px;font-weight:400;color:var(--text);" id="log-page-title">log </span><span class="blood-drop-emoji" onclick="openWrappedHome()" id="log-drop">🩸</span>
     </div>
@@ -3257,7 +3256,7 @@ function goBackFromWrappedHome() {
 function openWrappedDetail(wrapId) {
   haptic('light');
   const wrap = (appData.wraps || []).find(w => w.id === wrapId);
-  if (!wrap) return;
+  if (!wrap) { showToast('wrap not found'); return; }
   if (!wrap.viewed) {
     wrap.viewed = true;
     save();
@@ -3265,8 +3264,18 @@ function openWrappedDetail(wrapId) {
     renderHistory();
     renderWrappedHome();
   }
-  renderWrappedPage(wrap);
-  showPage('page-wrapped-detail');
+  // Ensure defaults for fields that may be missing on older wraps
+  wrap.narrativeEntries = wrap.narrativeEntries || [];
+  wrap.symsByPhase      = wrap.symsByPhase      || {};
+  wrap.textureSymIds    = wrap.textureSymIds     || [];
+  wrap.spottingIds      = wrap.spottingIds       || [];
+  try {
+    renderWrappedPage(wrap);
+    showPage('page-wrapped-detail');
+  } catch(e) {
+    console.error('renderWrappedPage error:', e);
+    showToast('error loading wrap — try syncing');
+  }
 }
 
 function goBackFromWrappedDetail() {
