@@ -3031,7 +3031,10 @@ function renderHistory() {
   if (unviewed.length) {
     const newest = unviewed[unviewed.length - 1];
     const wrapNum = wraps.indexOf(wraps.find(w => w.id === newest.id)) + 1;
-    const pNum = chronological.findIndex(p => String(p.id) === String(newest.periodId)) + 1;
+    const pNum = chronological.findIndex(p => 
+      String(p.id) === String(newest.periodId) ||
+      `wrap_${p.id}` === newest.id
+    ) + 1;
     nudgeHtml = `<div class="wrapped-nudge" onclick="openWrapped('${newest.id}')">
       <div class="wrapped-nudge-icon">🪷</div>
       <div class="wrapped-nudge-text"><strong>wrapped ${wrapNum}</strong> is ready — period ${pNum}</div>
@@ -3051,8 +3054,12 @@ function renderHistory() {
           .map(f=>`<span class="he-flow-day">${fmtDisplay(f.date)}: ${f.flow}</span>`).join('')
       : '';
 
-    // Wrapped tag — coerce ids to string to avoid number/string type mismatch from Supabase
-    const wrap = wraps.find(w => String(w.periodId) === String(p.id));
+    // Wrapped tag — match by periodId with string coercion AND fallback to deriving from wrap.id
+    const wrap = wraps.find(w => 
+      String(w.periodId) === String(p.id) || 
+      w.id === `wrap_${p.id}` ||
+      w.id === `wrap_${String(p.id)}`
+    );
     const wrapNum = wrap ? wraps.indexOf(wrap) + 1 : null;
     const wrapTag = wrap
       ? `<span class="he-tag" style="background:var(--accent-xsoft);color:var(--accent);border:1px solid var(--accent-mid);cursor:pointer;" onclick="openWrapped('${wrap.id}')">🪷 wrapped ${wrapNum}</span>`
@@ -3289,7 +3296,9 @@ function goBackFromWrapped() {
 
 function renderWrappedPage(wrap) {
   const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
-  const periodNum = chronological.findIndex(p => String(p.id) === String(wrap.periodId)) + 1;
+  const periodNum = chronological.findIndex(p => 
+    String(p.id) === String(wrap.periodId) || `wrap_${p.id}` === wrap.id
+  ) + 1;
   const wrapNum   = (appData.wraps || []).indexOf(wrap) + 1;
 
   const cl = avgCycleLength(), pl = avgPeriodLength(), ovD = cl - 14;
@@ -3347,7 +3356,9 @@ function renderWrappedPage(wrap) {
   const spottingInCycle = (appData.spotting || [])
     .filter(e => (wrap.spottingIds||[]).includes(e.id))
     .sort((a,b) => a.date.localeCompare(b.date));
-  const period = appData.periods.find(p => String(p.id) === String(wrap.periodId));
+  const period = appData.periods.find(p => 
+    String(p.id) === String(wrap.periodId) || `wrap_${p.id}` === wrap.id
+  );
   const flowDays = (period?.dailyFlow || []).sort((a,b)=>a.date.localeCompare(b.date));
   const textureEntry = wrap.narrativeEntries.slice()
     .sort((a,b) => {
