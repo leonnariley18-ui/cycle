@@ -1882,18 +1882,28 @@ async function dbFetch(path, options={}) {
 }
 
 async function loadFromSupabase() {
+  function safeParseArray(val) {
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'string') { try { return JSON.parse(val); } catch(e) { return []; } }
+    return [];
+  }
+  function safeParseObject(val) {
+    if (val && typeof val === 'object' && !Array.isArray(val)) return val;
+    if (typeof val === 'string') { try { return JSON.parse(val); } catch(e) { return {}; } }
+    return {};
+  }
   try {
     const rows = await dbFetch(`cycle_data?user_token=eq.${USER_TOKEN}&select=*`);
     if (rows && rows.length > 0) {
       const row = rows[0];
       return {
-        periods:      row.periods      || TEMPDROP_DEFAULT.periods,
-        symptoms:     row.symptoms     || {},
-        journal:      row.journal      || {},
-        spotting:     row.spotting     || [],
-        wraps:        row.wraps        || [],
+        periods:      safeParseArray(row.periods)      .length ? safeParseArray(row.periods)       : TEMPDROP_DEFAULT.periods,
+        symptoms:     safeParseObject(row.symptoms),
+        journal:      safeParseObject(row.journal),
+        spotting:     safeParseArray(row.spotting),
+        wraps:        safeParseArray(row.wraps),
         activePeriod: row.active_period || null,
-        settings:     row.settings     || TEMPDROP_DEFAULT.settings
+        settings:     safeParseObject(row.settings)    && Object.keys(safeParseObject(row.settings)).length ? safeParseObject(row.settings) : TEMPDROP_DEFAULT.settings
       };
     }
     const fresh = JSON.parse(JSON.stringify(TEMPDROP_DEFAULT));
