@@ -3308,7 +3308,7 @@ function renderWrappedHome() {
     const endDisp   = parse(wrap.cycleEnd).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}).toLowerCase();
     html += `<div class="wrap-archive-row" onclick="openWrappedDetail('${wrap.id}')">
       <div class="wrap-archive-left">
-        <span class="wrap-archive-num">wrapped ${wrapNum}</span>
+        <span class="wrap-archive-num">cycle ${wrapNum}</span>
         <span class="wrap-archive-period">period ${pNum > 0 ? pNum : '—'}</span>
         <span class="wrap-archive-dates">${startDisp} — ${endDisp}</span>
       </div>
@@ -3334,6 +3334,18 @@ function renderWrappedHome() {
 }
 
 function renderWrappedPage(wrap) {
+  // Defensive defaults — guard against null fields from Supabase JSON
+  wrap.narrativeEntries  = wrap.narrativeEntries  || [];
+  wrap.symsByPhase       = wrap.symsByPhase       || {};
+  wrap.textureSymIds     = wrap.textureSymIds      || [];
+  wrap.spottingIds       = wrap.spottingIds        || [];
+  wrap.dailyFlow         = wrap.dailyFlow          || [];
+  wrap.cycleDays         = wrap.cycleDays          || 0;
+  wrap.periodDays        = wrap.periodDays         || null;
+  wrap.thisLutealLen     = wrap.thisLutealLen       != null ? wrap.thisLutealLen : 0;
+  wrap.avgRecentCycle    = wrap.avgRecentCycle      || avgCycleLength();
+  wrap.avgRecentPeriod   = wrap.avgRecentPeriod     || avgPeriodLength();
+
   const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
   const periodNum = chronological.findIndex(p => 
     String(p.id) === String(wrap.periodId) || `wrap_${p.id}` === wrap.id
@@ -3412,7 +3424,7 @@ function renderWrappedPage(wrap) {
 
   // Hero
   html += `<div class="wrapped-hero">
-    <div class="wrapped-hero-eyebrow">wrapped ${wrapNum} 🪷</div>
+    <div class="wrapped-hero-eyebrow">cycle ${wrapNum} 🪷</div>
     <div class="wrapped-hero-title">period ${periodNum}</div>
     <div class="wrapped-hero-dates">${startDisp} — ${endDisp} · ${wrap.cycleDays} days</div>
   </div>`;
@@ -3562,6 +3574,9 @@ function renderHistory() {
       w.id === `wrap_${p.id}` ||
       w.id === `wrap_${String(p.id)}`
     );
+    const cycleNum = hasWrap
+      ? wraps.findIndex(w => String(w.periodId) === String(p.id) || w.id === `wrap_${p.id}` || w.id === `wrap_${String(p.id)}`) + 1
+      : null;
 
     let editForm = '';
     if (isEditing && isEditable) {
@@ -3582,7 +3597,7 @@ function renderHistory() {
           <div class="he-dates">${fmtDisplay(p.start)}${p.end ? ' → ' + fmtDisplay(p.end) : ''}</div>
           <span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-xsoft);flex-shrink:0;">period ${periodNum}</span>
         </div>
-        <div class="he-meta">${dur}${p.notes ? ' · ' + p.notes : ''}</div>
+        <div class="he-meta">${dur}${p.notes ? ' · ' + p.notes : ''}${cycleNum ? ` · <span style="color:var(--accent);opacity:0.7;">cycle ${cycleNum}</span>` : ''}</div>
       </div>
       <div class="he-right">
         ${isActive ? `<span class="flow-tag" style="background:#EBF4F0;color:var(--follicular)">active</span>` : ''}
