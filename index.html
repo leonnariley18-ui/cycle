@@ -1624,7 +1624,6 @@ body {
         <div class="data-coll-inner">
           <div class="data-row"><span>cloud sync</span><button class="data-action" onclick="manualSync()">sync now ↻</button></div>
           <div class="data-row"><span>export backup</span><button class="data-action" onclick="exportData()">download</button></div>
-          <div class="data-row" id="backfill-wrap-row" style="display:none"><span>generate missing wraps</span><button class="data-action" onclick="backfillWraps()">generate 🪷</button></div>
           <div class="data-row" id="register-wrap-row"><span>register new wrap</span><button class="data-action" onclick="registerLatestWrap()">register 🪷</button></div>
           <div class="data-row danger"><span>reset to baseline</span><button class="data-action danger" id="clear-btn" onclick="confirmClear()">reset</button></div>
         </div>
@@ -2090,7 +2089,6 @@ function renderAll() {
   renderSymptomGrid();
   renderJournalTab();
   updateWrapNotif();
-  updateBackfillRow();
   renderWrappedHome();
 }
 
@@ -3203,40 +3201,6 @@ function updateWrapNotif() {
   dot.style.display = wrappedPeriods.length ? 'block' : 'none';
 }
 
-function updateBackfillRow() {
-  const row = document.getElementById('backfill-wrap-row');
-  if (!row) return;
-  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
-  const eligible = chronological.filter((p, i) => {
-    if (!p.end || p.source === 'tempdrop') return false;
-    const hasNextPeriod = chronological[i + 1];
-    const alreadyWrapped = (appData.wraps || []).find(w => String(w.periodId) === String(p.id) || w.id === `wrap_${p.id}`);
-    return hasNextPeriod && !alreadyWrapped;
-  });
-  row.style.display = eligible.length ? 'flex' : 'none';
-}
-
-function backfillWraps() {
-  haptic('medium');
-  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
-  let generated = 0;
-  chronological.forEach((p, i) => {
-    if (!p.end || p.source === 'tempdrop') return;
-    const nextPeriod = chronological[i + 1];
-    if (!nextPeriod) return;
-    const alreadyWrapped = (appData.wraps || []).find(w => String(w.periodId) === String(p.id) || w.id === `wrap_${p.id}`);
-    if (alreadyWrapped) return;
-    generateWrapped(p, nextPeriod.start);
-    generated++;
-  });
-  if (generated > 0) {
-    save();
-    renderAll();
-    showToast(`${generated} wrap${generated > 1 ? 's' : ''} generated 🪷`);
-  } else {
-    showToast('nothing to generate');
-  }
-}
 
 // ── WRAPPED NAVIGATION ─────────────────────────────────────────────────────
 function openWrappedHome() {
