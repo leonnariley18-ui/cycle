@@ -1625,6 +1625,7 @@ body {
           <div class="data-row"><span>cloud sync</span><button class="data-action" onclick="manualSync()">sync now ↻</button></div>
           <div class="data-row"><span>export backup</span><button class="data-action" onclick="exportData()">download</button></div>
           <div class="data-row" id="backfill-wrap-row" style="display:none"><span>generate missing wraps</span><button class="data-action" onclick="backfillWraps()">generate 🪷</button></div>
+          <div class="data-row" id="register-wrap-row"><span>register new wrap</span><button class="data-action" onclick="registerLatestWrap()">register 🪷</button></div>
           <div class="data-row danger"><span>reset to baseline</span><button class="data-action danger" id="clear-btn" onclick="confirmClear()">reset</button></div>
         </div>
       </div>
@@ -1904,6 +1905,7 @@ async function launchApp() {
     if (!appData.journal)  appData.journal  = {};
     if (!appData.spotting) appData.spotting  = [];
     if (!appData.wraps)    appData.wraps     = [];
+    if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
     setSyncDot('');
   } catch(e) {
     setSyncDot('error');
@@ -1955,7 +1957,6 @@ async function loadFromSupabase() {
         symptoms:     safeParseObject(row.symptoms),
         journal:      safeParseObject(row.journal),
         spotting:     safeParseArray(row.spotting),
-        wraps:        safeParseArray(row.wraps),
         activePeriod: row.active_period || null,
         settings:     safeParseObject(row.settings)    && Object.keys(safeParseObject(row.settings)).length ? safeParseObject(row.settings) : TEMPDROP_DEFAULT.settings
       };
@@ -1977,7 +1978,6 @@ async function saveToSupabase(data) {
       symptoms:      data.symptoms || {},
       journal:       data.journal  || {},
       spotting:      data.spotting || [],
-      wraps:         data.wraps    || [],
       active_period: data.activePeriod || null,
       settings:      data.settings,
       updated_at:    new Date().toISOString()
@@ -2048,7 +2048,7 @@ const TEMPDROP_DEFAULT = {
     {id:1021,start:"2026-04-03",end:"2026-04-09",dailyFlow:[],notes:"",source:"tempdrop"}
   ],
   activePeriod: null,
-  settings: { cycleLength: 24, periodLength: 6 },
+  settings: { cycleLength: 24, periodLength: 6, wrappedPeriods: [] },
   symptoms: {},
   journal: {}
 };
@@ -3198,8 +3198,9 @@ function generateWrapped(period, nextPeriodStart) {
 function updateWrapNotif() {
   const dot = document.getElementById('wrap-notif-dot');
   if (!dot) return;
-  const unviewed = (appData.wraps || []).filter(w => !w.viewed);
-  dot.style.display = unviewed.length ? 'block' : 'none';
+  // Show dot when there are wrapped cycles available
+  const wrappedPeriods = appData.settings?.wrappedPeriods || [];
+  dot.style.display = wrappedPeriods.length ? 'block' : 'none';
 }
 
 function updateBackfillRow() {
@@ -3290,30 +3291,39 @@ function goBackFromWrapped() { goBackFromWrappedHome(); }
 function renderWrappedHome() {
   const body = document.getElementById('wrapped-home-body');
   if (!body) return;
-  const wraps = (appData.wraps || []).slice().sort((a,b) => b.cycleStart.localeCompare(a.cycleStart));
   const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const wrappedPeriods = appData.settings?.wrappedPeriods || [];
 
-  if (!wraps.length && !appData.activePeriod) {
-    body.innerHTML = '<div class="empty"><div class="empty-big">nothing yet</div><div class="empty-small">start a new period to generate your first wrap</div></div>';
+  if (!wrappedPeriods.length && !appData.activePeriod) {
+    body.innerHTML = '<div class="empty"><div class="empty-big">nothing yet</div><div class="empty-small">cycles will appear here as they complete</div></div>';
     return;
   }
 
+  const WRAPS_BASE_URL = 'https://leonnariley18-ui.github.io/cycle/wraps/';
   let html = '';
-  wraps.forEach(wrap => {
-    const wrapNum = (appData.wraps || []).indexOf(wrap) + 1;
-    const pNum = chronological.findIndex(p =>
-      String(p.id) === String(wrap.periodId) || p.id === parseInt(wrap.id.replace('wrap_',''))
-    ) + 1;
-    const startDisp = parse(wrap.cycleStart).toLocaleDateString('en-US', {month:'short', day:'numeric'}).toLowerCase();
-    const endDisp   = parse(wrap.cycleEnd).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}).toLowerCase();
-    html += `<div class="wrap-archive-row" onclick="openWrappedDetail('${wrap.id}')">
+
+  // Show each wrapped period, newest first
+  const sortedWrapped = [...wrappedPeriods].reverse();
+  sortedWrapped.forEach((periodId, revIdx) => {
+    const cycleNum = wrappedPeriods.length - revIdx;
+    const period = chronological.find(p => String(p.id) === String(periodId));
+    if (!period) return;
+    const pNum = chronological.findIndex(p => String(p.id) === String(periodId)) + 1;
+    const startDisp = parse(period.start).toLocaleDateString('en-US', {month:'short', day:'numeric'}).toLowerCase();
+    // cycle end = start of next period
+    const nextPeriod = chronological[chronological.findIndex(p => String(p.id) === String(periodId)) + 1];
+    const endDisp = nextPeriod
+      ? parse(nextPeriod.start).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}).toLowerCase()
+      : (period.end ? parse(period.end).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}).toLowerCase() : '—');
+    const standaloneUrl = `${WRAPS_BASE_URL}cycle-${cycleNum}.html`;
+
+    html += `<div class="wrap-archive-row" onclick="openWrappedEntry(null, '${standaloneUrl}', ${cycleNum})">
       <div class="wrap-archive-left">
-        <span class="wrap-archive-num">cycle ${wrapNum}</span>
-        <span class="wrap-archive-period">period ${pNum > 0 ? pNum : '—'}</span>
+        <span class="wrap-archive-num">cycle ${cycleNum}</span>
+        <span class="wrap-archive-period">period ${pNum}</span>
         <span class="wrap-archive-dates">${startDisp} — ${endDisp}</span>
       </div>
       <div class="wrap-archive-right">
-        ${!wrap.viewed ? '<div class="wrap-archive-dot"></div>' : ''}
         <span class="wrap-archive-chevron">›</span>
       </div>
     </div>`;
@@ -3331,6 +3341,19 @@ function renderWrappedHome() {
   }
 
   body.innerHTML = html || '<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--text-xsoft);font-style:italic;">no wraps yet</div>';
+}
+
+async function openWrappedEntry(wrapId, standaloneUrl, cycleNum) {
+  haptic('light');
+  // Open standalone page — if it doesn't exist, silent no-op
+  try {
+    const res = await fetch(standaloneUrl, { method: 'HEAD' });
+    if (res.ok) {
+      window.open(standaloneUrl, '_blank');
+    }
+  } catch(e) {
+    // No standalone page yet — do nothing
+  }
 }
 
 function renderWrappedPage(wrap) {
@@ -3530,6 +3553,30 @@ function renderWrappedPage(wrap) {
   if (detailEl) detailEl.innerHTML = html;
 }
 
+// ── WRAPPED PERIOD REGISTRATION ───────────────────────────────────────────
+function registerWrappedPeriod(periodId) {
+  if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
+  const id = String(periodId);
+  if (!appData.settings.wrappedPeriods.some(p => String(p) === id)) {
+    appData.settings.wrappedPeriods.push(periodId);
+    save();
+    renderAll();
+    showToast('cycle registered 🪷');
+  }
+}
+
+function registerLatestWrap() {
+  if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
+  const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  // Find the most recent completed non-tempdrop period not yet registered
+  const eligible = chronological
+    .filter(p => p.end && !p.source && p.id !== appData.activePeriod)
+    .filter(p => !appData.settings.wrappedPeriods.some(id => String(id) === String(p.id)));
+  const latest = eligible[eligible.length - 1];
+  if (!latest) { showToast('nothing new to register'); return; }
+  registerWrappedPeriod(latest.id);
+}
+
 // Returns the 1-based cycle number for a given period id, based on chronological order of all periods.
 function getCycleNumber(periodId) {
   const sorted = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
@@ -3560,7 +3607,6 @@ function renderHistory() {
   const pl = avgPeriodLength();
   const hasActivePeriod = !!appData.activePeriod;
   const mostRecentId = chronological[chronological.length - 1]?.id;
-  const wraps = appData.wraps || [];
 
   el.innerHTML = sorted.map(p => {
     const periodNum = chronological.findIndex(c => c.id === p.id) + 1;
@@ -3569,13 +3615,10 @@ function renderHistory() {
     const isEditing = editingPeriodId === p.id;
     const isEditable = !isTD && (isActive || (!hasActivePeriod && p.id === mostRecentId));
     const dur = p.end ? diffDays(parse(p.start), parse(p.end)) + ' days' : isActive ? 'in progress' : `~${pl} days`;
-    const hasWrap = wraps.some(w =>
-      String(w.periodId) === String(p.id) ||
-      w.id === `wrap_${p.id}` ||
-      w.id === `wrap_${String(p.id)}`
-    );
+    const wrappedPeriods = appData.settings?.wrappedPeriods || [];
+    const hasWrap = wrappedPeriods.some(id => String(id) === String(p.id));
     const cycleNum = hasWrap
-      ? wraps.findIndex(w => String(w.periodId) === String(p.id) || w.id === `wrap_${p.id}` || w.id === `wrap_${String(p.id)}`) + 1
+      ? wrappedPeriods.findIndex(id => String(id) === String(p.id)) + 1
       : null;
 
     let editForm = '';
@@ -3794,6 +3837,7 @@ async function manualSync() {
   if (!appData.journal)  appData.journal  = {};
   if (!appData.spotting) appData.spotting  = [];
   if (!appData.wraps)    appData.wraps     = [];
+  if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
   appData.periods.forEach(p => {
     if (p.end && !p.source && p.endedByUser === undefined) p.endedByUser = true;
   });
