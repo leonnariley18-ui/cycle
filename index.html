@@ -1667,7 +1667,6 @@ body {
       <span class="nav-label">Calendar</span>
     </button>
     <button class="nav-btn" id="log-nav-btn" onclick="goTo('log',this)">
-      <div class="nav-notif" id="wrap-notif-dot" style="display:none;"></div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
       <span class="nav-label">Log</span>
     </button>
@@ -2395,7 +2394,9 @@ function getPhaseForDay(dateStr) {
 // during an extended luteal phase correctly remain labeled luteal, not
 // menstrual day 1 of a predicted new cycle.
 function getCycleDayForDate(dateStr) {
-  const sorted = [...appData.periods].filter(p=>p.end).sort((a,b)=>a.start.localeCompare(b.start));
+  // Include active period even if no end date yet
+  const sorted = [...appData.periods].filter(p => p.end || p.id === appData.activePeriod)
+    .sort((a,b) => a.start.localeCompare(b.start));
   if (!sorted.length) return null;
   let lastPeriod = null;
   for (let i = sorted.length-1; i >= 0; i--) {
@@ -3194,11 +3195,7 @@ function generateWrapped(period, nextPeriodStart) {
 }
 
 function updateWrapNotif() {
-  const dot = document.getElementById('wrap-notif-dot');
-  if (!dot) return;
-  // Show dot when there are wrapped cycles available
-  const wrappedPeriods = appData.settings?.wrappedPeriods || [];
-  dot.style.display = wrappedPeriods.length ? 'block' : 'none';
+  // dot removed — wrapped accessible via 🩸 always
 }
 
 
