@@ -2181,21 +2181,41 @@ function dayName(s) {
 
 // ── AVERAGES ───────────────────────────────────────────────────────────────
 function avgCycleLength() {
-  const sorted = [...appData.periods].sort((a,b)=>a.start.localeCompare(b.start));
+  const sorted = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
   if (sorted.length < 2) return appData.settings.cycleLength;
   const gaps = [];
-  for (let i=1;i<sorted.length;i++) {
+  for (let i = 1; i < sorted.length; i++) {
     const g = diffDays(parse(sorted[i-1].start), parse(sorted[i].start));
-    if (g>15&&g<55) gaps.push(g);
+    if (g > 15 && g < 55) gaps.push(g);
   }
-  return gaps.length ? Math.round(gaps.reduce((a,b)=>a+b,0)/gaps.length) : appData.settings.cycleLength;
+  if (!gaps.length) return appData.settings.cycleLength;
+  // Weighted average: most recent cycles count more
+  // Last 3 → weight 3, next 3 → weight 2, everything older → weight 1
+  const weighted = gaps.map((g, i) => {
+    const fromEnd = gaps.length - 1 - i;
+    const w = fromEnd < 3 ? 3 : fromEnd < 6 ? 2 : 1;
+    return { g, w };
+  });
+  const totalWeight = weighted.reduce((a, b) => a + b.w, 0);
+  const weightedSum  = weighted.reduce((a, b) => a + b.g * b.w, 0);
+  return Math.round(weightedSum / totalWeight);
 }
 
 function avgPeriodLength() {
-  const withEnd = appData.periods.filter(p=>p.end);
+  const withEnd = appData.periods.filter(p => p.end && !p.source);
   if (!withEnd.length) return appData.settings.periodLength;
-  const durs = withEnd.map(p=>diffDays(parse(p.start),parse(p.end))).filter(d=>d>0&&d<14);
-  return durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : appData.settings.periodLength;
+  const sorted = withEnd.sort((a,b) => a.start.localeCompare(b.start));
+  const durs = sorted.map(p => diffDays(parse(p.start), parse(p.end))).filter(d => d > 0 && d < 14);
+  if (!durs.length) return appData.settings.periodLength;
+  // Weighted: last 3 app-logged periods → weight 3, next 3 → weight 2, older → weight 1
+  const weighted = durs.map((d, i) => {
+    const fromEnd = durs.length - 1 - i;
+    const w = fromEnd < 3 ? 3 : fromEnd < 6 ? 2 : 1;
+    return { d, w };
+  });
+  const totalWeight = weighted.reduce((a, b) => a + b.w, 0);
+  const weightedSum  = weighted.reduce((a, b) => a + b.d * b.w, 0);
+  return Math.round(weightedSum / totalWeight);
 }
 
 // ── ACTIVE PERIOD ──────────────────────────────────────────────────────────
@@ -2310,7 +2330,7 @@ function getCurrentCycleInfo() {
   if (inActivePeriod) {
     phase='menstrual';
     dayInPhase = diffDays(parse(active.start), now) + 1;
-    phaseDur = pl;
+    phaseDur = dayInPhase; // don't cap against average — show actual day
   } else if (lastPeriod.endedByUser) {
     const effectivePL = actualPL;
     const daysSinceEnd = diffDays(parse(lastPeriod.end), now);
@@ -2356,11 +2376,17 @@ function getPhaseForDay(dateStr) {
   const cl=avgCycleLength(), pl=avgPeriodLength(), ovD=cl-14;
   const target=parse(dateStr);
 
-  // Check actual logged period days first — this handles new periods correctly
+  // Check actual logged period days first
+  // For active period: no end date means still bleeding — stay menstrual
   for (const p of sorted) {
-    const ps=parse(p.start);
-    const pe=p.end?parse(p.end):new Date(ps.getTime()+(pl-1)*86400000);
-    if (target>=ps&&target<=pe) return 'menstrual';
+    const ps = parse(p.start);
+    if (p.id === appData.activePeriod) {
+      // Active period has no end — if date is on or after start, it's menstrual
+      if (target >= ps) return 'menstrual';
+    } else {
+      const pe = p.end ? parse(p.end) : new Date(ps.getTime() + (pl-1)*86400000);
+      if (target >= ps && target <= pe) return 'menstrual';
+    }
   }
 
   // Find the most recent period start before this date
