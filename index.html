@@ -378,6 +378,44 @@ body {
   padding: 3px 10px; border-radius: 20px; font-weight: 500;
 }
 
+/* ── Event log ── */
+.event-log-btn {
+  width: 100%; padding: 10px 14px; background: transparent;
+  border: 1px dashed var(--border); border-radius: 12px;
+  font-size: 12px; color: var(--text-xsoft);
+  font-family: 'DM Sans', sans-serif; font-weight: 300;
+  cursor: pointer; text-align: left; margin-top: 10px;
+  display: flex; align-items: center; gap: 8px; transition: all 0.18s;
+}
+.event-log-btn:active { background: var(--bg3); }
+.event-marker-row { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 10px; }
+.event-marker-row:last-child { border-bottom: none; padding-bottom: 0; }
+.event-pip { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.event-marker-content { flex: 1; min-width: 0; }
+.event-marker-title { font-size: 13px; color: var(--text); margin-bottom: 3px; }
+.event-marker-meta { font-size: 11px; color: var(--text-xsoft); line-height: 1.5; }
+.event-marker-tags { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+.event-marker-tag { font-size: 9px; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.04em; }
+.event-del-btn { background: none; border: none; color: var(--text-xsoft); cursor: pointer; font-size: 16px; padding: 2px 4px; transition: color 0.2s; flex-shrink: 0; }
+.event-del-btn:hover { color: var(--accent); }
+.event-category-pills { display: flex; gap: 7px; }
+.event-cat-pill {
+  flex: 1; text-align: center; padding: 8px 6px;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  font-size: 12px; color: var(--text-soft); background: var(--bg);
+  cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+}
+.event-cat-pill.sel-ill { background: var(--menstrual-bg); border-color: var(--menstrual); color: var(--menstrual); }
+.event-cat-pill.sel-str { background: var(--luteal-bg); border-color: var(--luteal); color: var(--luteal); }
+.event-phase-span { margin-top: 8px; }
+.event-phase-span-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; }
+.event-phase-note { font-size: 11px; color: var(--text-xsoft); font-style: italic; line-height: 1.55; }
+.event-toggle-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.event-toggle-label { font-size: 13px; color: var(--text-soft); line-height: 1.4; }
+.event-toggle-sub { font-size: 11px; color: var(--text-xsoft); margin-top: 3px; line-height: 1.45; font-style: italic; }
+.cal-event-dot { position: absolute; top: 1px; right: 1px; width: 5px; height: 5px; border-radius: 50%; }
+
 .phase-transition-banner {
   position: fixed;
   top: 0; left: 50%;
@@ -1480,7 +1518,7 @@ body {
 
   <!-- CALENDAR -->
   <div class="screen page" id="page-calendar">
-    <div class="page-title">calendar 🗓️</div>
+    <div class="page-title">calendar <span class="crystal-ball-emoji" onclick="openEventLog()" style="font-size:28px;">🗓️</span></div>
     <div class="page-sub">your cycle at a glance</div>
     <div class="card" style="padding: 24px 16px;overflow:hidden">
       <div class="cal-header">
@@ -1500,6 +1538,52 @@ body {
         <div class="legend-item"><div class="legend-dot" style="border:1.5px dashed var(--menstrual);background:transparent"></div>Predicted</div>
       </div>
     </div>
+    <div id="cal-events-section"></div>
+  </div>
+
+  <!-- EVENT LOG FORM PAGE -->
+  <div class="screen page" id="page-event-log">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:28px;cursor:pointer;" onclick="goBackFromEventLog()">
+      <span style="font-size:22px;color:var(--text-xsoft);">‹</span>
+      <span style="font-size:12px;color:var(--text-xsoft);letter-spacing:0.04em;">calendar</span>
+    </div>
+    <div class="page-title" style="font-size:26px;margin-bottom:28px;">log an event 📍</div>
+    <div class="card">
+      <div style="margin-bottom:16px;">
+        <div class="card-label" style="margin-bottom:10px;">what kind of event</div>
+        <div class="event-category-pills">
+          <div class="event-cat-pill" id="evcat-illness" onclick="selectEventCat('illness')">illness</div>
+          <div class="event-cat-pill" id="evcat-stress" onclick="selectEventCat('stress')">high stress</div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:16px 0;"></div>
+      <div style="margin-bottom:16px;">
+        <div class="card-label" style="margin-bottom:10px;">when</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="date" id="event-start" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--text);outline:none;-webkit-appearance:none;color-scheme:dark;">
+          <span style="font-size:12px;color:var(--text-xsoft);flex-shrink:0;">→</span>
+          <input type="date" id="event-end" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--text);outline:none;-webkit-appearance:none;color-scheme:dark;">
+        </div>
+        <div class="event-phase-span" id="event-phase-span"></div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:16px 0;" id="event-fever-divider" style="display:none;"></div>
+      <div style="margin-bottom:16px;" id="event-fever-section" style="display:none;">
+        <div class="event-toggle-row">
+          <div>
+            <div class="event-toggle-label">involved a fever</div>
+            <div class="event-toggle-sub">fever is most likely to shift your cycle timing</div>
+          </div>
+          <div class="flow-tap" id="event-fever-toggle" onclick="toggleEventFever()" style="flex:none;padding:7px 14px;font-size:12px;min-width:60px;text-align:center;">no</div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:16px 0;"></div>
+      <div style="margin-bottom:16px;">
+        <div class="card-label" style="margin-bottom:10px;">notes <span style="color:var(--text-xsoft);text-transform:none;letter-spacing:0;font-size:11px;">(optional)</span></div>
+        <textarea id="event-notes" placeholder="anything worth remembering…" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--text);outline:none;resize:none;height:80px;color-scheme:dark;line-height:1.55;"></textarea>
+      </div>
+      <button class="btn-primary" id="event-save-btn" onclick="saveEvent()">save event</button>
+    </div>
+    <div id="event-log-list-section"></div>
   </div>
 
   <!-- LOG -->
@@ -1903,6 +1987,7 @@ async function launchApp() {
     if (!appData.journal)  appData.journal  = {};
     if (!appData.spotting) appData.spotting  = [];
     if (!appData.wraps)    appData.wraps     = [];
+    if (!appData.events)   appData.events    = [];
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
     setSyncDot('');
   } catch(e) {
@@ -1955,6 +2040,7 @@ async function loadFromSupabase() {
         symptoms:     safeParseObject(row.symptoms),
         journal:      safeParseObject(row.journal),
         spotting:     safeParseArray(row.spotting),
+        events:       safeParseArray(row.events),
         activePeriod: row.active_period || null,
         settings:     safeParseObject(row.settings)    && Object.keys(safeParseObject(row.settings)).length ? safeParseObject(row.settings) : TEMPDROP_DEFAULT.settings
       };
@@ -1976,6 +2062,7 @@ async function saveToSupabase(data) {
       symptoms:      data.symptoms || {},
       journal:       data.journal  || {},
       spotting:      data.spotting || [],
+      events:        data.events   || [],
       active_period: data.activePeriod || null,
       settings:      data.settings,
       updated_at:    new Date().toISOString()
@@ -2048,7 +2135,8 @@ const TEMPDROP_DEFAULT = {
   activePeriod: null,
   settings: { cycleLength: 24, periodLength: 6, wrappedPeriods: [] },
   symptoms: {},
-  journal: {}
+  journal: {},
+  events: []
 };
 
 let appData = JSON.parse(JSON.stringify(TEMPDROP_DEFAULT));
@@ -2082,6 +2170,7 @@ window.onload = async () => {
 function renderAll() {
   renderToday();
   renderCalendar();
+  renderCalendarEventSection();
   renderLogTab();
   renderHistory();
   renderInsights();
@@ -2939,7 +3028,7 @@ function renderJournalTab() {
       `<tr><td>${r.name}</td><td class="${r.cls}">${r.status}</td></tr>`
     ).join('');
     const firstEntryHTML = firstEntry ? `
-      <div class="journal-entry-preview-meta">${parse(firstEntry.dateStr).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase()} · day ${firstEntry.dayInPhase}</div>
+      <div class="journal-entry-preview-meta">${fmtDisplay(firstEntry.dateStr)} · day ${firstEntry.dayInPhase}</div>
       <div class="journal-entry-preview-text">"${firstEntry.text}"</div>
     ` : `<div class="journal-no-entries">no entries yet</div>`;
     const restHTML = restEntries.length ? `
@@ -2950,7 +3039,7 @@ function renderJournalTab() {
       <div class="journal-entries-expanded" id="journal-expand-${phase}">
         ${restEntries.map(e=>`
           <div class="journal-entry-item">
-            <div class="journal-entry-item-meta">${parse(e.dateStr).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase()} · day ${e.dayInPhase}</div>
+            <div class="journal-entry-item-meta">${fmtDisplay(e.dateStr)} · day ${e.dayInPhase}</div>
             <div class="journal-entry-item-text">"${e.text}"</div>
           </div>
         `).join('')}
@@ -3027,6 +3116,18 @@ function renderCalendar() {
     }
   }
 
+  // Build event date set for dots
+  const eventDates = {};
+  (appData.events || []).forEach(ev => {
+    let cur = new Date(parse(ev.start));
+    const end = parse(ev.end || ev.start);
+    while (cur <= end) {
+      const ds = fmt(cur);
+      eventDates[ds] = ev.type;
+      cur = new Date(cur.getTime() + 86400000);
+    }
+  });
+
   let html='<div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div><div class="cal-dow">Su</div>';
   for(let i=0;i<firstDow;i++) html+='<div class="cal-day empty"></div>';
 
@@ -3047,7 +3148,11 @@ function renderCalendar() {
       else if(phase==='ovulation') cls+=' phase-ovulation-day';
       else if(phase==='luteal') cls+=' phase-luteal-day';
     }
-    html+=`<div class="${cls}">${d}</div>`;
+    const evType = eventDates[ds];
+    const evDot = evType
+      ? `<span class="cal-event-dot" style="background:${evType==='illness'?'var(--menstrual)':'var(--luteal)'};"></span>`
+      : '';
+    html+=`<div class="${cls}" style="position:relative;">${d}${evDot}</div>`;
   }
   grid.innerHTML=html;
 }
@@ -3204,6 +3309,11 @@ function generateWrapped(period, nextPeriodStart) {
     .filter(e => e.date >= cycleStart && e.date < cycleEnd)
     .map(e => e.id);
 
+  // Event log ids in cycle window
+  const eventIds = (appData.events || [])
+    .filter(e => e.start >= cycleStart && e.start < cycleEnd)
+    .map(e => e.id);
+
   const wrap = {
     id:              `wrap_${period.id}`,
     periodId:        period.id,
@@ -3216,6 +3326,7 @@ function generateWrapped(period, nextPeriodStart) {
     symsByPhase,
     textureSymIds,
     spottingIds,
+    eventIds,
   };
   appData.wraps.push(wrap);
 }
@@ -3257,6 +3368,7 @@ function openWrappedDetail(wrapId) {
   wrap.symsByPhase      = wrap.symsByPhase      || {};
   wrap.textureSymIds    = wrap.textureSymIds     || [];
   wrap.spottingIds      = wrap.spottingIds       || [];
+  wrap.eventIds         = wrap.eventIds          || [];
   try {
     renderWrappedPage(wrap);
     showPage('page-wrapped-detail');
@@ -3390,6 +3502,26 @@ function renderWrappedPage(wrap) {
       ? `<div class="wrapped-stat-compare longer">+${diff}${unit} vs avg</div>`
       : `<div class="wrapped-stat-compare shorter">${diff}${unit} vs avg</div>`;
 
+  // Resolve full objects from stored ids — must come before comparisons
+  const symsByPhaseFull = {};
+  Object.entries(wrap.symsByPhase || {}).forEach(([ph, ids]) => {
+    symsByPhaseFull[ph] = ids.map(sid => SYMPTOMS.find(s=>s.id===sid)).filter(Boolean);
+  });
+  const textureSymptomsAll = (wrap.textureSymIds || [])
+    .map(sid => SYMPTOMS.find(s=>s.id===sid)).filter(Boolean);
+  const spottingInCycle = (appData.spotting || [])
+    .filter(e => (wrap.spottingIds||[]).includes(e.id))
+    .sort((a,b) => a.date.localeCompare(b.date));
+  const period = appData.periods.find(p =>
+    String(p.id) === String(wrap.periodId) || `wrap_${p.id}` === wrap.id
+  );
+  const flowDays = (period?.dailyFlow || []).sort((a,b)=>a.date.localeCompare(b.date));
+  const textureEntry = wrap.narrativeEntries.slice()
+    .sort((a,b) => {
+      const ps = {luteal:3,menstrual:2,follicular:1,ovulation:0};
+      return (ps[b.phase]||0)-(ps[a.phase]||0) || b.text.length-a.text.length;
+    })[0];
+
   // Comparisons
   const comparisons = [];
   const prevWraps = (appData.wraps || []).filter(w => w.id !== wrap.id);
@@ -3406,26 +3538,6 @@ function renderWrappedPage(wrap) {
   } else if (wrap.periodDays && periodDiff <= -2) {
     comparisons.push({ color:'var(--follicular)', text:`shorter period than usual at ${wrap.periodDays} days. wrapped up faster than your recent average.` });
   }
-
-  // Resolve full objects from stored ids
-  const symsByPhaseFull = {};
-  Object.entries(wrap.symsByPhase || {}).forEach(([ph, ids]) => {
-    symsByPhaseFull[ph] = ids.map(sid => SYMPTOMS.find(s=>s.id===sid)).filter(Boolean);
-  });
-  const textureSymptomsAll = (wrap.textureSymIds || [])
-    .map(sid => SYMPTOMS.find(s=>s.id===sid)).filter(Boolean);
-  const spottingInCycle = (appData.spotting || [])
-    .filter(e => (wrap.spottingIds||[]).includes(e.id))
-    .sort((a,b) => a.date.localeCompare(b.date));
-  const period = appData.periods.find(p => 
-    String(p.id) === String(wrap.periodId) || `wrap_${p.id}` === wrap.id
-  );
-  const flowDays = (period?.dailyFlow || []).sort((a,b)=>a.date.localeCompare(b.date));
-  const textureEntry = wrap.narrativeEntries.slice()
-    .sort((a,b) => {
-      const ps = {luteal:3,menstrual:2,follicular:1,ovulation:0};
-      return (ps[b.phase]||0)-(ps[a.phase]||0) || b.text.length-a.text.length;
-    })[0];
 
   const startDisp = parse(wrap.cycleStart).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
   const endDisp   = parse(wrap.cycleEnd).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
@@ -3517,7 +3629,7 @@ function renderWrappedPage(wrap) {
     html += `<div class="wrapped-card"><div class="wrapped-eyebrow">spotting · ${spottingInCycle.length} event${spottingInCycle.length>1?'s':''}</div>
       ${spottingInCycle.map(ev=>{
         const pip=COLOR_HEX_W[ev.color]||'#888';
-        const dl=parse(ev.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
+        const dl=fmtDisplay(ev.date);
         const when=ev.when==='before'?'pre-period':ev.when==='mid'?'mid-cycle':ev.when==='after'?'post-period':'';
         const daySyms=appData.symptoms?.[ev.date]||[];
         const vibes=daySyms.length?`<div class="wrapped-spot-vibes">${daySyms.map(sid=>{
@@ -3530,6 +3642,43 @@ function renderWrappedPage(wrap) {
           <span class="wrapped-spot-meta">${dl}${ev.color?' · '+ev.color:''}${when?' · '+when:''}</span></div>
           ${ev.notes?`<div class="wrapped-spot-notes">${ev.notes}</div>`:''}
           ${vibes}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // Events (illness / stress)
+  const eventsInCycle = (appData.events || [])
+    .filter(e => (wrap.eventIds||[]).includes(e.id))
+    .sort((a,b) => a.start.localeCompare(b.start));
+
+  if (eventsInCycle.length) {
+    const PHASE_BADGE_W = {
+      menstrual:  { bg:'var(--menstrual-bg)',  color:'var(--menstrual)',  emoji:'🌑' },
+      follicular: { bg:'var(--follicular-bg)', color:'var(--follicular)', emoji:'🌱' },
+      ovulation:  { bg:'var(--ovulation-bg)',  color:'var(--ovulation)',  emoji:'✨' },
+      luteal:     { bg:'var(--luteal-bg)',      color:'var(--luteal)',     emoji:'🌙' },
+    };
+    html += `<div class="wrapped-card"><div class="wrapped-eyebrow">events · ${eventsInCycle.length} logged</div>
+      ${eventsInCycle.map(ev => {
+        const pip = ev.type === 'illness' ? 'var(--menstrual)' : 'var(--luteal)';
+        const isSameDay = ev.start === ev.end;
+        const dateLabel = isSameDay ? fmtDisplay(ev.start) : `${fmtDisplay(ev.start)} – ${fmtDisplay(ev.end)}`;
+        const phases = getPhasesForRange(ev.start, ev.end);
+        const phaseTags = phases.map(ph => {
+          const b = PHASE_BADGE_W[ph];
+          return `<span class="wrapped-spot-vibe" style="background:${b.bg};color:${b.color};">${b.emoji} ${ph}</span>`;
+        }).join('');
+        const feverTag = ev.fever
+          ? `<span class="wrapped-spot-vibe" style="background:var(--menstrual-bg);color:var(--menstrual);">fever</span>`
+          : '';
+        return `<div class="wrapped-spot-event">
+          <div class="wrapped-spot-top">
+            <div class="wrapped-spot-pip" style="background:${pip};"></div>
+            <span class="wrapped-spot-meta">${ev.type === 'illness' ? 'illness' : 'high stress'} · ${dateLabel}</span>
+          </div>
+          ${ev.notes ? `<div class="wrapped-spot-notes">"${ev.notes}"</div>` : ''}
+          <div class="wrapped-spot-vibes" style="margin-top:5px;">${feverTag}${phaseTags}</div>
         </div>`;
       }).join('')}
     </div>`;
@@ -3824,6 +3973,7 @@ async function manualSync() {
   if (!appData.journal)  appData.journal  = {};
   if (!appData.spotting) appData.spotting  = [];
   if (!appData.wraps)    appData.wraps     = [];
+  if (!appData.events)   appData.events    = [];
   if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
   appData.periods.forEach(p => {
     if (p.end && !p.source && p.endedByUser === undefined) p.endedByUser = true;
@@ -3864,6 +4014,7 @@ function clearAll(){
   appData.journal  = {};
   appData.spotting = [];
   appData.wraps    = [];
+  appData.events   = [];
   appData.settings = fresh.settings;
   symptomViewDate = fmt(new Date());
   save(); renderAll(); showToast('Reset to baseline 🌑');
@@ -4228,6 +4379,348 @@ function toggleSpottingMore(key) {
   if (!body || !arrow) return;
   body.classList.toggle('open');
   arrow.classList.toggle('open');
+}
+
+// ── EVENT LOG ──────────────────────────────────────────────────────────────
+let eventFormState = { cat: null, fever: false };
+
+function openEventLog() {
+  haptic('light');
+  eventFormState = { cat: null, fever: false };
+  const now = fmt(today());
+  document.getElementById('event-start').value = now;
+  document.getElementById('event-end').value   = now;
+  document.getElementById('event-notes').value = '';
+  document.getElementById('event-fever-toggle').textContent = 'no';
+  document.getElementById('event-fever-toggle').classList.remove('active');
+  document.getElementById('evcat-illness').className = 'event-cat-pill';
+  document.getElementById('evcat-stress').className  = 'event-cat-pill';
+  document.getElementById('event-fever-section').style.display = 'none';
+  document.getElementById('event-fever-divider').style.display = 'none';
+  document.getElementById('event-save-btn').style.background = 'var(--accent)';
+  updateEventPhaseSpan();
+  renderEventLogList();
+  document.getElementById('event-start').addEventListener('change', updateEventPhaseSpan);
+  document.getElementById('event-end').addEventListener('change', updateEventPhaseSpan);
+  showPage('page-event-log');
+}
+
+function goBackFromEventLog() {
+  haptic('light');
+  showPage('page-calendar');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.nav-btn[onclick*="calendar"]').classList.add('active');
+}
+
+function selectEventCat(cat) {
+  haptic('light');
+  eventFormState.cat = cat;
+  document.getElementById('evcat-illness').className = 'event-cat-pill' + (cat === 'illness' ? ' sel-ill' : '');
+  document.getElementById('evcat-stress').className  = 'event-cat-pill' + (cat === 'stress'  ? ' sel-str' : '');
+  const showFever = cat === 'illness';
+  document.getElementById('event-fever-section').style.display = showFever ? 'block' : 'none';
+  document.getElementById('event-fever-divider').style.display = showFever ? 'block' : 'none';
+  document.getElementById('event-save-btn').style.background = cat === 'stress' ? 'var(--luteal)' : 'var(--accent)';
+  if (cat !== 'illness') { eventFormState.fever = false; }
+}
+
+function toggleEventFever() {
+  haptic('light');
+  eventFormState.fever = !eventFormState.fever;
+  const btn = document.getElementById('event-fever-toggle');
+  btn.textContent = eventFormState.fever ? 'yes' : 'no';
+  if (eventFormState.fever) btn.classList.add('active');
+  else btn.classList.remove('active');
+}
+
+function getPhasesForRange(startStr, endStr) {
+  if (!startStr || !endStr) return [];
+  const s = parse(startStr), e = parse(endStr);
+  if (s > e) return [];
+  const phasesSeen = [];
+  let cur = new Date(s);
+  while (cur <= e) {
+    const ph = getPhaseForDay(fmt(cur));
+    if (ph && !phasesSeen.includes(ph)) phasesSeen.push(ph);
+    cur = new Date(cur.getTime() + 86400000);
+  }
+  return phasesSeen;
+}
+
+const EVENT_PHASE_NOTES = {
+  illness: {
+    menstrual:  'illness during menstrual can intensify cramping and fatigue — your body is already working hard.',
+    follicular: 'illness in follicular may delay ovulation — the body can deprioritize reproduction under stress.',
+    ovulation:  'illness around ovulation may suppress or delay the LH surge, shifting your cycle.',
+    luteal:     'illness in luteal is less likely to shift timing — ovulation has already occurred.',
+  },
+  stress: {
+    menstrual:  'stress during menstrual can worsen PMS symptoms, but timing is already set for this cycle.',
+    follicular: 'sustained stress in follicular — where cortisol is highest — is most likely to delay ovulation.',
+    ovulation:  'acute stress at ovulation can suppress the LH surge, potentially pushing your period later.',
+    luteal:     'stress in luteal is unlikely to shift cycle length — ovulation has already occurred.',
+  }
+};
+
+function updateEventPhaseSpan() {
+  const startStr = document.getElementById('event-start')?.value;
+  const endStr   = document.getElementById('event-end')?.value;
+  const container = document.getElementById('event-phase-span');
+  if (!container) return;
+  if (!startStr) { container.innerHTML = ''; return; }
+  const end = endStr || startStr;
+  const phases = getPhasesForRange(startStr, end);
+  if (!phases.length) { container.innerHTML = ''; return; }
+
+  const PHASE_BADGE = {
+    menstrual:  { bg:'var(--menstrual-bg)',  color:'var(--menstrual)',  emoji:'🌑' },
+    follicular: { bg:'var(--follicular-bg)', color:'var(--follicular)', emoji:'🌱' },
+    ovulation:  { bg:'var(--ovulation-bg)',  color:'var(--ovulation)',  emoji:'✨' },
+    luteal:     { bg:'var(--luteal-bg)',      color:'var(--luteal)',     emoji:'🌙' },
+  };
+  const cat = eventFormState.cat || 'illness';
+  const note = phases.length === 1
+    ? (EVENT_PHASE_NOTES[cat]?.[phases[0]] || '')
+    : 'this event spans multiple phases.';
+
+  const tags = phases.map(ph => {
+    const b = PHASE_BADGE[ph];
+    return `<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 9px;border-radius:20px;background:${b.bg};color:${b.color};">${b.emoji} ${ph}</span>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;margin-bottom:${note?'5px':'0'};">${tags}</div>
+    ${note ? `<div style="font-size:11px;color:var(--text-xsoft);font-style:italic;line-height:1.55;">${note}</div>` : ''}`;
+}
+
+function saveEvent() {
+  haptic('medium');
+  if (!eventFormState.cat) { showToast('pick a category first'); return; }
+  const startVal = document.getElementById('event-start').value;
+  const endVal   = document.getElementById('event-end').value;
+  if (!startVal) { showToast('add a start date'); return; }
+  const endFinal = endVal || startVal;
+  if (parse(endFinal) < parse(startVal)) { showToast('end date must be after start'); return; }
+  if (!appData.events) appData.events = [];
+  const entry = {
+    id:       Date.now(),
+    type:     eventFormState.cat,
+    start:    startVal,
+    end:      endFinal,
+    fever:    eventFormState.cat === 'illness' ? eventFormState.fever : false,
+    notes:    document.getElementById('event-notes').value.trim(),
+  };
+  appData.events.push(entry);
+  save();
+  renderAll();
+  showToast('event saved 📍');
+  eventFormState = { cat: null, fever: false };
+  document.getElementById('evcat-illness').className = 'event-cat-pill';
+  document.getElementById('evcat-stress').className  = 'event-cat-pill';
+  document.getElementById('event-start').value = fmt(today());
+  document.getElementById('event-end').value   = fmt(today());
+  document.getElementById('event-notes').value = '';
+  document.getElementById('event-fever-toggle').textContent = 'no';
+  document.getElementById('event-fever-toggle').classList.remove('active');
+  document.getElementById('event-fever-section').style.display = 'none';
+  document.getElementById('event-fever-divider').style.display = 'none';
+  document.getElementById('event-phase-span').innerHTML = '';
+  document.getElementById('event-save-btn').style.background = 'var(--accent)';
+  renderEventLogList();
+}
+
+function deleteEvent(id) {
+  haptic('light');
+  appData.events = (appData.events || []).filter(e => e.id !== id);
+  save();
+  renderAll();
+  renderEventLogList();
+  showToast('event removed');
+}
+
+let editingEventId = null;
+
+function renderEventLogList() {
+  const section = document.getElementById('event-log-list-section');
+  if (!section) return;
+  const events = (appData.events || []).sort((a,b) => b.start.localeCompare(a.start));
+  if (!events.length) { section.innerHTML = ''; return; }
+
+  // Determine current cycle start for edit gating
+  const sortedPeriods = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const currentCycleStart = sortedPeriods.length ? sortedPeriods[sortedPeriods.length-1].start : null;
+
+  const PHASE_BADGE = {
+    menstrual:  { bg:'var(--menstrual-bg)',  color:'var(--menstrual)',  emoji:'🌑' },
+    follicular: { bg:'var(--follicular-bg)', color:'var(--follicular)', emoji:'🌱' },
+    ovulation:  { bg:'var(--ovulation-bg)',  color:'var(--ovulation)',  emoji:'✨' },
+    luteal:     { bg:'var(--luteal-bg)',      color:'var(--luteal)',     emoji:'🌙' },
+  };
+
+  section.innerHTML = `
+    <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-xsoft);margin:20px 0 10px 2px;">all events</div>
+    ${events.map(ev => {
+      const isSameDay = ev.start === ev.end;
+      const dateLabel = isSameDay
+        ? fmtDisplay(ev.start)
+        : `${fmtDisplay(ev.start)} – ${fmtDisplay(ev.end)}`;
+      const phases = getPhasesForRange(ev.start, ev.end);
+      const pipColor = ev.type === 'illness' ? 'var(--menstrual)' : 'var(--luteal)';
+      const phaseTags = phases.map(ph => {
+        const b = PHASE_BADGE[ph];
+        return `<span class="event-marker-tag" style="background:${b.bg};color:${b.color};">${b.emoji} ${ph}</span>`;
+      }).join('');
+      const feverTag = ev.fever
+        ? `<span class="event-marker-tag" style="background:var(--menstrual-bg);color:var(--menstrual);">fever</span>`
+        : '';
+      const isCurrentCycle = currentCycleStart && ev.start >= currentCycleStart;
+      const isEditing = editingEventId === ev.id;
+
+      const editForm = isEditing ? `
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <div class="event-cat-pill${ev.type==='illness'?' sel-ill':''}" onclick="toggleEventEditCat(${ev.id},'illness')" style="flex:1;text-align:center;padding:7px 4px;font-size:11px;">illness</div>
+            <div class="event-cat-pill${ev.type==='stress'?' sel-str':''}" onclick="toggleEventEditCat(${ev.id},'stress')" style="flex:1;text-align:center;padding:7px 4px;font-size:11px;">high stress</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;">
+            <input type="date" id="ev-edit-start-${ev.id}" value="${ev.start}" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:var(--text);outline:none;-webkit-appearance:none;color-scheme:dark;">
+            <span style="font-size:11px;color:var(--text-xsoft);">→</span>
+            <input type="date" id="ev-edit-end-${ev.id}" value="${ev.end}" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:var(--text);outline:none;-webkit-appearance:none;color-scheme:dark;">
+          </div>
+          ${ev.type === 'illness' ? `
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-size:12px;color:var(--text-soft);">fever?</span>
+            <div class="flow-tap${ev.fever?' active':''}" id="ev-edit-fever-${ev.id}" onclick="toggleEventEditFever(${ev.id})" style="flex:none;padding:6px 12px;font-size:11px;">${ev.fever?'yes':'no'}</div>
+          </div>` : ''}
+          <textarea id="ev-edit-notes-${ev.id}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;color:var(--text);outline:none;resize:none;height:64px;color-scheme:dark;line-height:1.5;margin-bottom:10px;" placeholder="notes…">${ev.notes||''}</textarea>
+          <div style="display:flex;gap:7px;">
+            <button onclick="saveEventEdit(${ev.id})" style="flex:1;padding:9px;background:${ev.type==='illness'?'var(--accent)':'var(--luteal)'};color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">save</button>
+            <button onclick="cancelEventEdit()" style="padding:9px 13px;background:transparent;border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--text-xsoft);font-family:'DM Sans',sans-serif;cursor:pointer;">cancel</button>
+          </div>
+        </div>` : '';
+
+      return `<div class="event-marker-row" style="flex-wrap:wrap;">
+        <div class="event-pip" style="background:${pipColor};margin-top:${isEditing?'14px':'4px'};"></div>
+        <div class="event-marker-content">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+            <div>
+              <div class="event-marker-title">${ev.type === 'illness' ? 'illness' : 'high stress'}</div>
+              <div class="event-marker-meta">${dateLabel}</div>
+              ${ev.notes && !isEditing ? `<div class="event-marker-meta" style="margin-top:2px;font-style:italic;">"${ev.notes}"</div>` : ''}
+              ${!isEditing ? `<div class="event-marker-tags">${feverTag}${phaseTags}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:2px;flex-shrink:0;">
+              ${isCurrentCycle && !isEditing ? `<button class="edit-btn" onclick="startEventEdit(${ev.id})" style="font-size:13px;">✏️</button>` : ''}
+              ${!isEditing ? `<button class="event-del-btn" onclick="deleteEvent(${ev.id})">×</button>` : ''}
+            </div>
+          </div>
+          ${editForm}
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+function startEventEdit(id) {
+  haptic('light');
+  editingEventId = id;
+  renderEventLogList();
+}
+
+function cancelEventEdit() {
+  editingEventId = null;
+  renderEventLogList();
+}
+
+function toggleEventEditCat(id, cat) {
+  haptic('light');
+  const ev = (appData.events || []).find(e => e.id === id);
+  if (!ev) return;
+  ev.type = cat;
+  if (cat !== 'illness') ev.fever = false;
+  renderEventLogList();
+}
+
+function toggleEventEditFever(id) {
+  haptic('light');
+  const ev = (appData.events || []).find(e => e.id === id);
+  if (!ev) return;
+  ev.fever = !ev.fever;
+  const btn = document.getElementById(`ev-edit-fever-${id}`);
+  if (btn) {
+    btn.textContent = ev.fever ? 'yes' : 'no';
+    if (ev.fever) btn.classList.add('active');
+    else btn.classList.remove('active');
+  }
+}
+
+function saveEventEdit(id) {
+  haptic('medium');
+  const ev = (appData.events || []).find(e => e.id === id);
+  if (!ev) return;
+  const startEl = document.getElementById(`ev-edit-start-${id}`);
+  const endEl   = document.getElementById(`ev-edit-end-${id}`);
+  const notesEl = document.getElementById(`ev-edit-notes-${id}`);
+  if (startEl && startEl.value) ev.start = startEl.value;
+  if (endEl && endEl.value) ev.end = endEl.value;
+  else if (endEl) ev.end = ev.start;
+  if (parse(ev.end) < parse(ev.start)) ev.end = ev.start;
+  if (notesEl) ev.notes = notesEl.value.trim();
+  editingEventId = null;
+  save();
+  renderAll();
+  showToast('event updated 📍');
+}
+
+function renderCalendarEventSection() {
+  const section = document.getElementById('cal-events-section');
+  if (!section) return;
+  const sorted = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  const lastPeriod = sorted[sorted.length - 1];
+  if (!lastPeriod) { section.innerHTML = ''; return; }
+
+  const cycleStart = lastPeriod.start;
+  const cl = avgCycleLength();
+  const cycleEnd = fmt(new Date(parse(cycleStart).getTime() + cl * 86400000));
+
+  const eventsThisCycle = (appData.events || []).filter(ev =>
+    ev.start >= cycleStart && ev.start <= cycleEnd
+  ).sort((a,b) => a.start.localeCompare(b.start));
+
+  if (!eventsThisCycle.length) { section.innerHTML = ''; return; }
+
+  const PHASE_BADGE = {
+    menstrual:  { bg:'var(--menstrual-bg)',  color:'var(--menstrual)',  emoji:'🌑' },
+    follicular: { bg:'var(--follicular-bg)', color:'var(--follicular)', emoji:'🌱' },
+    ovulation:  { bg:'var(--ovulation-bg)',  color:'var(--ovulation)',  emoji:'✨' },
+    luteal:     { bg:'var(--luteal-bg)',      color:'var(--luteal)',     emoji:'🌙' },
+  };
+
+  section.innerHTML = `
+    <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-xsoft);margin:14px 0 10px 2px;">events this cycle</div>
+    <div class="card" style="padding:16px 20px;">
+      ${eventsThisCycle.map(ev => {
+        const isSameDay = ev.start === ev.end;
+        const dateLabel = isSameDay ? fmtDisplay(ev.start) : `${fmtDisplay(ev.start)} – ${fmtDisplay(ev.end)}`;
+        const phases = getPhasesForRange(ev.start, ev.end);
+        const pipColor = ev.type === 'illness' ? 'var(--menstrual)' : 'var(--luteal)';
+        const phaseTags = phases.map(ph => {
+          const b = PHASE_BADGE[ph];
+          return `<span class="event-marker-tag" style="background:${b.bg};color:${b.color};">${b.emoji} ${ph}</span>`;
+        }).join('');
+        const feverTag = ev.fever
+          ? `<span class="event-marker-tag" style="background:var(--menstrual-bg);color:var(--menstrual);">fever</span>`
+          : '';
+        return `<div class="event-marker-row">
+          <div class="event-pip" style="background:${pipColor};"></div>
+          <div class="event-marker-content">
+            <div class="event-marker-title">${ev.type === 'illness' ? 'illness' : 'high stress'}</div>
+            <div class="event-marker-meta">${dateLabel}</div>
+            ${ev.notes ? `<div class="event-marker-meta" style="margin-top:2px;font-style:italic;">"${ev.notes}"</div>` : ''}
+            <div class="event-marker-tags">${feverTag}${phaseTags}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
 }
 
 // ── NAV ────────────────────────────────────────────────────────────────────
