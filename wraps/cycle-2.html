@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>cycle 2 · june 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Serif+Display:ital@0;1&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky:       #E8EFF4;
+  --sky-deep:  #B8CDD8;
+  --sea:       #6B9AB8;
+  --tide:      #2C4A5A;
+  --tide-soft: #4A6E82;
+  --tide-muted:#7A9BAD;
+  --tide-xmuted:#A8C0CC;
+  --sand:      #D4C5A9;
+  --sand-warm: #C8B898;
+  --linen:     #F2EDE6;
+  --linen-deep:#E6DFD4;
+  --border:    rgba(44,74,90,0.10);
+  --border-mid:rgba(44,74,90,0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--sky); scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  color: var(--tide);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── BACKGROUND ── */
+.bg-layer {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-photo {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=85&fit=crop');
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.14;
+  filter: saturate(0.5) brightness(1.1);
+}
+
+.bg-wash {
+  position: absolute; inset: 0;
+  background: rgba(232,239,244,0.78);
+}
+
+.bg-grain {
+  position: absolute; inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.bg-tint {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 55% 35% at 80% 5%, rgba(107,154,184,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 45% at 12% 90%, rgba(44,74,90,0.07) 0%, transparent 55%);
+}
+
+/* ── LAYOUT ── */
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 56px;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tide-muted);
+  margin-bottom: 18px;
+}
+
+.hero-cycle {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(72px, 14vw, 110px);
+  font-weight: 400;
+  line-height: 0.9;
+  color: var(--tide);
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.8s ease 0.1s forwards;
+}
+
+.hero-month {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--sea);
+  letter-spacing: 0.06em;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.25s forwards;
+}
+
+.hero-dates {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--tide-muted);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.4s forwards;
+}
+
+/* ── OPENER ── */
+.opener {
+  margin: 0 0 56px;
+  padding: 36px 40px;
+  background: rgba(242,237,230,0.72);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+}
+
+.opener-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--tide);
+}
+
+.opener-text strong {
+  font-weight: 500;
+  color: var(--sea);
+}
+
+/* ── SECTION ── */
+.section {
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.section.visible {
+  animation: fadeUp 0.65s ease forwards;
+}
+
+.section-eyebrow {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tide-muted);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── STATS ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.stat-cell {
+  background: rgba(242,237,230,0.65);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 22px 16px 18px;
+  text-align: center;
+}
+
+.stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 34px;
+  font-weight: 400;
+  color: var(--tide);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 300;
+  color: var(--tide-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.stat-compare {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--sea);
+  margin-top: 5px;
+}
+
+/* ── QUOTE ── */
+.quote-block {
+  padding: 32px 36px;
+  background: rgba(107,154,184,0.08);
+  border-left: 2.5px solid var(--sea);
+  border-radius: 0 2px 2px 0;
+  margin-bottom: 0;
+}
+
+.quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--tide);
+  margin-bottom: 12px;
+}
+
+.quote-meta {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--tide-muted);
+  letter-spacing: 0.08em;
+}
+
+.quote-context {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--tide-soft);
+  line-height: 1.75;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── FLOW BARS ── */
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.flow-row:last-child { border-bottom: none; }
+
+.flow-date {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--tide-muted);
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.flow-track {
+  flex: 1;
+  height: 5px;
+  background: var(--sky-deep);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.flow-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--sea);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+.flow-fill.animate { transform: scaleX(1); }
+
+.flow-label {
+  font-size: 10px;
+  font-weight: 300;
+  color: var(--tide-muted);
+  width: 52px;
+  text-align: right;
+  letter-spacing: 0.04em;
+}
+
+/* ── SYMPTOM PHASES ── */
+.phase-block {
+  margin-bottom: 20px;
+}
+
+.phase-block:last-child { margin-bottom: 0; }
+
+.phase-heading {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.pill-row { display: flex; flex-wrap: wrap; gap: 7px; }
+
+.pill {
+  font-size: 11px;
+  font-weight: 300;
+  padding: 5px 13px;
+  border-radius: 40px;
+  letter-spacing: 0.03em;
+}
+
+.pill-menstrual { background: rgba(168,92,92,0.10); color: #7A3C3C; }
+.pill-ovulation  { background: rgba(107,154,184,0.14); color: var(--tide-soft); }
+.pill-luteal     { background: rgba(184,205,216,0.35); color: var(--tide); }
+.pill-good       { background: rgba(107,154,184,0.09); color: var(--sea); }
+
+/* ── SPOTTING ── */
+.spotting-entry {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.spotting-entry:last-child { border-bottom: none; }
+
+.spotting-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.spotting-pip {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.spotting-meta {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--tide-soft);
+}
+
+.spotting-notes {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--tide-muted);
+  line-height: 1.7;
+  font-style: italic;
+  padding-left: 18px;
+}
+
+/* ── HORMONE ARC ── */
+.arc-phase {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
+}
+
+.arc-phase:last-child { border-bottom: none; }
+
+.arc-phase-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--tide-muted);
+  width: 80px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.arc-phase-text {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--tide-soft);
+  line-height: 1.75;
+}
+
+.arc-phase-text em {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--tide);
+  font-size: 14px;
+}
+
+/* ── EVENT FOOTNOTE ── */
+.footnote-card {
+  background: rgba(184,205,216,0.18);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 24px 28px;
+}
+
+.footnote-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tide-muted);
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.footnote-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--tide);
+  margin-bottom: 8px;
+}
+
+.footnote-text {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--tide-soft);
+  line-height: 1.75;
+}
+
+/* ── CLOSE ── */
+.close {
+  text-align: center;
+  padding: 64px 0 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--tide-xmuted);
+  letter-spacing: 0.08em;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="bg-photo"></div>
+  <div class="bg-wash"></div>
+  <div class="bg-grain"></div>
+  <div class="bg-tint"></div>
+</div>
+
+<div class="content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">leonna · personal cycle record</div>
+    <div class="hero-cycle">cycle 2</div>
+    <div class="hero-month">june 2026</div>
+    <div class="hero-dates">may 22 – june 14 &nbsp;·&nbsp; 23 days &nbsp;·&nbsp; period 23</div>
+  </div>
+
+  <!-- OPENER -->
+  <div class="opener">
+    <div class="opener-text">
+      A cycle that ran close to its own clock — <strong>23 days</strong>, one short of your average. 
+      The period itself was full and present: heavy at the start, tapering cleanly across seven days. 
+      And somewhere in the middle of it all, you picked up a book.
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="section">
+    <div class="section-eyebrow">the numbers</div>
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num">23</div>
+        <div class="stat-label">cycle length</div>
+        <div class="stat-compare">–1 vs avg</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">7</div>
+        <div class="stat-label">period length</div>
+        <div class="stat-compare">on average</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">11</div>
+        <div class="stat-label">luteal length</div>
+        <div class="stat-compare">typical</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE QUOTE -->
+  <div class="section">
+    <div class="section-eyebrow">in your own words</div>
+    <div class="quote-block">
+      <div class="quote-text">"between today and yesterday, feeling very drawn to reading and writing"</div>
+      <div class="quote-meta">may 25 &nbsp;·&nbsp; menstrual day 4</div>
+      <div class="quote-context">
+        You wrote this on day 4 of your period — the day estrogen begins its slow return from the floor. 
+        Prostaglandins have quieted. The body's urgent work is mostly done. And in that stillness, 
+        the pull toward language. Toward taking things in rather than putting things out. 
+        This is the right-hemisphere shift that low estrogen tends to create — inward, 
+        receptive, drawn to creative absorption. You felt it before you had the vocabulary for it. 
+        Now you do.
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW -->
+  <div class="section">
+    <div class="section-eyebrow">flow · 7 days</div>
+    <div class="flow-row">
+      <div class="flow-date">may 22</div>
+      <div class="flow-track"><div class="flow-fill" data-width="1.0"></div></div>
+      <div class="flow-label">heavy</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-date">may 23</div>
+      <div class="flow-track"><div class="flow-fill" data-width="1.0"></div></div>
+      <div class="flow-label">heavy</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-date">may 24</div>
+      <div class="flow-track"><div class="flow-fill" data-width="0.65"></div></div>
+      <div class="flow-label">medium</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-date">may 25</div>
+      <div class="flow-track"><div class="flow-fill" data-width="0.35"></div></div>
+      <div class="flow-label">light</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-date">may 26</div>
+      <div class="flow-track"><div class="flow-fill" data-width="0.35"></div></div>
+      <div class="flow-label">light</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-date">may 27</div>
+      <div class="flow-track"><div class="flow-fill" data-width="0.35"></div></div>
+      <div class="flow-label">light</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-date">may 28</div>
+      <div class="flow-track"><div class="flow-fill" data-width="0.10"></div></div>
+      <div class="flow-label">spotting</div>
+    </div>
+  </div>
+
+  <!-- SPOTTING -->
+  <div class="section">
+    <div class="section-eyebrow">pre-period spotting · 2 events</div>
+    <div class="spotting-entry">
+      <div class="spotting-top">
+        <div class="spotting-pip" style="background:#8A3A3A;"></div>
+        <div class="spotting-meta">may 20 &nbsp;·&nbsp; red &nbsp;·&nbsp; before period</div>
+      </div>
+      <div class="spotting-notes">"happened right after arriving home from work. period panties stayed on for the rest of the night."</div>
+    </div>
+    <div class="spotting-entry">
+      <div class="spotting-top">
+        <div class="spotting-pip" style="background:#C07840;"></div>
+        <div class="spotting-meta">may 21 &nbsp;·&nbsp; brown &nbsp;·&nbsp; before period</div>
+      </div>
+      <div class="spotting-notes">"morning bathroom visit, no blood. no blood while wiping for the entire day. put on a pad in the morning and came home to only small deposit. woke up feeling like cramps were incoming but they/period never came"</div>
+    </div>
+  </div>
+
+  <!-- SYMPTOMS BY PHASE -->
+  <div class="section">
+    <div class="section-eyebrow">symptoms by phase</div>
+
+    <div class="phase-block">
+      <div class="phase-heading" style="color:#7A3C3C;">🌑 menstrual</div>
+      <div class="pill-row">
+        <span class="pill pill-menstrual">intense cramps</span>
+        <span class="pill pill-menstrual">moody</span>
+        <span class="pill pill-menstrual">low energy</span>
+        <span class="pill pill-menstrual">no appetite</span>
+      </div>
+    </div>
+
+    <div class="phase-block" style="margin-top:20px;">
+      <div class="phase-heading" style="color:var(--sea);">✨ ovulation</div>
+      <div class="pill-row">
+        <span class="pill pill-ovulation">lusty</span>
+        <span class="pill pill-ovulation">focused</span>
+        <span class="pill pill-ovulation">bad skin</span>
+      </div>
+    </div>
+
+    <div class="phase-block" style="margin-top:20px;">
+      <div class="phase-heading" style="color:var(--tide-soft);">🌙 luteal</div>
+      <div class="pill-row">
+        <span class="pill pill-luteal">confident</span>
+        <span class="pill pill-luteal">at peace</span>
+        <span class="pill pill-luteal">angry</span>
+        <span class="pill pill-luteal">low energy</span>
+        <span class="pill pill-luteal">no appetite</span>
+      </div>
+    </div>
+
+    <div class="phase-block" style="margin-top:20px;">
+      <div class="phase-heading" style="color:var(--tide-muted);">🌱 follicular</div>
+      <div class="pill-row">
+        <span class="pill" style="background:rgba(184,205,216,0.2);color:var(--tide-muted);font-style:italic;">nothing logged — the illness overlapped this window</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HORMONE ARC -->
+  <div class="section">
+    <div class="section-eyebrow">hormone arc · inferred from symptoms</div>
+
+    <div class="arc-phase">
+      <div class="arc-phase-label">menstrual</div>
+      <div class="arc-phase-text">
+        Estrogen and progesterone both at floor. The intensity here — cramps, no appetite, low energy — 
+        is consistent with high prostaglandin activity. The moody log on day 1 and the creative pull by 
+        day 4 tells a clear story: the sharpest discomfort gave way to something softer once the 
+        hormones stopped fighting.
+      </div>
+    </div>
+
+    <div class="arc-phase">
+      <div class="arc-phase-label">follicular</div>
+      <div class="arc-phase-text">
+        Estrogen climbing, nothing logged. The illness landed here — may 28 through june 1 — right as 
+        estrogen was beginning its rise. A fever during this window can slow that climb. And yet the 
+        cycle came in at 23 days, one short of average. <em>Your body moved through it anyway.</em>
+      </div>
+    </div>
+
+    <div class="arc-phase">
+      <div class="arc-phase-label">ovulation</div>
+      <div class="arc-phase-text">
+        Estrogen peaks, LH surges. The lusty + focused combination on may 31 is a clear ovulation 
+        fingerprint — peak estrogen sharpens concentration and heightens libido simultaneously. 
+        The bad skin showing up here is also consistent: estrogen peak can trigger a brief 
+        inflammatory response in skin. All three logged on the same day. <em>That's ovulation talking.</em>
+      </div>
+    </div>
+
+    <div class="arc-phase">
+      <div class="arc-phase-label">luteal</div>
+      <div class="arc-phase-text">
+        Progesterone rises, then drops. The early luteal — confident, at peace on june 5 — reflects 
+        progesterone at its stabilizing best. Then june 10: angry, low energy, no appetite. That's 
+        the withdrawal. Progesterone dropping, estrogen falling with it. The late luteal signature 
+        arriving right on schedule, <em>calmly violent</em> in its own way.
+      </div>
+    </div>
+  </div>
+
+  <!-- ILLNESS FOOTNOTE -->
+  <div class="section">
+    <div class="section-eyebrow">a note</div>
+    <div class="footnote-card">
+      <div class="footnote-eyebrow">illness · may 28 – june 1 · fever confirmed</div>
+      <div class="footnote-title">The week you got sick</div>
+      <div class="footnote-text">
+        An upper respiratory infection hit on the last day of your period and ran through early follicular. 
+        It came on fast — sore throat chalked up to allergies, then the full thing by friday: brain fog, 
+        body aches, fever. The fever broke overnight friday into saturday. By sunday you were eating again. 
+        Given that the cycle still ran close to average length, the illness doesn't appear to have delayed 
+        ovulation meaningfully — though the empty follicular symptom log makes that window harder to read. 
+        Something to watch across future cycles when illness shows up.
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSE -->
+  <div class="close">
+    cycle 2 · june 2026 · your body moved through it anyway
+  </div>
+
+</div>
+
+<script>
+// Scroll-triggered section reveals
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.section').forEach(el => observer.observe(el));
+
+// Flow bar animation
+const flowObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.flow-fill').forEach(fill => {
+        const w = parseFloat(fill.dataset.width);
+        fill.style.width = (w * 100) + '%';
+        fill.classList.add('animate');
+      });
+      flowObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.section').forEach(el => flowObserver.observe(el));
+</script>
+
+</body>
+</html>
