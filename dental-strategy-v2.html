@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dental Strategy v2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0e0e12;
+    color: #e8e4df;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #c4f0c2, #a8d8ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header .subtitle {
+    font-size: 0.85rem;
+    color: #8a8a95;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Quick ref at top */
+  .ref-grid {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .ref-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    text-decoration: none;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ref-row:active, .ref-row:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(196, 240, 194, 0.2);
+  }
+
+  .ref-row .when {
+    font-weight: 600;
+    color: #e0dcd8;
+  }
+
+  .ref-row .what {
+    color: #7a7a88;
+    text-align: right;
+    font-size: 0.78rem;
+  }
+
+  .ref-row .arrow {
+    color: #555;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* Products */
+  .products {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .product {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+
+  .product .emoji { font-size: 1.4rem; margin-bottom: 0.4rem; }
+  .product .name { font-weight: 700; font-size: 0.85rem; color: #fff; margin-bottom: 0.2rem; }
+  .product .role { font-size: 0.75rem; color: #7a7a88; line-height: 1.4; }
+
+  /* Collapsible sections */
+  .section {
+    margin-bottom: 1rem;
+    scroll-margin-top: 1rem;
+  }
+
+  .section-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s, border-color 0.2s;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: left;
+  }
+
+  .section-toggle:hover, .section-toggle:active {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .section-toggle.open {
+    border-radius: 12px 12px 0 0;
+    border-bottom-color: transparent;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .section-toggle .toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 100px;
+  }
+
+  .section-label.morning { background: rgba(255,200,60,0.12); color: #f0c840; }
+  .section-label.night { background: rgba(140,130,220,0.12); color: #a8a0e0; }
+  .section-label.products-label { background: rgba(255,255,255,0.06); color: #8a8a95; }
+
+  .section-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+  }
+
+  .chevron {
+    font-size: 0.8rem;
+    color: #555;
+    transition: transform 0.3s;
+  }
+
+  .section-toggle.open .chevron { transform: rotate(180deg); }
+
+  .section-body {
+    display: none;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 1.25rem;
+  }
+
+  .section-body.open { display: block; }
+
+  /* Path cards inside night section */
+  .path {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .path:last-child { margin-bottom: 0; }
+
+  .path-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .path-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c4f0c2, #a8d8ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .path-name { font-weight: 700; font-size: 1rem; color: #fff; }
+
+  .path-flow {
+    font-size: 0.78rem;
+    color: #6a6a78;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  .sub-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8a8a95;
+    margin-bottom: 0.6rem;
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .sub-label:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+
+  .energy-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .energy-label.high { color: #c4f0c2; }
+  .energy-label.low { color: #f0c840; }
+  .energy-label:first-of-type { margin-top: 0; }
+
+  /* Rule box */
+  .rule-box {
+    background: linear-gradient(135deg, rgba(168,160,224,0.1), rgba(196,240,194,0.05));
+    border: 1px solid rgba(168,160,224,0.2);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+
+  .rule-box .rule-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.3rem;
+  }
+
+  .rule-box .rule-desc { font-size: 0.82rem; color: #9a9aa5; }
+
+  /* Steps */
+  .steps {
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.65rem;
+    font-size: 0.88rem;
+    color: #c8c4bf;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0.05rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8a8a95;
+  }
+
+  .steps li strong { color: #fff; font-weight: 600; }
+
+  /* Notes */
+  .note {
+    font-size: 0.8rem;
+    color: #7a7a88;
+    line-height: 1.55;
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border-left: 2px solid rgba(255,255,255,0.08);
+  }
+
+  .note.success { border-left-color: rgba(196,240,194,0.3); color: #9ab898; }
+  .note.warning { border-left-color: rgba(240,200,64,0.3); color: #b8a878; }
+
+  /* Timer */
+  .timer-wrap {
+    margin-top: 1rem;
+  }
+
+  .timer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(196,240,194,0.08);
+    border: 1px solid rgba(196,240,194,0.15);
+    border-radius: 100px;
+    color: #c4f0c2;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s;
+  }
+
+  .timer-btn:active { background: rgba(196,240,194,0.15); }
+
+  .timer-btn.running {
+    background: rgba(196,240,194,0.12);
+    border-color: rgba(196,240,194,0.3);
+  }
+
+  .timer-btn.done {
+    background: rgba(240,200,64,0.12);
+    border-color: rgba(240,200,64,0.25);
+    color: #f0c840;
+  }
+
+  .timer-display {
+    font-variant-numeric: tabular-nums;
+    min-width: 3.5rem;
+    text-align: center;
+  }
+
+  @media (max-width: 500px) {
+    .container { padding: 1.5rem 1rem 3rem; }
+    .products { grid-template-columns: 1fr; }
+    .ref-row { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+    .ref-row .what { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Dental Strategy</h1>
+    <div class="subtitle">Whitening · Enamel Repair · Gum Health · Smoke Detox</div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="ref-grid">
+    <a class="ref-row" data-target="section-morning">
+      <span class="when">☀️ Morning</span>
+      <span class="what">Floss + CloSYS + Twice + tongue scrape <span class="arrow">↓</span></span>
+    </a>
+    <a class="ref-row" data-target="section-normal">
+      <span class="when">🌙 Normal Night</span>
+      <span class="what">Full routine after dinner + bedside CloSYS <span class="arrow">↓</span></span>
+    </a>
+    <a class="ref-row" data-target="section-couch-high">
+      <span class="when">🛋️ Couch Night ⚡</span>
+      <span class="what">Full routine in bathroom + smoke + CloSYS <span class="arrow">↓</span></span>
+    </a>
+    <a class="ref-row" data-target="section-couch-low">
+      <span class="when">🛋️ Couch Night 🪫</span>
+      <span class="what">Brush + CloSYS + smoke + CloSYS <span class="arrow">↓</span></span>
+    </a>
+  </div>
+
+  <!-- Products -->
+  <div class="section" id="section-products">
+    <button class="section-toggle" onclick="toggleSection(this)">
+      <div class="toggle-left">
+        <span class="section-label products-label">Kit</span>
+        <span class="section-title">Product Lineup</span>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="section-body">
+      <div class="products">
+        <div class="product">
+          <div class="emoji">☀️</div>
+          <div class="name">Twice Spearmint Eucalyptus</div>
+          <div class="role">Morning paste — SLS-free stain lifting</div>
+        </div>
+        <div class="product">
+          <div class="emoji">🌙</div>
+          <div class="name">SuperMouth Hydroxamin</div>
+          <div class="role">Night paste — dual-mineral enamel repair</div>
+        </div>
+        <div class="product">
+          <div class="emoji">🧴</div>
+          <div class="name">CloSYS Ultra Sensitive</div>
+          <div class="role">Mouthwash — chlorine dioxide antimicrobial</div>
+        </div>
+        <div class="product">
+          <div class="emoji">🛏️</div>
+          <div class="name">Bedside Kit</div>
+          <div class="role">Floss picks + CloSYS bottle + discard cup</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning -->
+  <div class="section" id="section-morning">
+    <button class="section-toggle" onclick="toggleSection(this)">
+      <div class="toggle-left">
+        <span class="section-label morning">Morning</span>
+        <span class="section-title">Morning Routine</span>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="section-body">
+      <ol class="steps">
+        <li><strong>Floss</strong> — String floss or water flosser</li>
+        <li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li>
+        <li><strong>Brush</strong> — 2 min with Twice Spearmint Eucalyptus, scrape tongue</li>
+      </ol>
+      <div class="note">Try to wait 20–30 min after eating before brushing — food acids temporarily soften enamel. If you need to brush right after eating, swish a pinch of baking soda in water for 30 sec first to neutralize. On weekdays this isn't an issue since you don't eat breakfast at home.</div>
+    </div>
+  </div>
+
+  <!-- Normal Night -->
+  <div class="section" id="section-normal">
+    <button class="section-toggle" onclick="toggleSection(this)">
+      <div class="toggle-left">
+        <span class="section-label night">Night</span>
+        <span class="section-title">Path A — Normal Night</span>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="section-body">
+      <div class="rule-box">
+        <div class="rule-title">⏰ Teeth brushed by midnight</div>
+        <div class="rule-desc">No matter what. Guarantees a 30-min buffer before your 12:30am smoke.</div>
+      </div>
+
+      <div class="path-flow">Dinner → wait 30 min → brush → projects → smoke 12:30+ → bedside rinse</div>
+
+      <div class="sub-label">Post-dinner brush</div>
+      <ol class="steps">
+        <li><strong>Floss</strong> — String floss, then water flosser for gum pockets</li>
+        <li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li>
+        <li><strong>Brush</strong> — 2 min with SuperMouth Hydroxamin, scrape tongue</li>
+      </ol>
+      <div class="timer-wrap">
+        <button class="timer-btn" onclick="startTimer(this, 1800, 'Post-dinner wait')">
+          <span>⏱ 30:00 post-dinner wait</span>
+          <span class="timer-display"></span>
+        </button>
+      </div>
+
+      <div class="note success">You're clean and mineralized. SuperMouth gets hours of contact time while you work on projects — better for enamel repair than brushing right before sleep.</div>
+
+      <div class="sub-label">After smoke, from bed</div>
+      <ol class="steps">
+        <li><strong>CloSYS Rinse</strong> — Swig, swish 60 sec, gargle, spit into discard cup</li>
+        <li><strong>Floss Pick</strong> (optional) — If you have the energy, hit the tight spots</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Couch Night High Energy -->
+  <div class="section" id="section-couch-high">
+    <button class="section-toggle" onclick="toggleSection(this)">
+      <div class="toggle-left">
+        <span class="section-label night">Night</span>
+        <span class="section-title">Path B — Couch Night ⚡</span>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="section-body">
+      <div class="path-flow">Woke up on couch → bathroom → full routine → smoke → bedside rinse</div>
+
+      <ol class="steps">
+        <li><strong>Floss</strong> — String floss or water flosser</li>
+        <li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li>
+        <li><strong>Brush</strong> — 2 min with SuperMouth Hydroxamin, scrape tongue</li>
+        <li><strong>Wait 15 min</strong> — Let enamel remineralize before smoking</li>
+        <li><strong>Smoke</strong> → CloSYS rinse from bed</li>
+      </ol>
+      <div class="timer-wrap">
+        <button class="timer-btn" onclick="startTimer(this, 900, 'Post-brush wait')">
+          <span>⏱ 15:00 post-brush wait</span>
+          <span class="timer-display"></span>
+        </button>
+      </div>
+
+      <div class="note warning">Aim for 15 min between brushing and smoking — most enamel remineralization has settled by then. But even with zero wait, brushing is infinitely better than not brushing. Twice in the morning lifts whatever extra stain sets overnight.</div>
+    </div>
+  </div>
+
+  <!-- Couch Night Low Energy -->
+  <div class="section" id="section-couch-low">
+    <button class="section-toggle" onclick="toggleSection(this)">
+      <div class="toggle-left">
+        <span class="section-label night">Night</span>
+        <span class="section-title">Path B — Couch Night 🪫</span>
+      </div>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="section-body">
+      <div class="path-flow">Woke up on couch → bathroom → quick brush + rinse → smoke → bedside rinse</div>
+
+      <ol class="steps">
+        <li><strong>Brush</strong> — 2 min with SuperMouth Hydroxamin</li>
+        <li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li>
+        <li><strong>Smoke</strong> → CloSYS rinse from bed</li>
+      </ol>
+
+      <div class="note warning">On low-energy couch nights, brush + rinse is your floor. Even without flossing or tongue scraping, you're removing the day's plaque before smoking. That alone makes a huge difference.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Collapse / expand
+  function toggleSection(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    btn.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  // Quick ref jump links
+  document.querySelectorAll('.ref-row[data-target]').forEach(row => {
+    row.addEventListener('click', e => {
+      e.preventDefault();
+      const targetId = row.getAttribute('data-target');
+      const section = document.getElementById(targetId);
+      if (!section) return;
+      const btn = section.querySelector('.section-toggle');
+      const body = section.querySelector('.section-body');
+      if (!btn.classList.contains('open')) {
+        btn.classList.add('open');
+        body.classList.add('open');
+      }
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Timers
+  const activeTimers = new Map();
+
+  function startTimer(btn, totalSec, label) {
+    // If already running, stop it
+    if (activeTimers.has(btn)) {
+      clearInterval(activeTimers.get(btn));
+      activeTimers.delete(btn);
+      btn.classList.remove('running', 'done');
+      btn.querySelector('span').textContent = `⏱ ${formatTime(totalSec)} ${label.toLowerCase()}`;
+      btn.querySelector('.timer-display').textContent = '';
+      return;
+    }
+
+    let remaining = totalSec;
+    const display = btn.querySelector('.timer-display');
+    const labelSpan = btn.querySelector('span');
+
+    btn.classList.add('running');
+    btn.classList.remove('done');
+    labelSpan.textContent = `⏸ ${label}`;
+    display.textContent = formatTime(remaining);
+
+    const interval = setInterval(() => {
+      remaining--;
+      display.textContent = formatTime(remaining);
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        activeTimers.delete(btn);
+        btn.classList.remove('running');
+        btn.classList.add('done');
+        labelSpan.textContent = `✓ ${label} done`;
+        display.textContent = '';
+
+        // Vibrate if available
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+        // Reset after 5 sec
+        setTimeout(() => {
+          btn.classList.remove('done');
+          labelSpan.textContent = `⏱ ${formatTime(totalSec)} ${label.toLowerCase()}`;
+          display.textContent = '';
+        }, 5000);
+      }
+    }, 1000);
+
+    activeTimers.set(btn, interval);
+  }
+
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+</script>
+</body>
+</html>
