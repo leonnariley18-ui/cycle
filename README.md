@@ -14,6 +14,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **spottingInCycle bug fixed** — resolved a ReferenceError in wrapped rendering that could crash the wrapped detail view.
 
+**wrapped registration order bug fixed** — "register new wrap 🪷" was registering the *most recent* eligible cycle instead of the oldest unregistered one, letting older cycles get skipped out of order. Registration now always picks the oldest completed, unregistered cycle first, keeping wraps chronological.
+
 ---
 
 ## what's new — v2.4 · may 2026
