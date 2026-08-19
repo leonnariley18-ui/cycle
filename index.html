@@ -3704,13 +3704,14 @@ function registerWrappedPeriod(periodId) {
 function registerLatestWrap() {
   if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
   const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
-  // Find the most recent completed non-tempdrop period not yet registered
+  // Find the oldest completed non-tempdrop period not yet registered
+  // (wraps are always registered in order oldest→newest, one at a time)
   const eligible = chronological
     .filter(p => p.end && !p.source && p.id !== appData.activePeriod)
     .filter(p => !appData.settings.wrappedPeriods.some(id => String(id) === String(p.id)));
-  const latest = eligible[eligible.length - 1];
-  if (!latest) { showToast('nothing new to register'); return; }
-  registerWrappedPeriod(latest.id);
+  const next = eligible[0]; // oldest first, not latest
+  if (!next) { showToast('nothing new to register'); return; }
+  registerWrappedPeriod(next.id);
 }
 
 // Returns the 1-based cycle number for a given period id, based on chronological order of all periods.
