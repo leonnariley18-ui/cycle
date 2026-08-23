@@ -6,6 +6,14 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
+## what's new — v2.7 · august 2026
+
+**Playbook quick-reference cleaned up** — cards were cramming icon+label and description into a cramped side-by-side row. Now stacked, with proper spacing.
+
+**Playbook timers hold the screen awake** — timers now request a wake lock while running so the phone doesn't auto-dim mid-countdown, and track a real end-time instead of a decrementing counter, so the display is always accurate even after backgrounding.
+
+---
+
 ## what's new — v2.6 · august 2026
 
 **Brush tracker** — a nightly dental habit tracker behind the glowing 🗄️ in the data tab. 7 habit-formation tiers, tier/slip-based science messaging, weekly Sunday digest with confetti, achievements, and a routine playbook. Own bottom nav (Dashboard / Science / Playbook / Awards), visually aligned with the rest of the app (calendar shape, cards, buttons, headers, layout all match cycle's own conventions; own peach/mauve/lime palette kept). Independent from period data. Synced via Supabase under a new `brush_tracker` column; confetti is bundled locally so it works offline.
