@@ -88,11 +88,15 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Journal** — open field on the today screen. Stored against cycle day and phase. Full archive in the data tab grouped by phase, with hormone table and science line per phase. Entries older than 3 days are read-only.
 
-**Calendar** — full month view with phase colors, logged periods, predicted future cycles, and event dots (pink for illness, blue for stress). Monday-first.
+**Calendar** — full month view with phase colors, logged periods, predicted future cycles, event dots (teal for illness, blue for stress), and unprotected-sex dots (red for fertile-window risk, lavender otherwise). Monday-first.
+
+**Unprotected sex log** — date + "logged" checkbox in the calendar tab, backfillable to any past date. Live fertility-risk line before you log, colored calendar dot after.
 
 **Insights** — cycle stats, phase length breakdown, upcoming predictions, symptom patterns. Tap 🔮 for spotting insights.
 
 **Data** — cloud sync via Supabase, local backup export, baseline reset, wrapped registration.
+
+**Brush tracker** — a separate nightly dental habit tracker behind the glowing 🗄️ in the data tab. Own tiers, science messaging, achievements, and playbook — see "what's new" above. Fully independent of period data.
 
 ---
 
@@ -100,7 +104,9 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Predictive** (feeds cycle calculations): period start dates, period end dates, weighted averages for cycle and period length.
 
-**Observational** (recorded, held, surfaces in wrapped — never touches calculations): symptoms, journal entries, spotting, events.
+**Observational** (recorded, held, surfaces in wrapped — never touches calculations): symptoms, journal entries, spotting, events, unprotected sex log.
+
+**Out of scope** (no relationship to cycle data at all): brush tracker — its own tiers, streaks, and habit data, tracked independently of period/cycle calculations.
 
 The app stays honest about what it knows vs what it's holding for you.
 
@@ -136,6 +142,8 @@ cycle/
 ├── index.html          ← the app
 ├── manifest.json
 ├── README.md
+├── vendor/
+│   └── confetti.min.js ← bundled locally for the brush tracker, so it works offline
 └── wraps/
     ├── cycle-1.html    ← may 2026
     ├── cycle-2.html    ← coming
@@ -148,7 +156,7 @@ cycle/
 
 | layer | tool |
 |---|---|
-| language | vanilla HTML/JS — single file |
+| language | vanilla HTML/JS — single-file app, one small vendored library |
 | database | Supabase (PostgreSQL) |
 | auth | PIN-based (hashed token) |
 | hosting | GitHub Pages |
@@ -210,6 +218,8 @@ A GitHub Actions workflow (`supabase-ping.yml`) runs every Monday and Thursday t
 - Cycle × transitions integration — surface current phase on the transitions home screen
 - Journal memory on today — surface what you wrote on this cycle day last month
 - Wrapped comparisons across cycles — patterns that emerge across multiple wraps, including cycles where events were logged vs those where they weren't
+- Bedtime reminder for the brush tracker if tonight isn't logged yet (needs a service worker for real push notifications)
+- Symptom correlation with fertile-window logging in insights, now that unprotected sex, illness, and stress are all timestamped against phase
 
 ---
 
