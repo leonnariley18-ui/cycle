@@ -2438,6 +2438,18 @@ async function launchApp() {
     if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false };
     if (!appData.intimacy) appData.intimacy = [];
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
+    // A period's cycle isn't complete until the *next* period starts, so the
+    // most recent period can never legitimately be wrapped yet — self-heal
+    // any bad state from before this rule was enforced at registration time.
+    {
+      const chron = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+      const mostRecentId = chron.length ? chron[chron.length - 1].id : null;
+      if (mostRecentId != null) {
+        const before = appData.settings.wrappedPeriods.length;
+        appData.settings.wrappedPeriods = appData.settings.wrappedPeriods.filter(id => String(id) !== String(mostRecentId));
+        if (appData.settings.wrappedPeriods.length !== before) save();
+      }
+    }
     setSyncDot('');
   } catch(e) {
     setSyncDot('error');
@@ -4165,10 +4177,14 @@ function registerWrappedPeriod(periodId) {
 function registerLatestWrap() {
   if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
   const chronological = [...appData.periods].sort((a,b) => a.start.localeCompare(b.start));
+  // A period's cycle runs until the *next* period starts, so the most recent
+  // period is never eligible yet — even once it has an end date, it's still
+  // editable and its cycle isn't complete. Exclude it explicitly.
+  const mostRecentId = chronological.length ? chronological[chronological.length - 1].id : null;
   // Find the oldest completed non-tempdrop period not yet registered
   // (wraps are always registered in order oldest→newest, one at a time)
   const eligible = chronological
-    .filter(p => p.end && !p.source && p.id !== appData.activePeriod)
+    .filter(p => p.end && !p.source && p.id !== appData.activePeriod && p.id !== mostRecentId)
     .filter(p => !appData.settings.wrappedPeriods.some(id => String(id) === String(p.id)));
   const next = eligible[0]; // oldest first, not latest
   if (!next) { showToast('nothing new to register'); return; }

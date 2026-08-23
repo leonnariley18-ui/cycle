@@ -12,6 +12,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Unprotected sex log** — lives in the calendar tab as a simple date field + "logged" checkbox, defaulting to today but freely backfillable to any past date. Checking a date adds it to your log; unchecking removes it. A live status line in the same card shows fertility risk for whatever date is selected — before you log anything — so it works as a lookahead check, not just a record. Each logged date also shows up as a small dot on the calendar, colored by the same risk: red for "high risk" (fertile window: 5 days before your estimated ovulation day through 1 day after, the standard sperm/egg-viability window), blue-gray for "low risk" (everywhere else in your cycle). Risk is computed live from your current cycle settings rather than stored, so both the status line and the dots stay accurate if your average cycle length changes later. Synced via Supabase under a new `intimacy` column (a plain array of logged dates — no protected-sex tracking, no notes).
 
+**Premature wrap registration bug fixed** — "register new wrap 🪷" was treating any period with an end date as eligible, including the most recent one. But a period and its cycle aren't the same thing: the cycle a period starts isn't complete until the *next* period begins, even after the period itself has ended (and it's still editable until then). The most recent period is now explicitly excluded from registration eligibility, and existing data self-heals on load — if the most recent period was already wrongly registered, it's automatically un-registered the next time the app loads, no manual cleanup needed.
+
 ---
 
 ## what's new — v2.5 · may 2026
