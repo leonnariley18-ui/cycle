@@ -1437,7 +1437,7 @@ body {
 
 /* ═══════════════ BRUSH TRACKER ═══════════════ */
 #page-brushtracker {
-  --bt-peach:#EFD2CB; --bt-mauve:#75485E; --bt-forest:#507255; --bt-black2:#0e0e14; --bt-lime:#C3E991;
+  --bt-peach:#EFD2CB; --bt-mauve:#75485E; --bt-forest:#507255; --bt-black2:#1c1820; --bt-lime:#C3E991;
   --bt-p03:rgba(239,210,203,0.03); --bt-p06:rgba(239,210,203,0.06); --bt-p10:rgba(239,210,203,0.1); --bt-p15:rgba(239,210,203,0.15); --bt-p20:rgba(239,210,203,0.2);
   --bt-m10:rgba(117,72,94,0.1); --bt-m15:rgba(117,72,94,0.15); --bt-m20:rgba(117,72,94,0.2); --bt-m25:rgba(117,72,94,0.25);
   --bt-f10:rgba(80,114,85,0.1); --bt-f15:rgba(80,114,85,0.15); --bt-f20:rgba(80,114,85,0.2);
@@ -5523,7 +5523,7 @@ function btChkOb(){document.getElementById('bt-ob-confirm').disabled=!(btSelMon&
 function btConfirmOb(){
   const data={startDate:btSelMon,logs:{},ss:false};
   const st=btPd(btSelMon);
-  for(let i=btSelDefN;i>=1;i--){const d=new Date(st);d.setDate(st.getDate()-i);data.logs[btFd(d)]='nothing';}
+  for(let i=btSelDefN;i>=1;i--){const d=new Date(st);d.setDate(st.getDate()-i);const ds=btFd(d);if(ds>=btGetTK())continue;data.logs[ds]='nothing';}
   btPersist(data);
   document.getElementById('bt-onboarding').style.display='none';
   document.getElementById('bt-dashboard-body').style.display='block';

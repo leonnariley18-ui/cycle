@@ -12,6 +12,10 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker nav bar fixed** — the host app's bottom nav (today/calendar/log/insights/data) is `position: fixed`, so it was rendering on top of the brush tracker's own bottom nav (Dashboard/Science/Playbook/Achievements) and blocking taps on it entirely. The host nav now hides while the brush tracker is open and reappears when you leave it.
 
+**Brush tracker onboarding no longer pre-logs tonight** — the starting-deficit backfill (e.g. "The Abyss," 10 nights) logs the nights immediately before your chosen start Monday as missed. If your start date was tomorrow, that range used to reach into tonight — locking in "nothing" for a night that hadn't happened yet, with no way to edit it afterward (logged nights are permanently locked, by design). The backfill now stops at yesterday and never touches today or later, regardless of how the deficit count and start date combine.
+
+**Brush tracker background lightened** — the tracker's base background (`--bt-black2`) was a very dark near-black (`#0e0e14`), and since every card/panel is a semi-transparent overlay on top of it, everything was washing toward black and losing contrast. Lightened to `#1c1820` — still clearly a dark/night theme, but cards, borders, and muted text are all more visible now. (If the muted mauve label text is still hard to read against the lighter background, that's a easy follow-up — just ask.)
+
 ---
 
 ## what's new — v2.6 · august 2026
