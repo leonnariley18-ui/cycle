@@ -24,6 +24,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker page layout now matches the cycle app's card structure** — cycle organizes every tab as a stack of bordered, shadowed cards, each with its own small centered eyebrow label. The tracker's dashboard used to separate its calendar and stats sections with a bare horizontal rule and a floating label instead — no card boundary at all. "This month" and "stats" are now each their own card. Same fix on the playbook (quick reference list and product lineup, previously floating with no boundary) and achievements (overview stats, milestones, and achievements grids, previously just a label above open content) — everything on every screen now reads as a stack of distinct cards, same as the rest of the app.
 
+**Brush tracker's breakdown bars now match cycle's bar-chart language** — the "all-time breakdown" bars on Science were the one remaining floating section on that page (its neighbors — baseline meter, slip tracker, tonight-did — were already card-wrapped); it's now a card too. Its bar metrics (row height, gap, label/count sizing) also now match cycle's own labeled-bar widget (`.phase-bar-row`) exactly, so the same "chart" reads consistently in both apps.
+
 ---
 
 ## what's new — v2.5 · may 2026

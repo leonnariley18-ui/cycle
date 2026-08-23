@@ -1554,14 +1554,12 @@ body {
 .bt-td-t{font-weight:700;font-size:0.75rem;color:var(--bt-lime);margin-bottom:0.3rem;}
 .bt-td-b{font-size:0.74rem;color:var(--bt-forest);line-height:1.5;}
 .bt-td-b strong{color:#a8d4a0;font-weight:700;}
-.bt-breakdown{margin-bottom:1rem;}
-.bt-bk-t{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.45;margin-bottom:0.5rem;text-align:center;}
-.bt-bk-bars{display:flex;flex-direction:column;gap:0.32rem;}
-.bt-bk-row{display:flex;align-items:center;gap:0.5rem;}
-.bt-bk-lbl{width:105px;flex-shrink:0;color:var(--bt-mauve);text-align:right;font-size:0.66rem;}
-.bt-bk-track{flex:1;height:5px;background:rgba(239,210,203,0.04);border-radius:2px;overflow:hidden;}
-.bt-bk-fill{height:100%;border-radius:2px;transition:width 0.4s;}
-.bt-bk-cnt{width:22px;text-align:right;font-size:0.66rem;color:var(--bt-mauve);font-weight:600;}
+.bt-bk-bars{display:flex;flex-direction:column;gap:8px;}
+.bt-bk-row{display:flex;align-items:center;gap:10px;}
+.bt-bk-lbl{width:105px;flex-shrink:0;color:var(--bt-mauve);text-align:right;font-size:11px;}
+.bt-bk-track{flex:1;height:6px;background:rgba(239,210,203,0.04);border-radius:3px;overflow:hidden;}
+.bt-bk-fill{height:100%;border-radius:3px;transition:width 0.4s;}
+.bt-bk-cnt{width:24px;text-align:right;font-size:11px;color:var(--bt-mauve);font-weight:600;flex-shrink:0;}
 .bt-reset-wrap{text-align:center;margin-top:2rem;padding-bottom:1rem;}
 .bt-reset-btn{background:var(--bt-m10);border:1px solid var(--bt-m20);color:#c090a0;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;padding:14px 2rem;border-radius:14px;width:100%;max-width:280px;}
 .bt-pb-products{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.5rem;}
@@ -5678,7 +5676,7 @@ function btRenderSci(data,tonight,logged,tier,score,ms,nbs,ns){
   if(logged&&tonight&&BT_TDB[tonight])ts.innerHTML=`<div class="bt-tonight-did"><div class="bt-td-t">What tonight's brush actually did</div><div class="bt-td-b">${BT_TDB[tonight]}</div></div>`;else ts.innerHTML='';
   const bks=document.getElementById('bt-breakdown-slot');
   const st=btPd(data.startDate),all2=Object.entries(data.logs).filter(([k])=>btPd(k)>=st);
-  if(all2.length>0){const counts={};all2.forEach(([,v])=>{counts[v]=(counts[v]||0)+1;});const mx=Math.max(...Object.values(counts),1);let rows='';for(const[key,t]of Object.entries(BT_TM)){const c=counts[key]||0;if(!c)continue;rows+=`<div class="bt-bk-row"><span class="bt-bk-lbl">${t.ic} ${t.lbl}</span><div class="bt-bk-track"><div class="bt-bk-fill" style="width:${(c/mx)*100}%;background:${t.co}"></div></div><span class="bt-bk-cnt">${c}</span></div>`;}bks.innerHTML=rows?`<div class="bt-breakdown"><div class="bt-bk-t">All-time breakdown</div><div class="bt-bk-bars">${rows}</div></div>`:'';}else bks.innerHTML='';
+  if(all2.length>0){const counts={};all2.forEach(([,v])=>{counts[v]=(counts[v]||0)+1;});const mx=Math.max(...Object.values(counts),1);let rows='';for(const[key,t]of Object.entries(BT_TM)){const c=counts[key]||0;if(!c)continue;rows+=`<div class="bt-bk-row"><span class="bt-bk-lbl">${t.ic} ${t.lbl}</span><div class="bt-bk-track"><div class="bt-bk-fill" style="width:${(c/mx)*100}%;background:${t.co}"></div></div><span class="bt-bk-cnt">${c}</span></div>`;}bks.innerHTML=rows?`<div class="bt-card bt-breakdown"><div class="bt-card-label">all-time breakdown</div><div class="bt-bk-bars">${rows}</div></div>`:'';}else bks.innerHTML='';
 }
 function btRenderAch(){
   const data=btData();if(!data)return;
