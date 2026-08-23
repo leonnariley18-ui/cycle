@@ -1838,6 +1838,7 @@ body {
           logged
         </label>
       </div>
+      <div id="intimacy-risk-line" style="margin-top:8px;font-size:12px;"></div>
     </div>
 
     <div id="cal-events-section"></div>
@@ -5745,6 +5746,15 @@ function syncIntimacyCheckbox() {
   const checkbox = document.getElementById('intimacy-checkbox');
   if (!dateInput || !checkbox) return;
   checkbox.checked = (appData.intimacy || []).includes(dateInput.value);
+  renderIntimacyRiskLine();
+}
+function renderIntimacyRiskLine() {
+  const dateInput = document.getElementById('intimacy-date');
+  const line = document.getElementById('intimacy-risk-line');
+  if (!dateInput || !line) return;
+  const isHigh = getFertileRisk(dateInput.value) === 'high';
+  line.textContent = isHigh ? '⚠️ fertile window — higher risk' : 'low risk right now';
+  line.style.color = isHigh ? '#E0555A' : 'var(--text-xsoft)';
 }
 function toggleIntimacyForDate() {
   haptic('light');
