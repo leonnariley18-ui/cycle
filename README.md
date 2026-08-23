@@ -6,6 +6,16 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
+## what's new — v2.6 · august 2026
+
+**Brush tracker** — a nightly dental habit tracker, tucked into the app behind the glowing 🗄️ in the data tab. Progresses through 7 habit-formation tiers (Initiation through Maintenance) over ~91 days of consistent nightly brushing, with contextual "science" messaging tied to your tier and slip streak, a weekly Sunday digest with confetti, a full achievements/milestones system, and a reference playbook with routine steps and countdown timers. Own 4-screen bottom nav (Dashboard / Science / Playbook / Awards) inside the tracker, with its own sync dot mirroring the main app's sync state. Fully independent from period data — resetting it doesn't touch your cycle history, and resetting to baseline doesn't touch it either. Synced via Supabase under a new `brush_tracker` column, same as the rest of the app. The confetti effect is bundled locally (`vendor/confetti.min.js`) rather than loaded from a CDN, so it still works offline.
+
+**Unprotected sex log** — lives in the calendar tab as a simple date field + "logged" checkbox, defaulting to today but freely backfillable to any past date. Checking a date adds it to your log; unchecking removes it. A live status line in the same card shows fertility risk for whatever date is selected — before you log anything — so it works as a lookahead check, not just a record. Each logged date also shows up as a small dot on the calendar, colored by the same risk: red for "high risk" (fertile window: 5 days before your estimated ovulation day through 1 day after, the standard sperm/egg-viability window), blue-gray for "low risk" (everywhere else in your cycle). Risk is computed live from your current cycle settings rather than stored, so both the status line and the dots stay accurate if your average cycle length changes later. Synced via Supabase under a new `intimacy` column (a plain array of logged dates — no protected-sex tracking, no notes).
+
+**Premature wrap registration bug fixed** — "register new wrap 🪷" was treating any period with an end date as eligible, including the most recent one. But a period and its cycle aren't the same thing: the cycle a period starts isn't complete until the *next* period begins, even after the period itself has ended (and it's still editable until then). The most recent period is now explicitly excluded from registration eligibility, and existing data self-heals on load — if the most recent period was already wrongly registered, it's automatically un-registered the next time the app loads, no manual cleanup needed.
+
+---
+
 ## what's new — v2.5 · may 2026
 
 **Event log** — tap 🗓️ in the calendar title to log illness or high stress events. Each event records a date range, phase context (calculated live, handles multi-phase spans), a fever flag for illness, and optional notes. Events appear as colored dots on the calendar grid and in an "events this cycle" section below it. Editable while the cycle is active; read-only once a new period starts. Surfaces in wrapped. Stored in Supabase under a new `events` column.
@@ -146,9 +156,20 @@ cycle/
 **Supabase project:** `sdvmycusfyavsuvsjvrv`
 **Table:** `cycle_data`
 
-**Columns:** `user_token`, `periods`, `symptoms`, `journal`, `spotting`, `events`, `active_period`, `settings`, `updated_at`
+**Columns:** `user_token`, `periods`, `symptoms`, `journal`, `spotting`, `events`, `brush_tracker`, `intimacy`, `active_period`, `settings`, `updated_at`
 
 `settings` stores: `cycleLength`, `periodLength`, `wrappedPeriods` (array of period ids that have a standalone wrap file)
+
+`brush_tracker` stores: `{ startDate, logs: { "YYYY-MM-DD": logType }, ss }` for the brush tracker feature — see "Brush tracker" above.
+
+`intimacy` stores a flat array of `"YYYY-MM-DD"` strings — the dates unprotected sex was logged. See "Unprotected sex log" above.
+
+**Both `brush_tracker` and `intimacy` must be added to the `cycle_data` table manually before use:**
+```sql
+alter table cycle_data add column brush_tracker jsonb;
+alter table cycle_data add column intimacy jsonb;
+```
+PostgREST rejects the whole PATCH if the JSON body references a column that doesn't exist yet — so until these columns exist, **every save fails, not just the new features' data** (it silently falls back to the `cycleApp3` localStorage cache and lights up the sync-error dot). Run the migration above before using either feature.
 
 ---
 
