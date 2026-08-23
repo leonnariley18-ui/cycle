@@ -16,6 +16,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Calendar dot colors disambiguated** — illness dots and unprotected-sex "high risk" dots were both reddish/pink, and stress dots and unprotected-sex "low risk" dots were both a similar blue — easy to mix up at a glance. Illness is now teal, unprotected-low-risk is now lavender; stress (blue) and unprotected-high-risk (red) are unchanged and now clearly distinct from their former lookalikes. The calendar legend also now lists illness and high-stress dots, which it never documented before.
 
+**Brush tracker calendar now matches the cycle app's** — circular day bubbles (was rounded squares), a large serif month label (was a tiny bold sans label), bordered square nav arrows (was flat borderless buttons), and the same day-of-week label sizing/header spacing as the main calendar. Own color palette and "today" outline-ring indicator stay as they were — this is about shape and scale reading as one app, not a palette swap.
+
 ---
 
 ## what's new — v2.5 · may 2026

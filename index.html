@@ -1503,13 +1503,13 @@ body {
 .bt-divider{display:flex;align-items:center;gap:0.5rem;margin:0.75rem 0;}
 .bt-divider-line{flex:1;height:1px;background:rgba(239,210,203,0.05);}
 .bt-divider-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.3;}
-.bt-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;}
-.bt-cal-month{font-weight:700;font-size:0.85rem;color:var(--bt-peach);}
-.bt-cal-nav{background:var(--bt-p06);border:none;color:var(--bt-mauve);width:1.8rem;height:1.8rem;border-radius:7px;font-size:0.75rem;cursor:pointer;}
-.bt-cal-nav:active{background:var(--bt-p10);}
-.bt-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-.bt-cal-dl{font-size:0.55rem;font-weight:600;color:var(--bt-mauve);opacity:0.4;text-transform:uppercase;text-align:center;padding:0.22rem 0;}
-.bt-cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:0.65rem;font-weight:500;color:rgba(239,210,203,0.15);background:rgba(239,210,203,0.02);cursor:pointer;}
+.bt-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.bt-cal-month{font-family:'Playfair Display',serif;font-weight:800;font-size:24px;color:var(--bt-peach);text-align:center;}
+.bt-cal-nav{background:none;border:1px solid var(--bt-p15);color:var(--bt-mauve);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 0.2s;}
+.bt-cal-nav:hover,.bt-cal-nav:active{background:var(--bt-p06);}
+.bt-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.bt-cal-dl{font-size:10px;font-weight:400;letter-spacing:0.08em;color:var(--bt-mauve);opacity:0.6;text-transform:uppercase;text-align:center;padding:4px 0 8px;}
+.bt-cal-d{width:100%;aspect-ratio:1;max-width:38px;max-height:38px;margin:0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;font-weight:300;color:rgba(239,210,203,0.15);background:rgba(239,210,203,0.02);cursor:pointer;transition:all 0.15s;}
 .bt-cal-d.before-start,.bt-cal-d.future{cursor:default;pointer-events:none;}
 .bt-cal-d.future{color:rgba(239,210,203,0.07);}.bt-cal-d.before-start{color:rgba(239,210,203,0.06);}
 .bt-cal-d.t-path-a{background:rgba(195,233,145,0.2);color:var(--bt-lime);font-weight:700;}
