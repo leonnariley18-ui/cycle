@@ -1166,15 +1166,15 @@ body {
 }
 
 /* ── Tooth glow (brush tracker entry) ── */
-.tooth-emoji {
+.data-cabinet-emoji {
   display: inline-block; cursor: pointer; user-select: none;
   vertical-align: middle; font-size: 26px;
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
   filter: drop-shadow(0 0 10px rgba(195,233,145,0.5)) drop-shadow(0 0 24px rgba(195,233,145,0.22));
-  animation: toothPulse 3s ease-in-out infinite;
+  animation: dataCabinetPulse 3s ease-in-out infinite;
 }
-.tooth-emoji:active { transform: scale(0.88); }
-@keyframes toothPulse {
+.data-cabinet-emoji:active { transform: scale(0.88); }
+@keyframes dataCabinetPulse {
   0%,100% { filter: drop-shadow(0 0 8px rgba(195,233,145,0.4)) drop-shadow(0 0 20px rgba(195,233,145,0.18)); }
   50%      { filter: drop-shadow(0 0 16px rgba(195,233,145,0.75)) drop-shadow(0 0 36px rgba(195,233,145,0.35)); }
 }
@@ -1982,7 +1982,7 @@ body {
 
   <!-- DATA -->
   <div class="screen page" id="page-data">
-    <div class="page-title">data <span class="tooth-emoji" onclick="openBrushTracker()" id="data-tooth">🦷</span> 🗄️</div>
+    <div class="page-title">data <span class="data-cabinet-emoji" onclick="openBrushTracker()" id="data-cabinet-icon">🗄️</span></div>
     <div class="page-sub">journal & sync</div>
     <div id="journal-phase-cards"></div>
     <div class="data-coll">
