@@ -20,6 +20,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker cards & buttons now match the cycle app's scale** — every standalone panel (hero, baseline meter, slip tracker, tonight-did, nudge, playbook rule, tier-movement, weekly digest, digest badges) moved from a 9-12px radius with tight padding to the same 20px radius, 24px padding, and soft drop shadow as cycle's `.card`. Buttons (log buttons, tier-option rows, playbook toggles, onboarding confirm, reset) moved from 9-10px radius to the same 14px radius/16px padding as cycle's primary and secondary buttons. Colors are untouched — the tracker's own peach/mauve/lime palette throughout; dense grid tiles (badge cards, stat boxes, product cards) were left at their existing compact size since they're multi-column cells, not standalone cards.
 
+**Brush tracker page headers & bottom nav now match the cycle app's** — each of the tracker's four screens previously repeated its own app name ("Did You Brush?") in a small left-aligned header instead of naming the screen. They now open with a large centered title + subtitle in cycle's page-title/page-sub scale ("dashboard 🪥", "the science 🔬", "the playbook 📖", "achievements 🏆"), with the tier pill moved down near the hero card where it's contextual instead of competing with the header. The tracker's own bottom nav is now a solid 64px panel with 22px icons and a plain color swap on the active tab, matching cycle's nav — previously it was shorter, sat on a translucent overlay, and dimmed inactive tabs with opacity.
+
 ---
 
 ## what's new — v2.5 · may 2026

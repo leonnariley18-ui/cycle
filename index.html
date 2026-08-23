@@ -1451,14 +1451,14 @@ body {
 .bt-subpages { flex: 1; min-height: 0; position: relative; }
 .bt-subpage { display:none; position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding: 1.25rem 1.25rem 1.5rem; color: var(--bt-peach); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
 .bt-subpage.active { display:block; animation: fadeUp 0.22s ease; }
-.bt-nav { display:flex; justify-content:space-around; align-items:center; padding: 8px 0; background: rgba(0,0,0,0.25); border-top: 1px solid var(--bt-p10); flex-shrink: 0; }
-.bt-nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color: var(--bt-mauve); font-family:'DM Sans',sans-serif; font-size: 10px; padding: 4px 8px; cursor:pointer; opacity: 0.6; }
-.bt-nav-btn.active { color: var(--bt-lime); opacity: 1; }
-.bt-nav-btn svg { width: 20px; height: 20px; }
+.bt-nav { display:flex; justify-content:space-around; align-items:center; height: 64px; background: var(--bt-black2); border-top: 1px solid var(--bt-p15); flex-shrink: 0; }
+.bt-nav-btn { display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; color: var(--bt-mauve); font-family:'DM Sans',sans-serif; font-size: 10px; letter-spacing:0.08em; text-transform:uppercase; padding: 8px 16px; cursor:pointer; transition: color 0.2s; }
+.bt-nav-btn.active { color: var(--bt-lime); }
+.bt-nav-btn svg { width: 22px; height: 22px; stroke-width: 1.5; }
 
-.bt-app-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
-.bt-app-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;letter-spacing:-0.02em;color:var(--bt-peach);}
-.bt-screen-sub{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;}
+.bt-page-title{font-family:'Playfair Display',serif;font-weight:800;font-size:28px;letter-spacing:-0.01em;color:var(--bt-peach);text-align:center;margin-bottom:6px;}
+.bt-page-sub{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.7;text-align:center;margin-bottom:24px;}
+.bt-tier-pill-row{display:flex;justify-content:center;margin-bottom:20px;}
 .bt-tier-pill{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.26rem 0.6rem;border-radius:100px;font-weight:500;}
 .bt-tp-1{background:var(--bt-m15);color:#a07888;}.bt-tp-2{background:var(--bt-p10);color:var(--bt-peach);}.bt-tp-3{background:var(--bt-f15);color:#8ab88e;}.bt-tp-35{background:var(--bt-f20);color:#a0c8a4;}.bt-tp-4{background:var(--bt-l12);color:var(--bt-lime);}.bt-tp-45{background:var(--bt-l20);color:var(--bt-lime);}.bt-tp-5{background:rgba(195,233,145,0.28);color:var(--bt-lime);}
 
@@ -2076,7 +2076,9 @@ body {
             <button class="bt-ob-confirm" id="bt-ob-confirm" disabled onclick="btConfirmOb()">Start the mission</button>
           </div>
           <div id="bt-dashboard-body" style="display:none;">
-            <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-tier-pill" id="bt-tier-pill">—</div></div>
+            <div class="bt-page-title">dashboard 🪥</div>
+            <div class="bt-page-sub">tonight's status</div>
+            <div class="bt-tier-pill-row"><div class="bt-tier-pill" id="bt-tier-pill">—</div></div>
             <div class="bt-hero neutral" id="bt-hero"><div class="bt-hero-emoji" id="bt-hero-emoji">🪥</div><div class="bt-hero-hl" id="bt-hero-hl">Start tracking tonight</div><div class="bt-hero-fact" id="bt-hero-fact">Log what you did each night.</div><div id="bt-streak-slot"></div></div>
             <div id="bt-nudge-slot"></div>
             <div id="bt-log-section"></div>
@@ -2102,14 +2104,16 @@ body {
 
         <!-- Science -->
         <div class="bt-subpage" id="bt-subpage-science">
-          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">The Science</div></div>
+          <div class="bt-page-title">the science 🔬</div>
+          <div class="bt-page-sub">the biology behind the streak</div>
           <div id="bt-meter-slot"></div><div id="bt-slip-slot"></div><div id="bt-smoke-slot"></div><div id="bt-tonight-slot"></div><div id="bt-breakdown-slot"></div>
           <div class="bt-reset-wrap" id="bt-reset-wrap"><button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button></div>
         </div>
 
         <!-- Playbook -->
         <div class="bt-subpage" id="bt-subpage-playbook">
-          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">The Playbook</div></div>
+          <div class="bt-page-title">the playbook 📖</div>
+          <div class="bt-page-sub">your nightly routine, step by step</div>
           <div class="bt-pb-ref">
             <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-m')"><span class="bt-pb-ref-w">☀️ Morning</span><span class="bt-pb-ref-wh">Floss + CloSYS + Twice + tongue scrape ↓</span></div>
             <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-a')"><span class="bt-pb-ref-w">🌙 Normal Night</span><span class="bt-pb-ref-wh">Full routine after dinner + bedside CloSYS ↓</span></div>
@@ -2159,7 +2163,8 @@ body {
 
         <!-- Achievements -->
         <div class="bt-subpage" id="bt-subpage-achievements">
-          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">Achievements</div></div>
+          <div class="bt-page-title">achievements 🏆</div>
+          <div class="bt-page-sub">milestones &amp; streaks earned</div>
           <div class="bt-ach-ov" id="bt-ach-ov"></div>
           <div id="bt-ach-mil"></div>
           <div id="bt-ach-rep"></div>
