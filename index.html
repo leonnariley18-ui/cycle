@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="cycle">
 <link rel="manifest" href="./manifest.json">
 <title>cycle</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #1A1728;
@@ -1165,6 +1165,20 @@ body {
   50%      { filter: drop-shadow(0 0 16px rgba(224,144,168,0.75)) drop-shadow(0 0 36px rgba(224,144,168,0.35)); }
 }
 
+/* ── Tooth glow (brush tracker entry) ── */
+.tooth-emoji {
+  display: inline-block; cursor: pointer; user-select: none;
+  vertical-align: middle; font-size: 26px;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  filter: drop-shadow(0 0 10px rgba(195,233,145,0.5)) drop-shadow(0 0 24px rgba(195,233,145,0.22));
+  animation: toothPulse 3s ease-in-out infinite;
+}
+.tooth-emoji:active { transform: scale(0.88); }
+@keyframes toothPulse {
+  0%,100% { filter: drop-shadow(0 0 8px rgba(195,233,145,0.4)) drop-shadow(0 0 20px rgba(195,233,145,0.18)); }
+  50%      { filter: drop-shadow(0 0 16px rgba(195,233,145,0.75)) drop-shadow(0 0 36px rgba(195,233,145,0.35)); }
+}
+
 /* ── Wrapped archive rows ── */
 .wrap-archive-row {
   display: flex; align-items: center; justify-content: space-between;
@@ -1419,7 +1433,279 @@ body {
   to   { opacity: 1; transform: translateX(0); }
 }
 #page-wrapped.active { animation: slideInFromRight 0.28s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+
+/* ═══════════════ BRUSH TRACKER ═══════════════ */
+#page-brushtracker {
+  --bt-peach:#EFD2CB; --bt-mauve:#75485E; --bt-forest:#507255; --bt-black2:#0e0e14; --bt-lime:#C3E991;
+  --bt-p03:rgba(239,210,203,0.03); --bt-p06:rgba(239,210,203,0.06); --bt-p10:rgba(239,210,203,0.1); --bt-p15:rgba(239,210,203,0.15); --bt-p20:rgba(239,210,203,0.2);
+  --bt-m10:rgba(117,72,94,0.1); --bt-m15:rgba(117,72,94,0.15); --bt-m20:rgba(117,72,94,0.2); --bt-m25:rgba(117,72,94,0.25);
+  --bt-f10:rgba(80,114,85,0.1); --bt-f15:rgba(80,114,85,0.15); --bt-f20:rgba(80,114,85,0.2);
+  --bt-l08:rgba(195,233,145,0.08); --bt-l12:rgba(195,233,145,0.12); --bt-l15:rgba(195,233,145,0.15); --bt-l20:rgba(195,233,145,0.2);
+  padding: 0 !important;
+}
+#page-brushtracker.active { display: flex; flex-direction: column; height: calc(100% - 20px); }
+.bt-shell { flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bt-black2); border-radius: 20px; overflow: hidden; }
+.bt-back { display:flex; align-items:center; gap:8px; padding: 20px 20px 0; cursor:pointer; flex-shrink: 0; }
+.bt-subpages { flex: 1; min-height: 0; position: relative; }
+.bt-subpage { display:none; position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding: 1.25rem 1.25rem 1.5rem; color: var(--bt-peach); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
+.bt-subpage.active { display:block; animation: fadeUp 0.22s ease; }
+.bt-nav { display:flex; justify-content:space-around; align-items:center; padding: 8px 0; background: rgba(0,0,0,0.25); border-top: 1px solid var(--bt-p10); flex-shrink: 0; }
+.bt-nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color: var(--bt-mauve); font-family:'DM Sans',sans-serif; font-size: 10px; padding: 4px 8px; cursor:pointer; opacity: 0.6; }
+.bt-nav-btn.active { color: var(--bt-lime); opacity: 1; }
+.bt-nav-btn svg { width: 20px; height: 20px; }
+
+.bt-app-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+.bt-app-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;letter-spacing:-0.02em;color:var(--bt-peach);}
+.bt-screen-sub{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;}
+.bt-tier-pill{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.26rem 0.6rem;border-radius:100px;font-weight:500;}
+.bt-tp-1{background:var(--bt-m15);color:#a07888;}.bt-tp-2{background:var(--bt-p10);color:var(--bt-peach);}.bt-tp-3{background:var(--bt-f15);color:#8ab88e;}.bt-tp-35{background:var(--bt-f20);color:#a0c8a4;}.bt-tp-4{background:var(--bt-l12);color:var(--bt-lime);}.bt-tp-45{background:var(--bt-l20);color:var(--bt-lime);}.bt-tp-5{background:rgba(195,233,145,0.28);color:var(--bt-lime);}
+
+.bt-hero{border-radius:16px;padding:1.5rem;margin-bottom:1rem;text-align:center;transition:background 0.6s ease,border-color 0.6s ease,box-shadow 0.6s ease;}
+.bt-hero.clean{background:linear-gradient(145deg,rgba(80,114,85,0.35) 0%,rgba(195,233,145,0.18) 50%,rgba(80,114,85,0.12) 100%);border:1px solid rgba(195,233,145,0.3);box-shadow:0 0 40px rgba(195,233,145,0.08),inset 0 1px 0 rgba(195,233,145,0.15);}
+.bt-hero.dirty{background:linear-gradient(145deg,rgba(117,72,94,0.5) 0%,rgba(90,32,64,0.35) 50%,rgba(117,72,94,0.2) 100%);border:1px solid rgba(117,72,94,0.4);box-shadow:0 0 40px rgba(117,72,94,0.12),inset 0 1px 0 rgba(117,72,94,0.2);}
+.bt-hero.partial{background:linear-gradient(145deg,rgba(239,210,203,0.15) 0%,rgba(117,72,94,0.2) 60%,rgba(239,210,203,0.08) 100%);border:1px solid rgba(239,210,203,0.18);box-shadow:0 0 30px rgba(239,210,203,0.04),inset 0 1px 0 rgba(239,210,203,0.1);}
+.bt-hero.neutral{background:linear-gradient(145deg,rgba(239,210,203,0.05) 0%,rgba(17,17,24,0) 100%);border:1px solid rgba(239,210,203,0.07);box-shadow:none;}
+.bt-hero-emoji{font-size:2.8rem;line-height:1;margin-bottom:0.6rem;}
+.bt-hero-hl{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;letter-spacing:-0.01em;margin-bottom:0.4rem;line-height:1.2;}
+.bt-hero.clean .bt-hero-hl{color:var(--bt-lime);}.bt-hero.dirty .bt-hero-hl{color:#c090a0;}.bt-hero.partial .bt-hero-hl{color:var(--bt-peach);}.bt-hero.neutral .bt-hero-hl{color:var(--bt-peach);}
+.bt-hero-fact{font-size:0.79rem;line-height:1.55;max-width:300px;margin:0 auto;}
+.bt-hero.clean .bt-hero-fact{color:#8ab88e;}.bt-hero.dirty .bt-hero-fact{color:#b07888;}.bt-hero.partial .bt-hero-fact{color:rgba(239,210,203,0.6);}.bt-hero.neutral .bt-hero-fact{color:rgba(117,72,94,0.8);}
+.bt-hero-fact strong{color:var(--bt-peach);font-weight:700;}
+.bt-streak-row{display:flex;align-items:center;justify-content:center;gap:0.35rem;margin-top:0.85rem;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;}
+.bt-streak-row.good{color:var(--bt-lime);text-shadow:0 0 12px rgba(195,233,145,0.4);}.bt-streak-row.bad{color:#c090a0;text-shadow:0 0 12px rgba(117,72,94,0.4);}
+.bt-streak-n{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800;line-height:1;}
+.bt-log-prompt{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);text-align:center;margin-bottom:0.6rem;opacity:0.7;}
+.bt-log-row{display:flex;gap:0.6rem;margin-bottom:0.6rem;}
+.bt-log-btn{flex:1;padding:0.9rem 0.5rem;border-radius:10px;border:2px solid transparent;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;text-align:center;cursor:pointer;transition:transform 0.12s;}
+.bt-log-btn:active{transform:scale(0.97);}
+.bt-log-btn.yes{background:linear-gradient(135deg,var(--bt-forest),#3d5940);color:var(--bt-lime);}
+.bt-log-btn.no{background:linear-gradient(135deg,var(--bt-mauve),#5a3648);color:var(--bt-peach);}
+.bt-log-btn.selected{border-color:rgba(239,210,203,0.3);}
+.bt-tier-section{animation:fadeUp 0.22s ease;}
+.bt-tier-sublabel{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);text-align:center;margin-bottom:0.5rem;opacity:0.6;}
+.bt-tier-options{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;}
+.bt-tier-btn{display:flex;align-items:center;gap:0.65rem;padding:0.75rem 0.9rem;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:9px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;width:100%;transition:background 0.15s;}
+.bt-tier-btn:active{background:var(--bt-p10);}
+.bt-ti{font-size:1.2rem;flex-shrink:0;width:1.6rem;text-align:center;}
+.bt-tt{flex:1;}
+.bt-tn{font-weight:700;font-size:0.82rem;color:var(--bt-peach);margin-bottom:0.1rem;}
+.bt-td2{font-size:0.68rem;color:var(--bt-mauve);line-height:1.3;}
+.bt-ts{font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:500;padding:0.18rem 0.45rem;border-radius:100px;flex-shrink:0;}
+.bt-ts-pos{background:var(--bt-l12);color:var(--bt-lime);}.bt-ts-pos2{background:var(--bt-f10);color:#8ab88e;}.bt-ts-neg1{background:var(--bt-p10);color:var(--bt-peach);}.bt-ts-neg2{background:var(--bt-m15);color:#a07888;}
+.bt-logged-msg{text-align:center;font-size:0.82rem;color:var(--bt-mauve);padding:0.85rem 1rem;background:var(--bt-p03);border-radius:10px;margin-bottom:1rem;}
+.bt-logged-msg strong{color:var(--bt-peach);font-weight:700;}
+.bt-nudge{background:linear-gradient(135deg,var(--bt-f10),var(--bt-l08));border:1px solid var(--bt-f15);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;}
+.bt-nudge-t{font-weight:700;font-size:0.75rem;color:var(--bt-lime);margin-bottom:0.2rem;}
+.bt-nudge-b{font-size:0.72rem;color:var(--bt-forest);line-height:1.45;}
+.bt-nudge-b strong{color:#a8d4a0;font-weight:700;}
+.bt-divider{display:flex;align-items:center;gap:0.5rem;margin:0.75rem 0;}
+.bt-divider-line{flex:1;height:1px;background:rgba(239,210,203,0.05);}
+.bt-divider-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.3;}
+.bt-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;}
+.bt-cal-month{font-weight:700;font-size:0.85rem;color:var(--bt-peach);}
+.bt-cal-nav{background:var(--bt-p06);border:none;color:var(--bt-mauve);width:1.8rem;height:1.8rem;border-radius:7px;font-size:0.75rem;cursor:pointer;}
+.bt-cal-nav:active{background:var(--bt-p10);}
+.bt-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.bt-cal-dl{font-size:0.55rem;font-weight:600;color:var(--bt-mauve);opacity:0.4;text-transform:uppercase;text-align:center;padding:0.22rem 0;}
+.bt-cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:0.65rem;font-weight:500;color:rgba(239,210,203,0.15);background:rgba(239,210,203,0.02);cursor:pointer;}
+.bt-cal-d.before-start,.bt-cal-d.future{cursor:default;pointer-events:none;}
+.bt-cal-d.future{color:rgba(239,210,203,0.07);}.bt-cal-d.before-start{color:rgba(239,210,203,0.06);}
+.bt-cal-d.t-path-a{background:rgba(195,233,145,0.2);color:var(--bt-lime);font-weight:700;}
+.bt-cal-d.t-couch-high{background:rgba(195,233,145,0.12);color:#a8d4a0;font-weight:700;}
+.bt-cal-d.t-couch-low{background:rgba(80,114,85,0.15);color:#8ab88e;font-weight:700;}
+.bt-cal-d.t-closys-floss{background:rgba(239,210,203,0.1);color:#c8a898;font-weight:700;}
+.bt-cal-d.t-closys-only{background:rgba(239,210,203,0.06);color:#a08878;font-weight:700;}
+.bt-cal-d.t-nothing{background:rgba(117,72,94,0.15);color:#a07888;font-weight:700;}
+.bt-cal-d.today{outline:1.5px solid rgba(239,210,203,0.22);outline-offset:-1.5px;}
+.bt-legend{display:flex;flex-wrap:wrap;gap:0.4rem 0.9rem;margin-top:0.6rem;justify-content:center;}
+.bt-legend-item{display:flex;align-items:center;gap:0.25rem;font-size:0.58rem;color:var(--bt-mauve);}
+.bt-legend-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+.bt-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:1rem;}
+.bt-stat-box{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:9px;padding:0.75rem 0.4rem;text-align:center;}
+.bt-stat-n{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--bt-peach);line-height:1;margin-bottom:0.2rem;}
+.bt-stat-n.green{color:var(--bt-lime);}
+.bt-stat-l{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;}
+.bt-meter-block{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.bt-meter-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.55rem;}
+.bt-meter-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);}
+.bt-meter-state{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;padding:0.18rem 0.5rem;border-radius:100px;}
+.bt-ms-holding{background:var(--bt-l12);color:var(--bt-lime);}.bt-ms-pressure{background:var(--bt-p15);color:var(--bt-peach);}.bt-ms-compromised{background:var(--bt-m15);color:#c090a0;}.bt-ms-critical{background:var(--bt-m25);color:#e0a0b8;}
+.bt-meter-track{height:4px;background:rgba(239,210,203,0.05);border-radius:2px;overflow:hidden;margin-bottom:0.6rem;}
+.bt-meter-fill{height:100%;border-radius:2px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+.bt-mf-holding{background:linear-gradient(90deg,var(--bt-forest),var(--bt-lime));}.bt-mf-pressure{background:linear-gradient(90deg,var(--bt-mauve),var(--bt-peach));}.bt-mf-compromised{background:linear-gradient(90deg,#5a2040,var(--bt-mauve));}.bt-mf-critical{background:linear-gradient(90deg,#3a1030,#5a2040);}
+.bt-meter-desc{font-size:0.75rem;color:var(--bt-mauve);line-height:1.5;}
+.bt-meter-desc strong{color:var(--bt-peach);font-weight:700;}
+.bt-meter-rec{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.06em;margin-top:0.4rem;color:#c090a0;}
+.bt-slip-block{background:var(--bt-m10);border:1px solid var(--bt-m20);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.bt-slip-top{display:flex;gap:1rem;margin-bottom:0.7rem;}
+.bt-slip-stat{flex:1;text-align:center;}
+.bt-slip-n{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;line-height:1;margin-bottom:0.2rem;}
+.bt-sn-b{color:#c090a0;}.bt-sn-n{color:#9a5870;}
+.bt-slip-l{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.7;line-height:1.3;}
+.bt-slip-dv{width:1px;background:var(--bt-m25);align-self:stretch;}
+.bt-slip-bio{font-size:0.74rem;color:rgba(239,210,203,0.5);line-height:1.5;padding-top:0.7rem;border-top:1px solid var(--bt-m15);}
+.bt-slip-bio strong{color:var(--bt-peach);font-weight:700;}
+.bt-smoke-flag{display:flex;align-items:flex-start;gap:0.5rem;background:var(--bt-m10);border:1px solid var(--bt-m15);border-left:2px solid var(--bt-mauve);border-radius:0 8px 8px 0;padding:0.7rem 0.9rem;margin-bottom:1rem;}
+.bt-smoke-icon{font-size:0.9rem;flex-shrink:0;margin-top:0.05rem;}
+.bt-smoke-text{font-size:0.72rem;color:rgba(239,210,203,0.5);line-height:1.45;}
+.bt-smoke-text strong{color:var(--bt-peach);font-weight:700;}
+.bt-tonight-did{background:var(--bt-f10);border:1px solid var(--bt-f15);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.bt-td-t{font-weight:700;font-size:0.75rem;color:var(--bt-lime);margin-bottom:0.3rem;}
+.bt-td-b{font-size:0.74rem;color:var(--bt-forest);line-height:1.5;}
+.bt-td-b strong{color:#a8d4a0;font-weight:700;}
+.bt-breakdown{margin-bottom:1rem;}
+.bt-bk-t{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.45;margin-bottom:0.5rem;text-align:center;}
+.bt-bk-bars{display:flex;flex-direction:column;gap:0.32rem;}
+.bt-bk-row{display:flex;align-items:center;gap:0.5rem;}
+.bt-bk-lbl{width:105px;flex-shrink:0;color:var(--bt-mauve);text-align:right;font-size:0.66rem;}
+.bt-bk-track{flex:1;height:5px;background:rgba(239,210,203,0.04);border-radius:2px;overflow:hidden;}
+.bt-bk-fill{height:100%;border-radius:2px;transition:width 0.4s;}
+.bt-bk-cnt{width:22px;text-align:right;font-size:0.66rem;color:var(--bt-mauve);font-weight:600;}
+.bt-reset-wrap{text-align:center;margin-top:2rem;padding-bottom:1rem;}
+.bt-reset-btn{background:var(--bt-m10);border:1px solid var(--bt-m20);color:#c090a0;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;padding:0.85rem 2rem;border-radius:10px;width:100%;max-width:280px;}
+.bt-pb-products{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.5rem;}
+.bt-pb-product{background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:10px;padding:0.85rem;}
+.bt-pb-product .bt-pe{font-size:1.2rem;margin-bottom:0.3rem;}
+.bt-pb-product .bt-pn{font-weight:700;font-size:0.78rem;color:var(--bt-peach);margin-bottom:0.15rem;}
+.bt-pb-product .bt-pr{font-size:0.68rem;color:var(--bt-mauve);line-height:1.3;}
+.bt-pb-sec{margin-bottom:0.75rem;}
+.bt-pb-tog{width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:10px;padding:0.85rem 1rem;cursor:pointer;font-family:inherit;color:inherit;font-size:inherit;text-align:left;transition:background 0.15s;}
+.bt-pb-tog:active{background:var(--bt-p10);}.bt-pb-tog.open{border-radius:10px 10px 0 0;border-bottom-color:transparent;}
+.bt-pb-tog-left{display:flex;align-items:center;gap:0.5rem;}
+.bt-pb-badge{font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;padding:0.22rem 0.55rem;border-radius:100px;}
+.bt-pb-badge.morning{background:rgba(255,200,60,0.1);color:#f0c840;}.bt-pb-badge.night{background:var(--bt-m10);color:#c090a0;}
+.bt-pb-tog-name{font-weight:700;font-size:0.9rem;color:var(--bt-peach);}
+.bt-pb-chev{font-size:0.75rem;color:var(--bt-mauve);transition:transform 0.25s;}
+.bt-pb-tog.open .bt-pb-chev{transform:rotate(180deg);}
+.bt-pb-body{display:none;background:var(--bt-p03);border:1px solid var(--bt-p06);border-top:none;border-radius:0 0 10px 10px;padding:1rem;}
+.bt-pb-body.open{display:block;}
+.bt-pb-rule{background:linear-gradient(135deg,var(--bt-m10),var(--bt-f10));border:1px solid var(--bt-m15);border-radius:10px;padding:1rem;margin-bottom:1rem;text-align:center;}
+.bt-pb-rule-t{font-family:'Playfair Display',serif;font-size:1rem;font-weight:800;color:var(--bt-peach);margin-bottom:0.25rem;}
+.bt-pb-rule-d{font-size:0.75rem;color:var(--bt-mauve);}
+.bt-pb-steps{list-style:none;counter-reset:step;}
+.bt-pb-steps li{counter-increment:step;position:relative;padding-left:1.8rem;margin-bottom:0.6rem;font-size:0.82rem;color:rgba(239,210,203,0.75);}
+.bt-pb-steps li::before{content:counter(step);position:absolute;left:0;top:0.05rem;width:1.3rem;height:1.3rem;background:rgba(239,210,203,0.06);border-radius:50%;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--bt-mauve);}
+.bt-pb-steps li strong{color:var(--bt-peach);font-weight:700;}
+.bt-pb-note{font-size:0.75rem;color:var(--bt-mauve);line-height:1.5;margin-top:0.75rem;padding:0.8rem;background:rgba(239,210,203,0.02);border-radius:7px;border-left:2px solid rgba(239,210,203,0.07);}
+.bt-pb-note.success{border-left-color:rgba(195,233,145,0.25);color:#8ab88e;}.bt-pb-note.warn{border-left-color:rgba(240,200,64,0.2);color:#b8a878;}
+.bt-pb-subdiv{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.45;margin:1rem 0 0.5rem;padding-top:0.85rem;border-top:1px solid rgba(239,210,203,0.05);}
+.bt-pb-timer{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;background:var(--bt-f10);border:1px solid var(--bt-f15);border-radius:100px;color:var(--bt-lime);font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;margin-top:0.75rem;}
+.bt-pb-timer.running{background:var(--bt-f15);}.bt-pb-timer.done{background:rgba(195,233,145,0.12);}
+.bt-pb-timer-d{font-variant-numeric:tabular-nums;min-width:2.8rem;text-align:center;}
+.bt-pb-ref{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.5rem;}
+.bt-pb-ref-row{display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0.9rem;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:8px;cursor:pointer;color:inherit;transition:background 0.15s;font-size:0.8rem;}
+.bt-pb-ref-row:active{background:var(--bt-p10);}
+.bt-pb-ref-w{font-weight:700;color:var(--bt-peach);font-size:0.8rem;}
+.bt-pb-ref-wh{font-size:0.72rem;color:var(--bt-mauve);text-align:right;}
+.bt-ach-ov{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:1.5rem;}
+.bt-ach-ov-box{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:9px;padding:0.7rem 0.4rem;text-align:center;}
+.bt-ach-ov-n{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--bt-peach);line-height:1;margin-bottom:0.2rem;}
+.bt-ach-ov-n.green{color:var(--bt-lime);}
+.bt-ach-ov-l{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;}
+.bt-ach-sec-lbl{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.4;margin-bottom:0.75rem;}
+.bt-badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:1.5rem;}
+.bt-badge-card{display:flex;flex-direction:column;align-items:center;gap:0.35rem;padding:0.85rem 0.4rem;border-radius:12px;text-align:center;}
+.bt-badge-card.earned{background:var(--bt-p06);border:1px solid var(--bt-p10);}
+.bt-badge-card.earned.lime-card{background:var(--bt-l08);border:1px solid var(--bt-l15);}
+.bt-badge-card.earned.forest-card{background:var(--bt-f10);border:1px solid var(--bt-f15);}
+.bt-badge-card.earned.mauve-card{background:var(--bt-m10);border:1px solid var(--bt-m15);}
+.bt-badge-card.locked{background:rgba(239,210,203,0.02);border:1px solid rgba(239,210,203,0.04);opacity:0.35;}
+.bt-badge-icon-w{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.bt-badge-card.earned .bt-badge-icon-w{background:rgba(239,210,203,0.06);}
+.bt-badge-card.earned.lime-card .bt-badge-icon-w{background:var(--bt-l12);}
+.bt-badge-card.earned.forest-card .bt-badge-icon-w{background:var(--bt-f15);}
+.bt-badge-card.earned.mauve-card .bt-badge-icon-w{background:var(--bt-m15);}
+.bt-badge-card.locked .bt-badge-icon-w{background:rgba(239,210,203,0.03);filter:grayscale(1);}
+.bt-badge-name{font-size:0.6rem;font-weight:700;line-height:1.2;}
+.bt-badge-card.earned .bt-badge-name{color:var(--bt-peach);}
+.bt-badge-card.earned.lime-card .bt-badge-name{color:var(--bt-lime);}
+.bt-badge-card.earned.forest-card .bt-badge-name{color:#8ab88e;}
+.bt-badge-card.earned.mauve-card .bt-badge-name{color:#c090a0;}
+.bt-badge-card.locked .bt-badge-name{color:var(--bt-mauve);}
+.bt-badge-meta{font-family:'DM Mono',monospace;font-size:0.5rem;color:var(--bt-mauve);opacity:0.4;line-height:1.3;text-align:center;}
+.bt-badge-cnt{font-family:'DM Mono',monospace;font-size:0.56rem;font-weight:500;padding:0.12rem 0.4rem;border-radius:100px;}
+.bt-badge-cnt.lime{background:var(--bt-l12);color:var(--bt-lime);}
+.bt-badge-cnt.forest{background:var(--bt-f10);color:#8ab88e;}
+.bt-badge-cnt.mauve{background:var(--bt-m10);color:#c090a0;}
+.bt-sheet-overlay{position:fixed;inset:0;background:rgba(2,2,2,0.7);z-index:500;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+.bt-sheet-overlay.open{opacity:1;pointer-events:all;}
+.bt-bottom-sheet{position:fixed;bottom:0;left:0;right:0;background:#1a1a22;border-radius:20px 20px 0 0;border-top:1px solid rgba(239,210,203,0.08);z-index:501;padding:0 1.25rem 3rem;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);max-height:85vh;overflow-y:auto;}
+.bt-bottom-sheet.open{transform:translateY(0);}
+.bt-sheet-handle{width:32px;height:3px;background:rgba(239,210,203,0.12);border-radius:2px;margin:1rem auto 1.5rem;}
+.bt-sde{display:flex;align-items:center;gap:0.85rem;padding:0.85rem 1rem;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:12px;margin-bottom:0.75rem;}
+.bt-sde-icon{font-size:1.8rem;flex-shrink:0;}
+.bt-sde-date{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;margin-bottom:0.2rem;}
+.bt-sde-label{font-weight:700;font-size:0.9rem;color:var(--bt-peach);}
+.bt-dig-div{display:flex;align-items:center;gap:0.5rem;margin:1.25rem 0 1rem;}
+.bt-dig-div-line{flex:1;height:1px;background:rgba(239,210,203,0.06);}
+.bt-dig-div-lbl{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.4;}
+.bt-dhs{border-radius:12px;padding:1rem 1.1rem;margin-bottom:0.75rem;text-align:center;}
+.bt-dhs.first{background:linear-gradient(160deg,var(--bt-f10),var(--bt-l08));border:1px solid var(--bt-l15);}
+.bt-dhs.up{background:linear-gradient(160deg,var(--bt-l08),var(--bt-f10));border:1px solid var(--bt-l20);}
+.bt-dhs.down{background:linear-gradient(160deg,var(--bt-m15),var(--bt-m10));border:1px solid var(--bt-m20);}
+.bt-dhs-e{font-size:1.8rem;line-height:1;margin-bottom:0.4rem;}
+.bt-dhs-t{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:800;margin-bottom:0.25rem;line-height:1.2;}
+.bt-dhs.first .bt-dhs-t,.bt-dhs.up .bt-dhs-t{color:var(--bt-lime);}.bt-dhs.down .bt-dhs-t{color:#c090a0;}
+.bt-dhs-s{font-size:0.72rem;line-height:1.45;}
+.bt-dhs.first .bt-dhs-s,.bt-dhs.up .bt-dhs-s{color:var(--bt-forest);}.bt-dhs.down .bt-dhs-s{color:var(--bt-mauve);}
+.bt-dhs-w{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;margin-top:0.5rem;opacity:0.45;}
+.bt-dhs.first .bt-dhs-w,.bt-dhs.up .bt-dhs-w{color:var(--bt-forest);}.bt-dhs.down .bt-dhs-w{color:var(--bt-mauve);}
+.bt-dig-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;margin-bottom:0.55rem;}
+.bt-dig-cell{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:10px;padding:0.7rem 0.85rem;}
+.bt-dig-cell.wide{grid-column:1/-1;}
+.bt-dc-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.3rem;}
+.bt-dc-val{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:var(--bt-peach);line-height:1;}
+.bt-dc-val.green{color:var(--bt-lime);}.bt-dc-val.dim{color:var(--bt-mauve);}
+.bt-dp{color:var(--bt-lime);}.bt-dn2{color:#c090a0;}.bt-dz{color:var(--bt-mauve);}
+.bt-tm{border-radius:10px;padding:0.75rem 0.85rem;margin-bottom:0.55rem;}
+.bt-tm.up{background:var(--bt-l08);border:1px solid var(--bt-l15);}.bt-tm.down{background:var(--bt-m10);border:1px solid var(--bt-m15);}.bt-tm.flat{background:var(--bt-p03);border:1px solid var(--bt-p06);}
+.bt-tm-in{flex:1;}
+.bt-tm-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.35rem;}
+.bt-tm-row{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
+.bt-tm-pill{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.07em;text-transform:uppercase;padding:0.22rem 0.6rem;border-radius:100px;font-weight:500;}
+.bt-tm-arr{font-size:0.8rem;}.bt-tm-arr.up{color:var(--bt-lime);}.bt-tm-arr.down{color:#c090a0;}
+.bt-tm-same{font-size:0.7rem;color:var(--bt-mauve);opacity:0.6;}
+.bt-wkbk{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:10px;padding:0.7rem 0.85rem;margin-bottom:0.55rem;}
+.bt-wkbk-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.55rem;}
+.bt-wkbk-rows{display:flex;flex-direction:column;gap:0.3rem;}
+.bt-wkbk-row{display:flex;align-items:center;gap:0.5rem;}
+.bt-wkbk-ic{width:1.3rem;text-align:center;flex-shrink:0;font-size:0.9rem;}
+.bt-wkbk-nm{flex:1;color:var(--bt-mauve);font-size:0.68rem;}
+.bt-wkbk-bw{width:60px;height:4px;background:rgba(239,210,203,0.05);border-radius:2px;overflow:hidden;}
+.bt-wkbk-bf{height:100%;border-radius:2px;}
+.bt-wkbk-ct{width:16px;text-align:right;font-weight:700;font-size:0.7rem;color:var(--bt-peach);}
+.bt-dig-bdg{background:var(--bt-l08);border:1px solid var(--bt-l12);border-radius:10px;padding:0.7rem 0.85rem;margin-top:0.55rem;}
+.bt-db-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.5rem;}
+.bt-db-chips{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.bt-db-chip{display:flex;align-items:center;gap:0.35rem;padding:0.28rem 0.6rem;border-radius:100px;font-size:0.68rem;font-weight:600;}
+.bt-db-chip.lime{background:var(--bt-l12);color:var(--bt-lime);border:1px solid var(--bt-l20);}
+.bt-db-chip.forest{background:var(--bt-f10);color:#8ab88e;border:1px solid var(--bt-f15);}
+.bt-bf-prompt{font-size:0.78rem;color:var(--bt-mauve);text-align:center;margin-bottom:1rem;line-height:1.5;}
+.bt-bf-prompt strong{color:var(--bt-peach);}
+
+/* Onboarding (shown inline within Dashboard subpage until set up) */
+.bt-ob{padding:1rem 0.25rem;}
+.bt-ob-logo{font-size:2.2rem;margin-bottom:0.75rem;text-align:center;}
+.bt-ob-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;letter-spacing:-0.02em;color:var(--bt-peach);text-align:center;margin-bottom:0.35rem;}
+.bt-ob-sub{font-size:0.78rem;color:var(--bt-mauve);text-align:center;margin-bottom:1.75rem;max-width:280px;margin-left:auto;margin-right:auto;}
+.bt-ob-step{width:100%;margin-bottom:1.5rem;}
+.bt-ob-step-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--bt-mauve);margin-bottom:0.75rem;opacity:0.7;}
+.bt-monday-list{display:flex;flex-direction:column;gap:0.4rem;}
+.bt-monday-option{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1rem;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:10px;cursor:pointer;font-size:0.88rem;color:var(--bt-peach);font-weight:500;}
+.bt-monday-option.selected{background:var(--bt-f10);border-color:var(--bt-f20);color:var(--bt-lime);}
+.bt-monday-option .bt-mo-tag{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--bt-mauve);opacity:0.6;}
+.bt-monday-option.selected .bt-mo-tag{color:var(--bt-forest);opacity:1;}
+.bt-deficit-options{display:flex;flex-direction:column;gap:0.5rem;}
+.bt-deficit-option{padding:1rem;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:12px;cursor:pointer;}
+.bt-deficit-option.selected{background:var(--bt-m10);border-color:var(--bt-m20);}
+.bt-deficit-name{font-weight:700;font-size:0.88rem;color:var(--bt-peach);margin-bottom:0.25rem;}
+.bt-deficit-option.selected .bt-deficit-name{color:#e0a0b8;}
+.bt-deficit-nights{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);margin-bottom:0.3rem;}
+.bt-deficit-desc{font-size:0.75rem;color:var(--bt-mauve);line-height:1.45;opacity:0.8;}
+.bt-ob-confirm{width:100%;padding:1rem;background:linear-gradient(135deg,var(--bt-forest),#3d5940);color:var(--bt-lime);font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;border:none;border-radius:12px;cursor:pointer;}
+.bt-ob-confirm:disabled{opacity:0.3;pointer-events:none;}
 </style>
+<script src="vendor/confetti.min.js"></script>
 </head>
 <body>
 
@@ -1696,7 +1982,7 @@ body {
 
   <!-- DATA -->
   <div class="screen page" id="page-data">
-    <div class="page-title">data 🗄️</div>
+    <div class="page-title">data <span class="tooth-emoji" onclick="openBrushTracker()" id="data-tooth">🦷</span> 🗄️</div>
     <div class="page-sub">journal & sync</div>
     <div id="journal-phase-cards"></div>
     <div class="data-coll">
@@ -1739,7 +2025,150 @@ body {
     <div id="wrapped-detail-body"></div>
   </div>
 
+  <!-- BRUSH TRACKER -->
+  <div class="screen page" id="page-brushtracker">
+    <div class="bt-shell">
+      <div class="bt-back" onclick="closeBrushTracker()">
+        <span style="font-size:22px;color:var(--bt-mauve, var(--text-xsoft));">‹</span>
+        <span style="font-size:12px;color:var(--bt-mauve, var(--text-xsoft));letter-spacing:0.04em;">data</span>
+      </div>
+      <div class="bt-subpages">
 
+        <!-- Onboarding (shown inline in Dashboard subpage) -->
+        <div class="bt-subpage active" id="bt-subpage-dashboard">
+          <div id="bt-onboarding" class="bt-ob" style="display:none;">
+            <div class="bt-ob-logo">🦷</div>
+            <div class="bt-ob-title">Did You Brush?</div>
+            <div class="bt-ob-sub">Your nightly habit formation tracker. Let's set you up.</div>
+            <div class="bt-ob-step">
+              <div class="bt-ob-step-label">Step 1 — Pick your start Monday</div>
+              <div class="bt-monday-list" id="bt-monday-list"></div>
+            </div>
+            <div class="bt-ob-step">
+              <div class="bt-ob-step-label">Step 2 — Pick your starting deficit</div>
+              <div class="bt-deficit-options">
+                <div class="bt-deficit-option" onclick="btSelDef(this,3)"><div class="bt-deficit-name">The Mild Hole</div><div class="bt-deficit-nights">3 nights</div><div class="bt-deficit-desc">Inconsistent but not catastrophic. Biofilm is organized, some inflammation. Baseline is low but not zero.</div></div>
+                <div class="bt-deficit-option" onclick="btSelDef(this,5)"><div class="bt-deficit-name">The Standard Hole</div><div class="bt-deficit-nights">5 nights</div><div class="bt-deficit-desc">The default starting point. Tartar is beginning to form, harmful bacteria are dominant. Real ground to make up.</div></div>
+                <div class="bt-deficit-option" onclick="btSelDef(this,7)"><div class="bt-deficit-name">The Deep Hole</div><div class="bt-deficit-nights">7 nights</div><div class="bt-deficit-desc">A full week of nothing. Tartar is hardening, microbiome at its worst. The first boss is harder — but so is the satisfaction of climbing out.</div></div>
+                <div class="bt-deficit-option" onclick="btSelDef(this,10)"><div class="bt-deficit-name">The Abyss</div><div class="bt-deficit-nights">10 nights</div><div class="bt-deficit-desc">You know where you've been. Maximum deficit, maximum fight.</div></div>
+              </div>
+            </div>
+            <button class="bt-ob-confirm" id="bt-ob-confirm" disabled onclick="btConfirmOb()">Start the mission</button>
+          </div>
+          <div id="bt-dashboard-body" style="display:none;">
+            <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-tier-pill" id="bt-tier-pill">—</div></div>
+            <div class="bt-hero neutral" id="bt-hero"><div class="bt-hero-emoji" id="bt-hero-emoji">🪥</div><div class="bt-hero-hl" id="bt-hero-hl">Start tracking tonight</div><div class="bt-hero-fact" id="bt-hero-fact">Log what you did each night.</div><div id="bt-streak-slot"></div></div>
+            <div id="bt-nudge-slot"></div>
+            <div id="bt-log-section"></div>
+            <div class="bt-divider"><div class="bt-divider-line"></div><div class="bt-divider-label">This month</div><div class="bt-divider-line"></div></div>
+            <div class="bt-cal-header"><button class="bt-cal-nav" onclick="btChMo(-1)">◀</button><span class="bt-cal-month" id="bt-cal-month"></span><button class="bt-cal-nav" onclick="btChMo(1)">▶</button></div>
+            <div class="bt-cal-grid" id="bt-cal-grid"></div>
+            <div class="bt-legend">
+              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(195,233,145,0.45)"></div>Path A</div>
+              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(195,233,145,0.25)"></div>Couch ⚡</div>
+              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(80,114,85,0.35)"></div>Couch 🪫</div>
+              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(239,210,203,0.2)"></div>Rinse+</div>
+              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(239,210,203,0.1)"></div>Rinse</div>
+              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(117,72,94,0.3)"></div>Nothing</div>
+            </div>
+            <div class="bt-divider" style="margin-top:1rem;"><div class="bt-divider-line"></div><div class="bt-divider-label">Stats</div><div class="bt-divider-line"></div></div>
+            <div class="bt-stats-row">
+              <div class="bt-stat-box"><div class="bt-stat-n" id="bt-stat-total">0</div><div class="bt-stat-l">Nights</div></div>
+              <div class="bt-stat-box"><div class="bt-stat-n green" id="bt-stat-brushed">0</div><div class="bt-stat-l">Brushed</div></div>
+              <div class="bt-stat-box"><div class="bt-stat-n" id="bt-stat-rate">—</div><div class="bt-stat-l">Brush rate</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Science -->
+        <div class="bt-subpage" id="bt-subpage-science">
+          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">The Science</div></div>
+          <div id="bt-meter-slot"></div><div id="bt-slip-slot"></div><div id="bt-smoke-slot"></div><div id="bt-tonight-slot"></div><div id="bt-breakdown-slot"></div>
+          <div class="bt-reset-wrap" id="bt-reset-wrap"><button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button></div>
+        </div>
+
+        <!-- Playbook -->
+        <div class="bt-subpage" id="bt-subpage-playbook">
+          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">The Playbook</div></div>
+          <div class="bt-pb-ref">
+            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-m')"><span class="bt-pb-ref-w">☀️ Morning</span><span class="bt-pb-ref-wh">Floss + CloSYS + Twice + tongue scrape ↓</span></div>
+            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-a')"><span class="bt-pb-ref-w">🌙 Normal Night</span><span class="bt-pb-ref-wh">Full routine after dinner + bedside CloSYS ↓</span></div>
+            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-bh')"><span class="bt-pb-ref-w">🛋️ Couch Night ⚡</span><span class="bt-pb-ref-wh">Full routine in bathroom + smoke + CloSYS ↓</span></div>
+            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-bl')"><span class="bt-pb-ref-w">🛋️ Couch Night 🪫</span><span class="bt-pb-ref-wh">Brush + CloSYS + smoke + CloSYS ↓</span></div>
+          </div>
+          <div class="bt-pb-products">
+            <div class="bt-pb-product"><div class="bt-pe">☀️</div><div class="bt-pn">Twice Spearmint Eucalyptus</div><div class="bt-pr">Morning paste — SLS-free stain lifting</div></div>
+            <div class="bt-pb-product"><div class="bt-pe">🌙</div><div class="bt-pn">SuperMouth Hydroxamin</div><div class="bt-pr">Night paste — dual-mineral enamel repair</div></div>
+            <div class="bt-pb-product"><div class="bt-pe">🧴</div><div class="bt-pn">CloSYS Ultra Sensitive</div><div class="bt-pr">Mouthwash — chlorine dioxide antimicrobial</div></div>
+            <div class="bt-pb-product"><div class="bt-pe">🛏️</div><div class="bt-pn">Bedside Kit</div><div class="bt-pr">Floss picks + CloSYS bottle + discard cup</div></div>
+          </div>
+          <div class="bt-pb-sec" id="bt-pb-m">
+            <button class="bt-pb-tog" onclick="btPbTog(this)"><div class="bt-pb-tog-left"><span class="bt-pb-badge morning">Morning</span><span class="bt-pb-tog-name">Morning Routine</span></div><span class="bt-pb-chev">▼</span></button>
+            <div class="bt-pb-body"><ol class="bt-pb-steps"><li><strong>Floss</strong> — String floss or water flosser</li><li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li><li><strong>Brush</strong> — 2 min with Twice Spearmint Eucalyptus. Scrape tongue.</li></ol><div class="bt-pb-note">Try to wait 20–30 min after eating before brushing. If you need to brush right after eating, swish a pinch of baking soda in water for 30 sec first.</div></div>
+          </div>
+          <div class="bt-pb-sec" id="bt-pb-a">
+            <button class="bt-pb-tog" onclick="btPbTog(this)"><div class="bt-pb-tog-left"><span class="bt-pb-badge night">Night</span><span class="bt-pb-tog-name">Path A — Normal Night</span></div><span class="bt-pb-chev">▼</span></button>
+            <div class="bt-pb-body">
+              <div class="bt-pb-rule"><div class="bt-pb-rule-t">⏰ Teeth brushed by midnight</div><div class="bt-pb-rule-d">No matter what. Guarantees a 30-min buffer before your 12:30am smoke.</div></div>
+              <div class="bt-pb-subdiv">Post-dinner brush (wait 30 min after eating)</div>
+              <ol class="bt-pb-steps"><li><strong>Floss</strong> — String floss, then water flosser for gum pockets</li><li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li><li><strong>Brush</strong> — 2 min with SuperMouth Hydroxamin. Scrape tongue.</li></ol>
+              <button class="bt-pb-timer" onclick="btPbTimer(this,1800,'Post-dinner wait')"><span>⏱ 30:00 post-dinner wait</span><span class="bt-pb-timer-d"></span></button>
+              <div class="bt-pb-note success">You're clean and mineralized. SuperMouth gets hours of contact time while you work — better for enamel repair than brushing right before sleep.</div>
+              <div class="bt-pb-subdiv">After smoke, from bed</div>
+              <ol class="bt-pb-steps"><li><strong>CloSYS Rinse</strong> — Swig, swish 60 sec, gargle, spit into discard cup</li><li><strong>Floss Pick</strong> (optional) — If you have the energy</li></ol>
+            </div>
+          </div>
+          <div class="bt-pb-sec" id="bt-pb-bh">
+            <button class="bt-pb-tog" onclick="btPbTog(this)"><div class="bt-pb-tog-left"><span class="bt-pb-badge night">Night</span><span class="bt-pb-tog-name">Path B — Couch Night ⚡</span></div><span class="bt-pb-chev">▼</span></button>
+            <div class="bt-pb-body">
+              <div class="bt-pb-subdiv">Woke up on couch → bathroom → full routine → smoke → bed</div>
+              <ol class="bt-pb-steps"><li><strong>Floss</strong> — String floss or water flosser</li><li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li><li><strong>Brush</strong> — 2 min with SuperMouth Hydroxamin. Scrape tongue.</li><li><strong>Wait 15 min</strong> — Let enamel remineralize before smoking</li><li><strong>Smoke</strong> → CloSYS rinse from bed</li></ol>
+              <button class="bt-pb-timer" onclick="btPbTimer(this,900,'Post-brush wait')"><span>⏱ 15:00 post-brush wait</span><span class="bt-pb-timer-d"></span></button>
+              <div class="bt-pb-note warn">Aim for 15 min between brushing and smoking. Even with zero wait, brushing is infinitely better than not brushing.</div>
+            </div>
+          </div>
+          <div class="bt-pb-sec" id="bt-pb-bl">
+            <button class="bt-pb-tog" onclick="btPbTog(this)"><div class="bt-pb-tog-left"><span class="bt-pb-badge night">Night</span><span class="bt-pb-tog-name">Path B — Couch Night 🪫</span></div><span class="bt-pb-chev">▼</span></button>
+            <div class="bt-pb-body">
+              <div class="bt-pb-subdiv">Woke up on couch → bathroom → quick brush + rinse → smoke → bed</div>
+              <ol class="bt-pb-steps"><li><strong>Brush</strong> — 2 min with SuperMouth Hydroxamin</li><li><strong>Rinse</strong> — CloSYS Ultra Sensitive, 30–60 sec</li><li><strong>Smoke</strong> → CloSYS rinse from bed</li></ol>
+              <div class="bt-pb-note warn">Brush + rinse is your floor on low-energy nights.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="bt-subpage" id="bt-subpage-achievements">
+          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">Achievements</div></div>
+          <div class="bt-ach-ov" id="bt-ach-ov"></div>
+          <div id="bt-ach-mil"></div>
+          <div id="bt-ach-rep"></div>
+        </div>
+
+      </div>
+      <nav class="bt-nav">
+        <button class="bt-nav-btn active" id="bt-nav-dashboard" onclick="btGoTo('dashboard')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2C8 6 6 10 6 13a6 6 0 0012 0c0-3-2-7-6-11z"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="bt-nav-btn" id="bt-nav-science" onclick="btGoTo('science')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 2v6L4 20a1 1 0 001 2h14a1 1 0 001-2L15 8V2M9 2h6"/></svg>
+          <span>Science</span>
+        </button>
+        <button class="bt-nav-btn" id="bt-nav-playbook" onclick="btGoTo('playbook')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h11a2 2 0 012 2v14l-6.5-3L4 20V4z"/></svg>
+          <span>Playbook</span>
+        </button>
+        <button class="bt-nav-btn" id="bt-nav-achievements" onclick="btGoTo('achievements')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="6"/><path d="M9 13l-2 8 5-3 5 3-2-8"/></svg>
+          <span>Awards</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <div class="bt-sheet-overlay" id="bt-sheet-overlay" onclick="btCloseSheet()"></div>
+  <div class="bt-bottom-sheet" id="bt-bottom-sheet"><div class="bt-sheet-handle"></div><div id="bt-sheet-content"></div></div>
 
   <nav class="nav">
     <button class="nav-btn active" onclick="goTo('today',this)">
@@ -1988,6 +2417,7 @@ async function launchApp() {
     if (!appData.spotting) appData.spotting  = [];
     if (!appData.wraps)    appData.wraps     = [];
     if (!appData.events)   appData.events    = [];
+    if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false };
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
     setSyncDot('');
   } catch(e) {
@@ -2041,6 +2471,7 @@ async function loadFromSupabase() {
         journal:      safeParseObject(row.journal),
         spotting:     safeParseArray(row.spotting),
         events:       safeParseArray(row.events),
+        brushTracker: Object.keys(safeParseObject(row.brush_tracker)).length ? safeParseObject(row.brush_tracker) : { startDate: null, logs: {}, ss: false },
         activePeriod: row.active_period || null,
         settings:     safeParseObject(row.settings)    && Object.keys(safeParseObject(row.settings)).length ? safeParseObject(row.settings) : TEMPDROP_DEFAULT.settings
       };
@@ -2063,6 +2494,7 @@ async function saveToSupabase(data) {
       journal:       data.journal  || {},
       spotting:      data.spotting || [],
       events:        data.events   || [],
+      brush_tracker: data.brushTracker || { startDate: null, logs: {}, ss: false },
       active_period: data.activePeriod || null,
       settings:      data.settings,
       updated_at:    new Date().toISOString()
@@ -2136,7 +2568,8 @@ const TEMPDROP_DEFAULT = {
   settings: { cycleLength: 24, periodLength: 6, wrappedPeriods: [] },
   symptoms: {},
   journal: {},
-  events: []
+  events: [],
+  brushTracker: { startDate: null, logs: {}, ss: false }
 };
 
 let appData = JSON.parse(JSON.stringify(TEMPDROP_DEFAULT));
@@ -4722,6 +5155,536 @@ function renderCalendarEventSection() {
         </div>`;
       }).join('')}
     </div>`;
+}
+
+// ── BRUSH TRACKER ────────────────────────────────────────────────────────────
+function btFireConfetti(){
+  const end=Date.now()+1200;
+  const colors=['#C3E991','#EFD2CB','#507255','#75485E'];
+  (function frame(){
+    confetti({particleCount:3,angle:60,spread:55,origin:{x:0},colors});
+    confetti({particleCount:3,angle:120,spread:55,origin:{x:1},colors});
+    if(Date.now()<end)requestAnimationFrame(frame);
+  })();
+}
+const BT_TM={
+  'path-a':      {b:true, s:2,   lbl:'Path A — Full routine', ic:'🌟',dc:'Floss + CloSYS + SuperMouth + tongue scrape after dinner',co:'rgba(195,233,145,0.45)',sc:'bt-ts-pos'},
+  'couch-high':  {b:true, s:2,   lbl:'Couch Night ⚡',        ic:'💪',dc:'Full routine in the bathroom before smoke',co:'rgba(195,233,145,0.25)',sc:'bt-ts-pos'},
+  'couch-low':   {b:true, s:1.5, lbl:'Couch Night 🪫',        ic:'🪥',dc:'Brush + CloSYS in bathroom before smoke',co:'rgba(80,114,85,0.35)',sc:'bt-ts-pos2'},
+  'closys-floss':{b:false,s:-0.5,lbl:'CloSYS + floss pick',   ic:'🧴',dc:'Rinse and floss pick from bed, no brush',co:'rgba(239,210,203,0.2)',sc:'bt-ts-neg1'},
+  'closys-only': {b:false,s:-1,  lbl:'CloSYS only',           ic:'💧',dc:'Mouthwash rinse from bed, nothing else',co:'rgba(239,210,203,0.1)',sc:'bt-ts-neg1'},
+  'nothing':     {b:false,s:-2,  lbl:'Nothing',               ic:'😬',dc:'Went to bed without doing anything',co:'rgba(117,72,94,0.3)',sc:'bt-ts-neg2'},
+};
+const BT_BL=['path-a','couch-high','couch-low'];
+const BT_NL=['closys-floss','closys-only','nothing'];
+const BT_AASC=['nothing','closys-only','closys-floss','couch-low','couch-high','path-a'];
+const BT_TD=[
+  {id:'1', nm:'Initiation',   pl:'bt-tp-1', mx:14,  mn:1 },
+  {id:'2', nm:'Instability',  pl:'bt-tp-2', mx:42,  mn:8 },
+  {id:'3', nm:'Consolidation',pl:'bt-tp-3', mx:70,  mn:22},
+  {id:'3.5',nm:'Deepening',   pl:'bt-tp-35',mx:90,  mn:45},
+  {id:'4', nm:'Automaticity', pl:'bt-tp-4', mx:120, mn:67},
+  {id:'4.5',nm:'Threshold',   pl:'bt-tp-45',mx:140, mn:80},
+  {id:'5', nm:'Maintenance',  pl:'bt-tp-5', mx:180, mn:91},
+];
+const BT_CM={
+  1:{e:'✨',h:'1 night brushed!',f:'You started. Tonight you interrupted the bacterial cycle for the first time. Biofilm is disrupted. <strong>The work has started.</strong>'},
+  2:{e:'🌱',h:'2 night streak!',f:'Two nights in. Plaque organizing on your enamel yesterday got cleared before it could calcify. Your gums are already less inflamed than 48 hours ago.'},
+  3:{e:'💚',h:'3 night streak!',f:'Three nights. Research marks this as the first real checkpoint. <strong>The biology is moving faster than the habit is.</strong>'},
+  4:{e:'🪴',h:'4 night streak!',f:'Four nights. <strong>Streptococcus mutans</strong> — the primary acid-producing bacteria responsible for enamel erosion — is being disrupted on a consistent cycle now.'},
+  5:{e:'🔥',h:'5 night streak!',f:'Five nights. Your gums are visibly less puffy than at the start of this week. <strong>It\'s working.</strong>'},
+  6:{e:'⭐',h:'6 night streak!',f:'Six nights. Your brain is building a context link between your nighttime environment and brushing. Faint, but real.'},
+  7:{e:'👑',h:'7 night streak!',f:'Seven nights. One full week. Beneficial bacteria are starting to get a foothold. <strong>Tomorrow you enter the hardest phase.</strong>'},
+  8:{e:'🌊',h:'Into the instability phase',f:'You made it past week one. Days 8–21 are where motivation statistically dips. <strong>The bacteria don\'t care about your motivation. Keep going anyway.</strong>'},
+  10:{e:'💪',h:'10 night streak!',f:'Double digits. Your beneficial bacteria are establishing real presence, actively competing with the harmful ones.'},
+  14:{e:'🏅',h:'14 night streak!',f:'Two weeks. Your gum tissue has measurably tightened. <strong>The pocket depth where bacteria harbor is shallower than it was 14 days ago.</strong>'},
+  17:{e:'💫',h:'17 night streak!',f:'Seventeen nights. Past the halfway point of the instability phase — the phase research says claims most people.'},
+  21:{e:'🌿',h:'21 nights — instability survived!',f:'The end of the instability phase. You didn\'t quit when it stopped feeling new. <strong>Your oral microbiome has genuinely shifted.</strong>'},
+  22:{e:'🌿',h:'Into consolidation',f:'The cue-routine loop is becoming context-dependent. <strong>The wiring is happening.</strong>'},
+  30:{e:'🌙',h:'30 nights — one full month!',f:'Your gum tissue is structurally different from day one — tighter, less prone to bleeding. <strong>This is compounding.</strong>'},
+  45:{e:'🌾',h:'45 nights — into deepening!',f:'Your brain is starting to generate the routine without a conscious decision. <strong>That\'s the wiring.</strong>'},
+  50:{e:'🔑',h:'50 night streak!',f:'The beneficial bacteria you\'ve been cultivating have now held dominance long enough to start restructuring the broader microbial community. <strong>The environment itself is changing.</strong>'},
+  60:{e:'🌅',h:'60 night streak!',f:'Your brain is beginning to generate mild discomfort when the routine is skipped. <strong>That\'s the cue-routine loop encoding.</strong>'},
+  66:{e:'⚡',h:'66 nights — research threshold!',f:'The research threshold for habit formation. <strong>The bacteria haven\'t changed what they do. You\'ve changed what you do about it.</strong>'},
+  67:{e:'👑',h:'Into automaticity!',f:'You crossed the research threshold. <strong>What you\'re building now isn\'t effortful habit — it\'s an automatic behavior.</strong>'},
+  75:{e:'🌟',h:'75 night streak!',f:'Your oral microbiome is in its best state since you started. Beneficial bacteria have established structural dominance — <strong>not just competing. Winning.</strong>'},
+  80:{e:'⏳',h:'80 nights — threshold phase!',f:'Ten days from the point where research says this feels wrong to skip. <strong>The version of you who struggled to brush before bed is starting to feel like someone else.</strong>'},
+  85:{e:'💎',h:'85 night streak!',f:'Your gums are at their healthiest in this entire journey. <strong>Beneficial bacterial diversity at its peak.</strong>'},
+  90:{e:'🏆',h:'90 nights — you\'re there!',f:'This is the threshold where brushing at night stops being something you try to do and <strong>starts being something you are.</strong> The family pattern stops with you.'},
+  100:{e:'💎',h:'100 nights!',f:'Your oral health baseline is categorically different from where you started. <strong>Your dentist will notice. Your teeth will show it.</strong>'},
+  180:{e:'🏅',h:'6 months!',f:'Half a year of nightly brushing. <strong>The family pattern is broken.</strong> This is yours now.'},
+  365:{e:'🌍',h:'A full year!',f:'You built this from a deficit. <strong>Whatever comes next, this one\'s done.</strong>'},
+};
+const btGetSM=()=>({
+  '1':[
+    {e:'🦠',h:'1 night skipped',bio:'Bacteria in your mouth have doubled overnight — about <strong>20 billion</strong> colonizing your teeth and gums. If you smoked before bed, the tar residue is sitting on your enamel giving bacteria a better surface to grip.'},
+    {e:'🪱',h:'2 nights without brushing',bio:'Biofilm is fully reformed and organizing into structured plaque. If you smoked, <strong>the vasoconstriction is masking your gum inflammation. Your gums may look fine. They are not fine.</strong>'},
+    {e:'🤢',h:'3 nights missed',bio:'Plaque is hardening at the gumline. <strong>Smoking before bed without brushing means the tar scaffold has been rebuilding every night, giving harmful bacteria an organized surface to colonize.</strong>'},
+    {e:'💀',h:'4 nights missed',bio:'Biofilm is now structured enough that a rinse alone won\'t break it. <strong>Nightly smoking is compounding the damage — suppressed saliva overnight means no natural defense.</strong>'},
+    {e:'🪦',h:'5 nights missed',bio:'Tartar is beginning to calcify at the gumline. <strong>The bacteria won this round</strong> — and smoking before bed has been accelerating their timeline every single night.'},
+    {e:'😶',h:'6 nights missed',bio:'Harmful strains are fully dominant, tartar is hardening. <strong>Nightly smoking has been giving them ideal conditions — tar scaffold, suppressed saliva, no mechanical disruption.</strong>'},
+    {e:'😶',h:'7 nights — a full week undone',bio:'Your mouth is back to baseline zero. <strong>The restart is tonight.</strong>'},
+    {e:'🤝',h:'8 nights. Still opening the app.',bio:'The biology has plateaued. <strong>The bathroom is right there.</strong>'},
+    {e:'🚪',h:'9 nights',bio:'You\'re still opening this app. You haven\'t decided this doesn\'t matter. You\'ve just been not doing it. <strong>Those are different things.</strong>'},
+    {e:'🌅',h:'10 nights — the window closes here',bio:'<strong>The only direction available to you is back. Tonight is night one — again.</strong>'},
+  ],
+  '2':[
+    {e:'🦠',h:'1 night missed in the instability phase',bio:'Your baseline is real but thin. <strong>If you smoked before bed, the tar residue is providing the bacterial scaffold you spent two weeks disrupting.</strong>'},
+    {e:'🪱',h:'2 nights in the instability phase',bio:'This is the statistically most likely place to fall off. <strong>Two nights of smoking without brushing: tar scaffold, suppressed saliva, unopposed bacterial colonization.</strong>'},
+    {e:'🤢',h:'3 nights missed',bio:'The biofilm is fully restructured. <strong>Smoking without brushing has been accelerating the bacterial timeline every night.</strong>'},
+    {e:'💀',h:'4 nights missed',bio:'Plaque is hardening. Habit research calls what\'s happening to your neural pathway <strong>extinction</strong> — and it happens faster than formation.'},
+    {e:'🪦',h:'5 nights missed',bio:'Tartar is forming. But you\'ve done this. <strong>The instability phase has a finish line.</strong>'},
+    {e:'😶',h:'6 nights missed',bio:'<strong>Restart tonight — the second time through this phase is statistically easier than the first.</strong>'},
+    {e:'😶',h:'7 nights — a full week',bio:'<strong>Your brain knows this routine exists. Restart tonight.</strong>'},
+    {e:'🤝',h:'8 nights. What\'s actually in the way?',bio:'<strong>The question isn\'t biological anymore. What\'s actually in the way tonight?</strong>'},
+    {e:'🚪',h:'9 nights — still logging',bio:'<strong>The bacteria are winning right now. But you know they don\'t have to.</strong>'},
+    {e:'🌅',h:'10 nights — window closes here',bio:'<strong>Night one of the instability phase, again. You\'ve already proven you can get through it.</strong>'},
+  ],
+  '3':[
+    {e:'🦠',h:'1 night missed in consolidation',bio:'Your baseline is genuinely strong. <strong>If you smoked before bed, tar residue is sitting on your enamel, giving bacteria a better grip.</strong> One night is fine. Two starts to matter.'},
+    {e:'🪱',h:'2 nights missed',bio:'The biofilm is organized — a rinse won\'t break it. <strong>Two nights of smoking without brushing: tar scaffold on your enamel, suppressed saliva.</strong>'},
+    {e:'🤢',h:'3 nights missed',bio:'Harmful strains are moving back in. <strong>Smoking without brushing: tar scaffold each night, saliva suppression, no mechanical disruption.</strong>'},
+    {e:'💀',h:'4 nights missed',bio:'Tartar is beginning to calcify. <strong>Four nights of smoking before bed without brushing: near-ideal bacterial conditions every night.</strong>'},
+    {e:'🪦',h:'5 nights missed',bio:'Your gums are re-inflaming — <strong>the vasoconstriction from smoking is masking it. Your gums may look okay right now. They are not okay.</strong>'},
+    {e:'😶',h:'6 nights missed',bio:'The tartar at your gumline is hardening. <strong>The smoking without brushing has been actively providing better bacterial conditions every single night.</strong>'},
+    {e:'😶',h:'7 nights — a week of backsliding',bio:'<strong>You need to restart tonight and treat it like week one, because biologically you\'re close to it.</strong>'},
+    {e:'🤝',h:'8 nights. What changed?',bio:'You built 22–66 days of real progress, and you\'ve watched it erode for eight nights. <strong>What\'s actually in the way?</strong>'},
+    {e:'🚪',h:'9 nights — still logging',bio:'<strong>It starts the same way it always starts. Tonight.</strong>'},
+    {e:'🌅',h:'10 nights — window closes here',bio:'<strong>You know what this phase feels like. You know what it costs to lose it. Start again.</strong>'},
+  ],
+  '3.5':[
+    {e:'🦠',h:'1 night missed in deepening',bio:'<strong>If you smoked before bed, tar residue is sitting on your best-ever enamel. One night tests that.</strong> Your buffer is real. Get back tomorrow.'},
+    {e:'🪱',h:'2 nights missed',bio:'<strong>Two nights of smoking without brushing: tar scaffold on your best-ever enamel, suppressed saliva.</strong> The deepening phase is where the habit starts protecting itself — but only if you keep reinforcing it.'},
+    {e:'🤢',h:'3 nights missed',bio:'The bacterial diversity you\'ve spent 45–66 days cultivating is shifting. <strong>The nightly smoking has been accelerating this: tar scaffold each night, saliva suppression, no brush to counter it.</strong>'},
+    {e:'💀',h:'4 nights missed',bio:'Tartar is beginning to calcify. The cue-routine loop that was starting to protect itself is losing definition. <strong>Four nights of smoking without brushing: near-ideal bacterial conditions every night.</strong>'},
+    {e:'🪦',h:'5 nights missed',bio:'Gums are re-inflaming — <strong>the vasoconstriction from smoking is masking some of it. Your gums may look okay. They are not okay.</strong>'},
+    {e:'😶',h:'6 nights missed',bio:'Your oral microbiome looks more like it did at day 30 than what you built at day 45–66. <strong>Six nights of smoking before bed without brushing: worst-case overnight environment every single night.</strong>'},
+    {e:'😶',h:'7 nights — a week of regression',bio:'<strong>Restart tonight and treat the first few nights like early consolidation — because biologically, that\'s where you are.</strong>'},
+    {e:'🤝',h:'8 nights. You were past the midpoint.',bio:'The deepening phase was where the habit started feeling like less work. <strong>What got in the way?</strong>'},
+    {e:'🚪',h:'9 nights — still logging',bio:'You made it to day 45. That\'s real. <strong>The rebuild from here is faster than the original build was.</strong>'},
+    {e:'🌅',h:'10 nights — window closes here',bio:'<strong>You know deepening is reachable. Start again tonight.</strong>'},
+  ],
+  '4':[
+    {e:'🦠',h:'1 night missed in automaticity',bio:'<strong>If you smoked before bed, tar residue is sitting on enamel in its best-ever state. One night tests that.</strong> Get back tomorrow.'},
+    {e:'🪱',h:'2 nights missed',bio:'<strong>Two nights of smoking without brushing: tar scaffold on your best-ever enamel, suppressed overnight defense.</strong> Two missed cues this close to full automaticity is what the research flags.'},
+    {e:'🤢',h:'3 nights missed',bio:'Streptococcus mutans is re-establishing acid production cycles. <strong>Your microbiome is more fragile than your tissue.</strong>'},
+    {e:'💀',h:'4 nights missed',bio:'Beneficial bacteria that took months to establish are losing dominance. <strong>You were 10 days from feeling weird about skipping this.</strong>'},
+    {e:'🪦',h:'5 nights missed',bio:'Your gums are re-inflaming — <strong>the vasoconstriction from smoking is masking it, but the inflammation is there.</strong> Tonight is not a suggestion.'},
+    {e:'😶',h:'6 nights missed',bio:'Tartar is hardening. <strong>Six nights of smoking without brushing has accelerated every stage of this reversion.</strong>'},
+    {e:'😶',h:'7 nights — you were this close',bio:'<strong>Restart tonight — your baseline means you\'ll rebuild faster than the first time.</strong>'},
+    {e:'🤝',h:'8 nights. What happened?',bio:'You had 80 nights behind you. <strong>What changed eight nights ago?</strong>'},
+    {e:'🚪',h:'9 nights — still logging',bio:'<strong>The automaticity phase can be rebuilt. But the rebuild starts with tonight, not tomorrow.</strong>'},
+    {e:'🌅',h:'10 nights — window closes here',bio:'<strong>You\'ve already proven you can get to night 80. The second run will be faster. But it has to start.</strong>'},
+  ],
+  '4.5':[
+    {e:'🦠',h:'1 night missed in the threshold phase',bio:'Your baseline is exceptional. <strong>If you smoked before bed, tar residue is sitting on enamel in its best-ever state. One night is a blip.</strong> You are this close.'},
+    {e:'🪱',h:'2 nights missed',bio:'<strong>Two nights of smoking without brushing this close to the finish line: tar scaffold on your best-ever enamel, suppressed saliva, no mechanical disruption.</strong>'},
+    {e:'🤢',h:'3 nights missed in the threshold phase',bio:'You were days from crossing into automaticity. <strong>Three nights here costs more than three nights at day 30.</strong> Get back tonight.'},
+    {e:'💀',h:'4 nights missed',bio:'<strong>Acid production is ramping up nightly and the tar residue from smoking is giving bacteria the surface they need.</strong> You were ten days from the finish line.'},
+    {e:'🪦',h:'5 nights missed',bio:'Gums are re-inflaming — <strong>the vasoconstriction from smoking is masking some of it. Your gums may look okay. They are not okay.</strong>'},
+    {e:'😶',h:'6 nights missed',bio:'<strong>Six nights of smoking without brushing: worst-case overnight environment every single night.</strong> You were almost there.'},
+    {e:'😶',h:'7 nights — you were this close',bio:'<strong>The word for that isn\'t failure — it\'s a detour.</strong> Restart tonight.'},
+    {e:'🤝',h:'8 nights. What happened?',bio:'<strong>Whatever it was, the bacteria have been making the most of it every night while you smoked before bed without brushing.</strong>'},
+    {e:'🚪',h:'9 nights — still logging',bio:'<strong>The rebuild from here is faster than any previous restart. It just has to start tonight.</strong>'},
+    {e:'🌅',h:'10 nights — window closes here',bio:'<strong>Your microbiome and your habit loop need you to start again. Tonight.</strong>'},
+  ],
+  '5':[
+    {e:'🦠',h:'1 night in maintenance',bio:'<strong>One night in maintenance is a blip. The bacteria will try. Your 91 days won\'t let them get far.</strong> Get back tomorrow.'},
+    {e:'🪱',h:'2 nights in maintenance',bio:'<strong>Two nights of smoking without brushing: tar scaffold, suppressed saliva, unopposed bacterial activity on your best-ever baseline.</strong>'},
+    {e:'🤢',h:'3 nights in maintenance',bio:'Harmful bacteria have re-established meaningful presence. <strong>Three nights of smoking without brushing: near-ideal overnight conditions. Your buffer is feeling it.</strong>'},
+    {e:'💀',h:'4 nights in maintenance',bio:'Tartar is forming at the gumline you tightened over 91+ days. <strong>Your maintenance baseline is strong — but you\'re withdrawing from it every night. It has limits.</strong>'},
+    {e:'🪦',h:'5 nights in maintenance',bio:'Gums are re-inflaming — <strong>the smoking\'s vasoconstriction is masking some of it, but it\'s there.</strong> Five nights is where real progress starts bleeding.'},
+    {e:'😶',h:'6 nights in maintenance',bio:'<strong>Six nights of smoking before bed without brushing: tar scaffold, suppressed saliva, no mechanical disruption.</strong> Tonight is when you stop spending what you built.'},
+    {e:'😶',h:'7 nights in maintenance',bio:'<strong>Your microbiome needs you to start again. Tonight.</strong>'},
+    {e:'🤝',h:'8 nights. Something shifted.',bio:'In maintenance, eight nights is unusual. <strong>Whatever shifted, the bacteria aren\'t waiting for it to resolve.</strong>'},
+    {e:'🚪',h:'9 nights — still logging',bio:'<strong>The rebuild from here is faster than any previous restart. It still has to start tonight.</strong>'},
+    {e:'🌅',h:'10 nights — window closes here',bio:'<strong>Your enamel and gum tissue still hold what 91+ days built. Your microbiome needs you. Tonight.</strong>'},
+  ],
+});
+const BT_SM=btGetSM();
+const BT_PM={
+  'closys-floss':{e:'🧴',h:'Not nothing.',f:'CloSYS + floss is a real defense layer. But <strong>your teeth need the mechanical clean only brushing gives.</strong> One tier up and you\'re there.'},
+  'closys-only':{e:'💧',h:'Bare minimum.',f:'CloSYS caught some bacteria — but plaque is still sitting on your teeth all night. <strong>Tomorrow, try adding the brush.</strong>'},
+};
+const BT_SMOKE={
+  br:'You smoked before bed tonight. <strong>The brush already cleared the tar residue and disrupted the bacterial scaffold</strong> before it could give harmful bacteria a foothold.',
+  pt:'<strong>You smoked before bed without brushing.</strong> Tar residue is sitting on your enamel — a scaffold that harmful bacteria use to colonize. The CloSYS slowed the bloom. It didn\'t clear the scaffold.',
+  nb:'<strong>You smoked before bed without brushing.</strong> Tar residue is providing a bacterial scaffold on your enamel. Smoking also suppresses saliva production — your mouth\'s natural overnight defense.',
+};
+const BT_TDB={
+  'path-a':'Full routine tonight. <strong>Flossing physically disrupted the biofilm between teeth</strong> — bacteria\'s most protected territory. CloSYS neutralized volatile compounds from smoking. SuperMouth is now working on your enamel for the next 8 hours.',
+  'couch-high':'Full couch night routine. <strong>The brush cleared the tar residue from smoking before it could provide a bacterial scaffold.</strong> You covered everything that matters.',
+  'couch-low':'Brush + CloSYS tonight. <strong>The brush mechanically cleared the tar residue and disrupted surface biofilm.</strong> The between-teeth spaces didn\'t get the full floss treatment — get those tomorrow.',
+};
+const BT_MILE=[
+  {id:'first-night',ic:'🦷',nm:'First Night',cl:'lime',dc:'Log your first brushed night'},
+  {id:'week-1',ic:'📅',nm:'Week 1 Complete',cl:'forest',dc:'Complete your first full logged week'},
+  {id:'survived-inst',ic:'💀',nm:'Survived Instability',cl:'mauve',dc:'Complete Tier 2'},
+  {id:'reached-maint',ic:'🏅',nm:'Maintenance',cl:'lime',dc:'Reach Tier 5'},
+  {id:'full-year',ic:'🌍',nm:'Full Year',cl:'lime',dc:'365 logged nights'},
+];
+const BT_REPS=[
+  {id:'tier-up',ic:'⬆️',nm:'Tier Up',cl:'lime',dc:'Advance to a new tier',ck:'tu'},
+  {id:'comeback',ic:'🏆',nm:'The Comeback',cl:'mauve',dc:'Brush after a 7+ night slip',ck:'cb'},
+  {id:'perfect-week',ic:'🌙',nm:'Perfect Week',cl:'forest',dc:'7/7 brushed nights in a week',ck:'pw'},
+  {id:'streak-7',ic:'🔥',nm:'Streak: 7',cl:'lime',dc:'7 consecutive brush nights',ck:'s7'},
+  {id:'streak-14',ic:'🔥',nm:'Streak: 14',cl:'lime',dc:'14 consecutive brush nights',ck:'s14'},
+  {id:'streak-30',ic:'💎',nm:'Streak: 30',cl:'lime',dc:'30 consecutive brush nights',ck:'s30'},
+  {id:'streak-66',ic:'⚡',nm:'Streak: 66',cl:'lime',dc:'Hit the research threshold',ck:'s66'},
+  {id:'streak-90',ic:'👑',nm:'Streak: 90',cl:'lime',dc:'Full automaticity',ck:'s90'},
+  {id:'path-a-7',ic:'🌟',nm:'Path A Perfectionist',cl:'forest',dc:'7 consecutive Path A nights',ck:'pa7'},
+  {id:'smoke-brush',ic:'🚬',nm:'Smoke & Brush',cl:'forest',dc:'Perfect week despite nightly smoking',ck:'sb'},
+];
+
+function btData(){ const d = appData.brushTracker; return (d && d.startDate) ? d : null; }
+function btPersist(d){ appData.brushTracker = d; save(); }
+function btFmtTimer(s){const m=Math.floor(s/60);return`${m}:${(s%60).toString().padStart(2,'0')}`;}
+function btFd(d){return d.toISOString().split('T')[0];}
+function btPd(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function btGetTK(){const n=new Date();if(n.getHours()<5)n.setDate(n.getDate()-1);return btFd(n);}
+function btGetMon(s){const d=btPd(s),day=d.getDay(),diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return btFd(d);}
+function btGetSun(s){const d=btPd(btGetMon(s));d.setDate(d.getDate()+6);return btFd(d);}
+function btIsSun(s){return btPd(s).getDay()===0;}
+function btGetTier(n){for(let i=BT_TD.length-1;i>=0;i--){if(n>=BT_TD[i].mn)return BT_TD[i];}return BT_TD[0];}
+
+function btGetConsec(data){
+  const st=btPd(data.startDate);let d=btPd(btGetTK()),c=0,fi=true;
+  while(true){if(d<st)break;const k=btFd(d),v=data.logs[k];if(v===undefined&&fi&&k===btGetTK()){fi=false;d.setDate(d.getDate()-1);continue;}fi=false;if(v&&BT_TM[v]?.b){c++;d.setDate(d.getDate()-1);}else break;}return c;
+}
+function btGetNBS(data){
+  const st=btPd(data.startDate);let d=btPd(btGetTK()),c=0,fi=true;
+  while(true){if(d<st)break;const k=btFd(d),v=data.logs[k];if(v===undefined&&fi&&k===btGetTK()){fi=false;d.setDate(d.getDate()-1);continue;}fi=false;if(v&&!BT_TM[v]?.b){c++;d.setDate(d.getDate()-1);}else break;}return c;
+}
+function btGetNS(data){
+  const st=btPd(data.startDate);let d=btPd(btGetTK()),c=0,fi=true;
+  while(true){if(d<st)break;const k=btFd(d),v=data.logs[k];if(v===undefined&&fi&&k===btGetTK()){fi=false;d.setDate(d.getDate()-1);continue;}fi=false;if(v==='nothing'){c++;d.setDate(d.getDate()-1);}else break;}return c;
+}
+function btGetScore(data){
+  const st=btPd(data.startDate),tier=btGetTier(btGetConsec(data));let sc=0;
+  Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b)).forEach(([,v])=>{if(BT_TM[v])sc=Math.max(0,Math.min(tier.mx,sc+BT_TM[v].s));});return sc;
+}
+function btGetScoreAt(data,ds){
+  const st=btPd(data.startDate),tg=btPd(ds);let sc=0;
+  Object.entries(data.logs).filter(([k])=>{const d=btPd(k);return d>=st&&d<=tg;}).sort(([a],[b])=>a.localeCompare(b)).forEach(([,v])=>{if(BT_TM[v])sc=Math.max(0,sc+BT_TM[v].s);});return sc;
+}
+function btGetTierAt(data,ds){
+  const st=btPd(data.startDate),tg=btPd(ds);
+  const ents=Object.entries(data.logs).filter(([k])=>{const d=btPd(k);return d>=st&&d<=tg;}).sort(([a],[b])=>a.localeCompare(b));
+  let streak=0;for(let i=ents.length-1;i>=0;i--){if(BT_TM[ents[i][1]]?.b)streak++;else break;}return btGetTier(streak);
+}
+function btGetMS(sc,mx){const p=sc/mx;if(p>=0.75)return'holding';if(p>=0.5)return'pressure';if(p>=0.25)return'compromised';return'critical';}
+function btGetCleanMsg(n){const keys=Object.keys(BT_CM).map(Number).sort((a,b)=>b-a);for(const k of keys){if(n>=k)return BT_CM[k];}return BT_CM[1];}
+function btGetSlipMsg(tid,n){const msgs=BT_SM[tid]||BT_SM['1'];return msgs[Math.min(n,msgs.length)-1]||msgs[msgs.length-1];}
+function btGetLastLogged(data){
+  const st=btPd(data.startDate);let d=btPd(btGetTK());d.setDate(d.getDate()-1);
+  for(let i=0;i<14;i++){if(d<st)break;const v=data.logs[btFd(d)];if(v)return v;d.setDate(d.getDate()-1);}return null;
+}
+function btCanBF(data){return Math.floor((btPd(btGetTK())-btPd(data.startDate))/86400000)>=3;}
+function btIn7(ds){const diff=Math.floor((btPd(btGetTK())-btPd(ds))/86400000);return diff>=1&&diff<=7;}
+
+// ACHIEVEMENTS
+function btCompAch(data){
+  if(!data)return{m:{},c:{}};
+  const st=btPd(data.startDate);
+  const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b));
+  const hasBr=all.some(([,v])=>BT_TM[v]?.b);
+  let mxStr=0,str=0;for(const[,v]of all){if(BT_TM[v]?.b){str++;mxStr=Math.max(mxStr,str);}else str=0;}
+  const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365};
+  const c={tu:0,cb:0,pw:0,s7:0,s14:0,s30:0,s66:0,s90:0,pa7:0,sb:0};
+  let consec=0,consecPA=0,slip=0,fromSlip=false,prevTIdx=0;
+  for(const[,v]of all){
+    if(BT_TM[v]?.b){
+      consec++;if(v==='path-a')consecPA++;else consecPA=0;
+      if(consec===7)c.s7++;if(consec===14)c.s14++;if(consec===30)c.s30++;if(consec===66)c.s66++;if(consec===90)c.s90++;
+      if(consecPA===7)c.pa7++;
+      if(fromSlip&&slip>=7)c.cb++;
+      fromSlip=false;slip=0;
+      const ti=BT_TD.findIndex(t=>t===btGetTier(consec));if(ti>prevTIdx)c.tu++;prevTIdx=ti;
+    }else{if(consec>0)fromSlip=true;consec=0;consecPA=0;slip++;prevTIdx=Math.max(0,BT_TD.findIndex(t=>t===btGetTier(0)));}
+  }
+  const wm={},today=btPd(btGetTK());
+  for(const[k,v]of all){const mo=btGetMon(k);if(!wm[mo])wm[mo]={b:0};if(BT_TM[v]?.b)wm[mo].b++;}
+  for(const[mo,wk]of Object.entries(wm)){const sun=btPd(btGetSun(mo));if(sun<=today&&wk.b===7){c.pw++;c.sb++;}}
+  return{m,c};
+}
+
+// ── PAGE NAV (own bottom nav, no swipe) ──
+let btCurSub='dashboard';
+function btGoTo(sub){
+  haptic('light');
+  btCurSub=sub;
+  document.querySelectorAll('.bt-subpage').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bt-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('bt-subpage-'+sub).classList.add('active');
+  document.getElementById('bt-nav-'+sub).classList.add('active');
+  if(sub==='achievements')btRenderAch();
+}
+function openBrushTracker(){
+  goTo('brushtracker', null);
+  btGoTo('dashboard');
+  const data=btData();
+  if(data){
+    document.getElementById('bt-onboarding').style.display='none';
+    document.getElementById('bt-dashboard-body').style.display='block';
+    btViewMonth=new Date(btPd(data.startDate));btViewMonth.setDate(1);
+    btRender();
+  }else{
+    document.getElementById('bt-onboarding').style.display='block';
+    document.getElementById('bt-dashboard-body').style.display='none';
+    btBuildMondays();
+  }
+}
+function closeBrushTracker(){
+  goTo('data', document.querySelector('.nav-btn[onclick*="data"]'));
+}
+
+// ONBOARDING
+let btSelMon=null,btSelDefN=null;
+function btBuildMondays(){
+  const list=document.getElementById('bt-monday-list');
+  const today=new Date(),day=today.getDay(),toMon=day===0?-6:1-day;
+  const thisMon=new Date(today);thisMon.setDate(today.getDate()+toMon);
+  const opts=[];for(let i=3;i>=-1;i--){const d=new Date(thisMon);d.setDate(thisMon.getDate()-i*7);opts.push(d);}
+  const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  list.innerHTML=opts.map(d=>{
+    const isT=btFd(d)===btFd(thisMon),isPa=d<thisMon,wks=Math.round(Math.abs(thisMon-d)/604800000);
+    const tag=isT?'this week':isPa?`${wks}w ago`:'next week';
+    return`<div class="bt-monday-option" onclick="btSelMon2(this,'${btFd(d)}')"><span>${DN[d.getDay()]}, ${MN[d.getMonth()]} ${d.getDate()}</span><span class="bt-mo-tag">${tag}</span></div>`;
+  }).join('');
+}
+function btSelMon2(el,ds){document.querySelectorAll('.bt-monday-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');btSelMon=ds;btChkOb();}
+function btSelDef(el,n){document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');btSelDefN=n;btChkOb();}
+function btChkOb(){document.getElementById('bt-ob-confirm').disabled=!(btSelMon&&btSelDefN);}
+function btConfirmOb(){
+  const data={startDate:btSelMon,logs:{},ss:false};
+  const st=btPd(btSelMon);
+  for(let i=btSelDefN;i>=1;i--){const d=new Date(st);d.setDate(st.getDate()-i);data.logs[btFd(d)]='nothing';}
+  btPersist(data);
+  document.getElementById('bt-onboarding').style.display='none';
+  document.getElementById('bt-dashboard-body').style.display='block';
+  btViewMonth=new Date(btPd(btSelMon));btViewMonth.setDate(1);btRender();
+}
+function btShowResetConfirm(){
+  const wrap = document.getElementById('bt-reset-wrap');
+  wrap.innerHTML = `
+    <div style="text-align:center;padding:0.5rem 0;">
+      <div style="font-size:0.78rem;color:var(--bt-mauve);margin-bottom:0.75rem;">This will clear all your brush tracker data. Are you sure?</div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;">
+        <button onclick="btDoReset()" style="flex:1;max-width:130px;padding:0.75rem;background:var(--bt-m15);border:1px solid var(--bt-m25);color:#e0a0b8;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;border-radius:10px;cursor:pointer;">Yes, reset</button>
+        <button onclick="btCancelReset()" style="flex:1;max-width:130px;padding:0.75rem;background:var(--bt-p06);border:1px solid var(--bt-p06);color:var(--bt-mauve);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;border-radius:10px;cursor:pointer;">Cancel</button>
+      </div>
+    </div>`;
+}
+function btCancelReset(){
+  const wrap = document.getElementById('bt-reset-wrap');
+  wrap.innerHTML = '<button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button>';
+}
+function btDoReset(){
+  btPersist({ startDate: null, logs: {}, ss: false });
+  btSelMon=null;btSelDefN=null;
+  document.querySelectorAll('.bt-monday-option').forEach(o=>o.classList.remove('selected'));
+  document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('bt-ob-confirm').disabled=true;
+  document.getElementById('bt-dashboard-body').style.display='none';
+  document.getElementById('bt-onboarding').style.display='block';
+  btGoTo('dashboard');
+  btBuildMondays();
+  showToast('brush tracker reset');
+}
+
+// SHEET
+function btOpenSheet(html,withConfetti){document.getElementById('bt-sheet-content').innerHTML=html;document.getElementById('bt-sheet-overlay').classList.add('open');document.getElementById('bt-bottom-sheet').classList.add('open');if(withConfetti)setTimeout(btFireConfetti,300);}
+function btCloseSheet(){document.getElementById('bt-sheet-overlay').classList.remove('open');document.getElementById('bt-bottom-sheet').classList.remove('open');}
+
+function btTapDay(ds){
+  const data=btData();if(!data)return;
+  const tk=btGetTK(),st=btPd(data.startDate),tap=btPd(ds);
+  if(tap>btPd(tk))return;
+  const logged=data.logs[ds];
+  if(logged){let h=btBuildDayView(data,ds);let hasBadges=false;if(btIsSun(ds)){const digest=btBuildDigest(data,ds);hasBadges=digest.includes('bt-dig-bdg');h+=digest;}btOpenSheet(h,hasBadges);}
+  else if(ds!==tk&&btIn7(ds)&&btCanBF(data))btOpenSheet(btBuildBF(data,ds));
+}
+function btBuildDayView(data,ds){
+  const v=data.logs[ds];if(!v||!BT_TM[v])return'';
+  const t=BT_TM[v],d=btPd(ds);
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  return`<div class="bt-sde"><div class="bt-sde-icon">${t.ic}</div><div><div class="bt-sde-date">${DN[d.getDay()]}, ${MN[d.getMonth()]} ${d.getDate()}</div><div class="bt-sde-label">${t.lbl}</div></div></div>`;
+}
+function btBuildDigest(data,sunStr){
+  const sun=btPd(sunStr),mon=new Date(sun);mon.setDate(sun.getDate()-6);
+  const st=btPd(data.startDate);
+  const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const wl=`${MN[mon.getMonth()]} ${mon.getDate()} – ${MN[sun.getMonth()]} ${sun.getDate()}`;
+  const isFirst=mon<=st&&sun>=st;
+  let brushed=0;const wc={};
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const k=btFd(d),v=data.logs[k];if(v&&BT_TM[v]){if(BT_TM[v].b)brushed++;wc[v]=(wc[v]||0)+1;}}
+  const rate=Math.round((brushed/7)*100);
+  const prev=new Date(mon);prev.setDate(mon.getDate()-1);
+  const s0=Math.round(btGetScoreAt(data,btFd(prev))),s1=Math.round(btGetScoreAt(data,sunStr)),delta=s1-s0;
+  const dc=delta>0?'bt-dp':delta<0?'bt-dn2':'bt-dz';
+  const ds2=delta>0?'baseline gaining':delta<0?'baseline eroding':'baseline flat';
+  const t0=btGetTierAt(data,btFd(prev)),t1=btGetTierAt(data,sunStr);
+  const moved=t0.id!==t1.id,up=moved&&BT_TD.findIndex(t=>t.id===t1.id)>BT_TD.findIndex(t=>t.id===t0.id),down=moved&&!up;
+  let hdr='';
+  if(isFirst)hdr=`<div class="bt-dhs first"><div class="bt-dhs-e">🌱</div><div class="bt-dhs-t">Week 1 — Mission Accepted</div><div class="bt-dhs-s">You started from a deficit and showed up anyway. That's the whole game right there.</div><div class="bt-dhs-w">${wl}</div></div>`;
+  else if(up)hdr=`<div class="bt-dhs up"><div class="bt-dhs-e">⬆️</div><div class="bt-dhs-t">Tier Up — ${t1.nm} Unlocked</div><div class="bt-dhs-s">${t1.mn} consecutive nights. The habit is doing more of the work now.</div><div class="bt-dhs-w">${wl}</div></div>`;
+  else if(down)hdr=`<div class="bt-dhs down"><div class="bt-dhs-e">⬇️</div><div class="bt-dhs-t">Tier Drop — Back to ${t1.nm}</div><div class="bt-dhs-s">A hard week. The path back is the same as it always was.</div><div class="bt-dhs-w">${wl}</div></div>`;
+  const tmc=up?'up':down?'down':'flat';
+  let tmH='';
+  if(moved)tmH=`<span class="bt-tm-pill ${t0.pl}">${t0.id} — ${t0.nm}</span><span class="bt-tm-arr ${up?'up':'down'}">→</span><span class="bt-tm-pill ${t1.pl}">${t1.id} — ${t1.nm}</span>`;
+  else if(isFirst)tmH=`<span class="bt-tm-pill ${t1.pl}">${t1.id} — ${t1.nm}</span><span class="bt-tm-same">— first week on the board</span>`;
+  else tmH=`<span class="bt-tm-pill ${t1.pl}">${t1.id} — ${t1.nm}</span><span class="bt-tm-same">— no change</span>`;
+  const mx=Math.max(...Object.values(wc),1);
+  let bars='';for(const[key,t]of Object.entries(BT_TM)){const c=wc[key]||0;if(!c)continue;bars+=`<div class="bt-wkbk-row"><div class="bt-wkbk-ic">${t.ic}</div><div class="bt-wkbk-nm">${t.lbl}</div><div class="bt-wkbk-bw"><div class="bt-wkbk-bf" style="width:${(c/mx)*100}%;background:${t.co}"></div></div><div class="bt-wkbk-ct">${c}</div></div>`;}
+  const badges=[];
+  if(isFirst){badges.push({ic:'🦷',nm:'First Night',cl:'lime'});badges.push({ic:'📅',nm:'Week 1 Complete',cl:'forest'});}
+  if(up)badges.push({ic:'⬆️',nm:'Tier Up',cl:'lime'});
+  if(brushed===7)badges.push({ic:'🌙',nm:'Perfect Week',cl:'forest'});
+  const bdgH=badges.length?`<div class="bt-dig-bdg"><div class="bt-db-lbl">Earned this week</div><div class="bt-db-chips">${badges.map(b=>`<div class="bt-db-chip ${b.cl}"><span>${b.ic}</span>${b.nm}</div>`).join('')}</div></div>`:'';
+  const divH=hdr?'':`<div class="bt-dig-div"><div class="bt-dig-div-line"></div><div class="bt-dig-div-lbl">Week of ${wl}</div><div class="bt-dig-div-line"></div></div>`;
+  return`${divH}${hdr}<div class="bt-tm ${tmc}"><div class="bt-tm-in"><div class="bt-tm-lbl">Tier ${moved?'movement':'this week'}</div><div class="bt-tm-row">${tmH}</div></div></div>
+    <div class="bt-dig-grid">
+      <div class="bt-dig-cell"><div class="bt-dc-lbl">Nights brushed</div><div class="bt-dc-val ${brushed>0?'green':'dim'}">${brushed}<span style="font-size:0.8rem;color:var(--bt-mauve);font-family:'DM Sans',sans-serif;font-weight:400;">/7</span></div></div>
+      <div class="bt-dig-cell"><div class="bt-dc-lbl">Brush rate</div><div class="bt-dc-val ${rate>=70?'green':rate>0?'':'dim'}">${rate}%</div></div>
+      <div class="bt-dig-cell"><div class="bt-dc-lbl">Score — start</div><div class="bt-dc-val">${s0}<span style="font-size:0.62rem;color:var(--bt-mauve);font-family:'DM Mono',sans-serif;"> pts</span></div></div>
+      <div class="bt-dig-cell"><div class="bt-dc-lbl">Score — end</div><div class="bt-dc-val">${s1}<span style="font-size:0.62rem;color:var(--bt-mauve);font-family:'DM Mono',sans-serif;"> pts</span></div></div>
+      <div class="bt-dig-cell wide"><div class="bt-dc-lbl">Score delta</div><div class="bt-dc-val ${dc}">${delta>0?'+':''}${delta} <span style="font-size:0.72rem;font-family:'DM Sans',sans-serif;font-weight:400;">${ds2}</span></div></div>
+    </div>
+    ${bars?`<div class="bt-wkbk"><div class="bt-wkbk-lbl">What you logged this week</div><div class="bt-wkbk-rows">${bars}</div></div>`:''}${bdgH}`;
+}
+function btBuildBF(data,ds){
+  const d=btPd(ds);
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const lbl=`${DN[d.getDay()]}, ${MN[d.getMonth()]} ${d.getDate()}`;
+  const sl=s=>s>0?`+${s}`:`${s}`;
+  let h=`<div class="bt-bf-prompt">What did you do on <strong>${lbl}</strong>?</div><div class="bt-tier-options">`;
+  for(const key of[...BT_BL,...BT_NL]){const t=BT_TM[key];h+=`<button class="bt-tier-btn" onclick="btBfLog('${ds}','${key}')"><span class="bt-ti">${t.ic}</span><div class="bt-tt"><div class="bt-tn">${t.lbl}</div><div class="bt-td2">${t.dc}</div></div><span class="bt-ts ${t.sc}">${sl(t.s)}</span></button>`;}
+  return h+'</div>';
+}
+function btBfLog(ds,tier){const data=btData();if(!data)return;data.logs[ds]=tier;btPersist(data);btCloseSheet();btRender();}
+
+// RENDER
+function btRender(){
+  const data=btData();if(!data)return;
+  const tk=btGetTK(),tonight=data.logs[tk],logged=tonight!==undefined;
+  const bs=btGetConsec(data),nbs=btGetNBS(data),ns=btGetNS(data);
+  const tier=btGetTier(bs),score=btGetScore(data),ms=btGetMS(score,tier.mx);
+  const st=btPd(data.startDate);
+  const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st);
+  const pill=document.getElementById('bt-tier-pill');
+  pill.className='bt-tier-pill '+tier.pl;pill.textContent=`Tier ${tier.id} — ${tier.nm}`;
+  const hero=document.getElementById('bt-hero'),ee=document.getElementById('bt-hero-emoji'),hh=document.getElementById('bt-hero-hl'),hf=document.getElementById('bt-hero-fact'),ss=document.getElementById('bt-streak-slot');
+  ss.innerHTML='';
+  if(logged){
+    const t=BT_TM[tonight];
+    if(t.b){const m=btGetCleanMsg(bs);hero.className='bt-hero clean';ee.textContent=m.e;hh.textContent=m.h;hf.innerHTML=m.f;if(bs>1)ss.innerHTML=`<div class="bt-streak-row good"><span class="bt-streak-n">${bs}</span><span>night brush streak</span></div>`;}
+    else if(tonight!=='nothing'&&BT_PM[tonight]){const m=BT_PM[tonight];hero.className='bt-hero partial';ee.textContent=m.e;hh.textContent=m.h;hf.innerHTML=m.f;}
+    else{const m=btGetSlipMsg(tier.id,nbs);hero.className='bt-hero dirty';ee.textContent=m.e;hh.textContent=m.h;hf.innerHTML='';if(nbs>1)ss.innerHTML=`<div class="bt-streak-row bad"><span class="bt-streak-n">${nbs}</span><span>nights no brush</span></div>`;}
+  }else if(all.length===0){hero.className='bt-hero neutral';ee.textContent='🪥';hh.textContent='Start tracking tonight';hf.textContent='Log what you did each night.';}
+  else if(nbs>0){const m=btGetSlipMsg(tier.id,nbs);hero.className='bt-hero dirty';ee.textContent=m.e;hh.textContent=m.h+' so far...';hf.innerHTML='';if(nbs>1)ss.innerHTML=`<div class="bt-streak-row bad"><span class="bt-streak-n">${nbs}</span><span>nights no brush</span></div>`;}
+  else if(bs>0){const m=btGetCleanMsg(bs);hero.className='bt-hero clean';ee.textContent=m.e;hh.textContent=m.h.replace('!', ' and counting!');hf.innerHTML=m.f;if(bs>1)ss.innerHTML=`<div class="bt-streak-row good"><span class="bt-streak-n">${bs}</span><span>night brush streak</span></div>`;}
+  const last=btGetLastLogged(data);let nudge='';
+  if(!logged&&nbs>=3&&last){const idx=BT_AASC.indexOf(last);if(idx>=0&&idx<BT_AASC.length-1){const sug=BT_AASC[idx+1],t=BT_TM[sug];const body=nbs>=6?`Just <strong>${t.lbl.toLowerCase()}</strong>. That's it. ${t.dc}.`:`You've been doing <strong>${BT_TM[last].lbl.toLowerCase()}</strong>. Tonight try: <strong>${t.lbl.toLowerCase()}</strong> — ${t.dc.toLowerCase()}.`;nudge=`<div class="bt-nudge"><div class="bt-nudge-t">${nbs>=6?'🚪 Tonight\'s ask':'📈 One tier up'}</div><div class="bt-nudge-b">${body}</div></div>`;}}
+  document.getElementById('bt-nudge-slot').innerHTML=nudge;
+  const ls=document.getElementById('bt-log-section');
+  if(logged){const t=BT_TM[tonight];ls.innerHTML=`<div class="bt-logged-msg">${t.ic} Tonight: <strong>${t.lbl}</strong></div>`;}
+  else{ls.innerHTML=`<div class="bt-log-prompt">What did you do tonight?</div><div class="bt-log-row"><button class="bt-log-btn yes" id="bt-btn-yes" onclick="btShowTiers('brushed')">🪥 I brushed</button><button class="bt-log-btn no" id="bt-btn-no" onclick="btShowTiers('skipped')">😬 I didn't</button></div><div id="bt-tier-slot"></div>`;}
+  const brushedN=all.filter(([,v])=>BT_TM[v]?.b).length,rate=all.length>0?Math.round((brushedN/all.length)*100):0;
+  document.getElementById('bt-stat-total').textContent=all.length;
+  document.getElementById('bt-stat-brushed').textContent=brushedN;
+  document.getElementById('bt-stat-rate').textContent=all.length>0?rate+'%':'—';
+  btRenderCal();btRenderSci(data,tonight,logged,tier,score,ms,nbs,ns);
+}
+function btRenderSci(data,tonight,logged,tier,score,ms,nbs,ns){
+  const pct=Math.max(2,Math.round((score/tier.mx)*100));
+  const sl={holding:'Holding',pressure:'Under Pressure',compromised:'Compromised',critical:'Critical'};
+  const rn=ms!=='holding'?Math.max(1,Math.ceil((tier.mx*0.75-score)/2)):null;
+  let md='';
+  if(ms==='holding')md=`Your baseline is holding. <strong>${Math.round(score)}/${tier.mx} pts.</strong> Keep reinforcing it every night.`;
+  else if(ms==='pressure')md=`Your baseline is under pressure. <strong>${Math.round(score)}/${tier.mx} pts.</strong> Harmful bacteria are making moves.`;
+  else if(ms==='compromised')md=`Your baseline is compromised. <strong>${Math.round(score)}/${tier.mx} pts.</strong> Real progress is eroding.`;
+  else md=`Your baseline is in critical state. <strong>${Math.round(score)}/${tier.mx} pts.</strong> Structural gains still yours. Microbiome is not.`;
+  document.getElementById('bt-meter-slot').innerHTML=`<div class="bt-meter-block"><div class="bt-meter-top"><div class="bt-meter-lbl">Baseline — Tier ${tier.id}</div><div class="bt-meter-state bt-ms-${ms}">${sl[ms]}</div></div><div class="bt-meter-track"><div class="bt-meter-fill bt-mf-${ms}" style="width:${pct}%"></div></div><div class="bt-meter-desc">${md}</div>${rn?`<div class="bt-meter-rec">${rn} brush night${rn===1?'':'s'} to stabilize</div>`:''}</div>`;
+  const slipSlot=document.getElementById('bt-slip-slot');
+  if(nbs>0||(logged&&tonight&&!BT_TM[tonight]?.b)){const sm=btGetSlipMsg(tier.id,nbs||1);slipSlot.innerHTML=`<div class="bt-slip-block"><div class="bt-slip-top"><div class="bt-slip-stat"><div class="bt-slip-n bt-sn-b">${nbs}</div><div class="bt-slip-l">Nights without<br>brushing</div></div><div class="bt-slip-dv"></div><div class="bt-slip-stat"><div class="bt-slip-n bt-sn-n">${ns}</div><div class="bt-slip-l">Nights with<br>nothing at all</div></div></div><div class="bt-slip-bio">${sm.bio}</div></div>`;}else slipSlot.innerHTML='';
+  let smokeMsg=BT_SMOKE.nb;if(logged){if(BT_TM[tonight]?.b)smokeMsg=BT_SMOKE.br;else if(tonight!=='nothing')smokeMsg=BT_SMOKE.pt;}
+  document.getElementById('bt-smoke-slot').innerHTML=`<div class="bt-smoke-flag"><div class="bt-smoke-icon">🚬</div><div class="bt-smoke-text">${smokeMsg}</div></div>`;
+  const ts=document.getElementById('bt-tonight-slot');
+  if(logged&&tonight&&BT_TDB[tonight])ts.innerHTML=`<div class="bt-tonight-did"><div class="bt-td-t">What tonight's brush actually did</div><div class="bt-td-b">${BT_TDB[tonight]}</div></div>`;else ts.innerHTML='';
+  const bks=document.getElementById('bt-breakdown-slot');
+  const st=btPd(data.startDate),all2=Object.entries(data.logs).filter(([k])=>btPd(k)>=st);
+  if(all2.length>0){const counts={};all2.forEach(([,v])=>{counts[v]=(counts[v]||0)+1;});const mx=Math.max(...Object.values(counts),1);let rows='';for(const[key,t]of Object.entries(BT_TM)){const c=counts[key]||0;if(!c)continue;rows+=`<div class="bt-bk-row"><span class="bt-bk-lbl">${t.ic} ${t.lbl}</span><div class="bt-bk-track"><div class="bt-bk-fill" style="width:${(c/mx)*100}%;background:${t.co}"></div></div><span class="bt-bk-cnt">${c}</span></div>`;}bks.innerHTML=rows?`<div class="bt-breakdown"><div class="bt-bk-t">All-time breakdown</div><div class="bt-bk-bars">${rows}</div></div>`:'';}else bks.innerHTML='';
+}
+function btRenderAch(){
+  const data=btData();if(!data)return;
+  const{m,c}=btCompAch(data);
+  const eM=BT_MILE.filter(x=>m[x.id]).length,eR=BT_REPS.filter(x=>c[x.ck]>0).length,tot=eM+eR,total=BT_MILE.length+BT_REPS.length;
+  document.getElementById('bt-ach-ov').innerHTML=`<div class="bt-ach-ov-box"><div class="bt-ach-ov-n green">${tot}</div><div class="bt-ach-ov-l">Earned</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total}</div><div class="bt-ach-ov-l">Total</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total>0?Math.round((tot/total)*100):0}%</div><div class="bt-ach-ov-l">Complete</div></div>`;
+  function card(ic,nm,cl,earned,dc,cnt){
+  if(earned)return`<div class="bt-badge-card earned ${cl}-card"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div>${cnt>1?`<div class="bt-badge-cnt ${cl}">×${cnt}</div>`:''}</div>`;
+  return`<div class="bt-badge-card locked"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div><div class="bt-badge-meta">${dc}</div></div>`;
+}
+  document.getElementById('bt-ach-mil').innerHTML=`<div class="bt-ach-sec-lbl">Milestones</div><div class="bt-badge-grid">${BT_MILE.map(x=>card(x.ic,x.nm,x.cl,m[x.id],x.dc,1)).join('')}</div>`;
+  document.getElementById('bt-ach-rep').innerHTML=`<div class="bt-ach-sec-lbl">Achievements</div><div class="bt-badge-grid">${BT_REPS.map(x=>card(x.ic,x.nm,x.cl,c[x.ck]>0,x.dc,c[x.ck])).join('')}</div>`;
+}
+function btShowTiers(phase){
+  const slot=document.getElementById('bt-tier-slot'),list=phase==='brushed'?BT_BL:BT_NL;
+  document.getElementById('bt-btn-yes')?.classList.toggle('selected',phase==='brushed');
+  document.getElementById('bt-btn-no')?.classList.toggle('selected',phase==='skipped');
+  const sl=s=>s>0?`+${s}`:`${s}`;
+  let h='<div class="bt-tier-section"><div class="bt-tier-sublabel">Which one?</div><div class="bt-tier-options">';
+  for(const key of list){const t=BT_TM[key];h+=`<button class="bt-tier-btn" onclick="btLogTier('${key}')"><span class="bt-ti">${t.ic}</span><div class="bt-tt"><div class="bt-tn">${t.lbl}</div><div class="bt-td2">${t.dc}</div></div><span class="bt-ts ${t.sc}">${sl(t.s)}</span></button>`;}
+  slot.innerHTML=h+'</div></div>';
+}
+function btLogTier(tier){
+  const data=btData();if(!data)return;
+  const isBad=!BT_TM[tier]?.b&&tier!=='closys-floss'&&tier!=='closys-only';
+  data.logs[btGetTK()]=tier;
+  if(isBad&&!data.ss){data.ss=true;btPersist(data);btRender();setTimeout(()=>btGoTo('science'),600);}
+  else{btPersist(data);btRender();}
+}
+function btPbTog(btn){const b=btn.nextElementSibling;btn.classList.toggle('open');b.classList.toggle('open');}
+function btPbJump(id){
+  const el=document.getElementById(id);if(!el)return;
+  const btn=el.querySelector('.bt-pb-tog'),body=el.querySelector('.bt-pb-body');
+  if(!btn.classList.contains('open')){btn.classList.add('open');body.classList.add('open');}
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+const btAT=new Map();
+function btPbTimer(btn,total,label){
+  if(btAT.has(btn)){clearInterval(btAT.get(btn));btAT.delete(btn);btn.classList.remove('running','done');btn.querySelector('span').textContent=`⏱ ${btFmtTimer(total)} ${label.toLowerCase()}`;btn.querySelector('.bt-pb-timer-d').textContent='';return;}
+  let rem=total;const disp=btn.querySelector('.bt-pb-timer-d'),ls=btn.querySelector('span');
+  btn.classList.add('running');ls.textContent=`⏸ ${label}`;disp.textContent=btFmtTimer(rem);
+  const iv=setInterval(()=>{rem--;disp.textContent=btFmtTimer(rem);if(rem<=0){clearInterval(iv);btAT.delete(btn);btn.classList.remove('running');btn.classList.add('done');ls.textContent=`✓ ${label} done`;disp.textContent='';if(navigator.vibrate)navigator.vibrate([200,100,200]);setTimeout(()=>{btn.classList.remove('done');ls.textContent=`⏱ ${btFmtTimer(total)} ${label.toLowerCase()}`;disp.textContent='';},5000);}},1000);
+  btAT.set(btn,iv);
+}
+let btViewMonth=new Date();btViewMonth.setDate(1);
+function btChMo(dir){btViewMonth.setMonth(btViewMonth.getMonth()+dir);btRenderCal();}
+function btRenderCal(){
+  const data=btData();if(!data)return;
+  const grid=document.getElementById('bt-cal-grid'),label=document.getElementById('bt-cal-month');
+  const y=btViewMonth.getFullYear(),mo=btViewMonth.getMonth();
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  label.textContent=`${MN[mo]} ${y}`;
+  const DL=['M','T','W','T','F','S','S'];
+  const first=new Date(y,mo,1),fd2=first.getDay(),offset=fd2===0?6:fd2-1;
+  const dim=new Date(y,mo+1,0).getDate();
+  const tk=btGetTK(),today=new Date(),st=btPd(data.startDate);
+  let h=DL.map(d=>`<div class="bt-cal-dl">${d}</div>`).join('');
+  for(let i=0;i<offset;i++)h+='<div class="bt-cal-d"></div>';
+  for(let d=1;d<=dim;d++){
+    const dt=new Date(y,mo,d),k=btFd(dt);
+    let cls='bt-cal-d';
+    if(k===tk)cls+=' today';
+    if(dt>today)cls+=' future';
+    else if(dt<st&&!data.logs[k])cls+=' before-start';
+    const v=data.logs[k];if(v)cls+=` t-${v}`;
+    h+=`<div class="${cls}" onclick="btTapDay('${k}')">${d}</div>`;
+  }
+  grid.innerHTML=h;
 }
 
 // ── NAV ────────────────────────────────────────────────────────────────────

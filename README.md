@@ -6,6 +6,12 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
+## what's new — v2.6 · august 2026
+
+**Brush tracker** — a nightly dental habit tracker, tucked into the app behind a glowing 🦷 in the data tab. Progresses through 7 habit-formation tiers (Initiation through Maintenance) over ~91 days of consistent nightly brushing, with contextual "science" messaging tied to your tier and slip streak, a weekly Sunday digest with confetti, a full achievements/milestones system, and a reference playbook with routine steps and countdown timers. Own 4-screen bottom nav (Dashboard / Science / Playbook / Awards) inside the tracker. Fully independent from period data — resetting it doesn't touch your cycle history, and resetting to baseline doesn't touch it either. Synced via Supabase under a new `brush_tracker` column, same as the rest of the app. The confetti effect is bundled locally (`vendor/confetti.min.js`) rather than loaded from a CDN, so it still works offline.
+
+---
+
 ## what's new — v2.5 · may 2026
 
 **Event log** — tap 🗓️ in the calendar title to log illness or high stress events. Each event records a date range, phase context (calculated live, handles multi-phase spans), a fever flag for illness, and optional notes. Events appear as colored dots on the calendar grid and in an "events this cycle" section below it. Editable while the cycle is active; read-only once a new period starts. Surfaces in wrapped. Stored in Supabase under a new `events` column.
@@ -146,9 +152,11 @@ cycle/
 **Supabase project:** `sdvmycusfyavsuvsjvrv`
 **Table:** `cycle_data`
 
-**Columns:** `user_token`, `periods`, `symptoms`, `journal`, `spotting`, `events`, `active_period`, `settings`, `updated_at`
+**Columns:** `user_token`, `periods`, `symptoms`, `journal`, `spotting`, `events`, `brush_tracker`, `active_period`, `settings`, `updated_at`
 
 `settings` stores: `cycleLength`, `periodLength`, `wrappedPeriods` (array of period ids that have a standalone wrap file)
+
+`brush_tracker` stores: `{ startDate, logs: { "YYYY-MM-DD": logType }, ss }` for the brush tracker feature — see "Brush tracker" above. **This column needs to be added to the `cycle_data` table manually** (e.g. `alter table cycle_data add column brush_tracker jsonb;`) before the brush tracker will sync — the app falls back to the localStorage cache (`cycleApp3`) if the column is missing, so nothing breaks, but it won't sync across devices until the column exists.
 
 ---
 
