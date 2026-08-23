@@ -22,6 +22,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker page headers & bottom nav now match the cycle app's** — each of the tracker's four screens previously repeated its own app name ("Did You Brush?") in a small left-aligned header instead of naming the screen. They now open with a large centered title + subtitle in cycle's page-title/page-sub scale ("dashboard 🪥", "the science 🔬", "the playbook 📖", "achievements 🏆"), with the tier pill moved down near the hero card where it's contextual instead of competing with the header. The tracker's own bottom nav is now a solid 64px panel with 22px icons and a plain color swap on the active tab, matching cycle's nav — previously it was shorter, sat on a translucent overlay, and dimmed inactive tabs with opacity.
 
+**Brush tracker page layout now matches the cycle app's card structure** — cycle organizes every tab as a stack of bordered, shadowed cards, each with its own small centered eyebrow label. The tracker's dashboard used to separate its calendar and stats sections with a bare horizontal rule and a floating label instead — no card boundary at all. "This month" and "stats" are now each their own card. Same fix on the playbook (quick reference list and product lineup, previously floating with no boundary) and achievements (overview stats, milestones, and achievements grids, previously just a label above open content) — everything on every screen now reads as a stack of distinct cards, same as the rest of the app.
+
 ---
 
 ## what's new — v2.5 · may 2026
