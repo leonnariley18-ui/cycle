@@ -1451,18 +1451,20 @@ body {
 .bt-subpages { flex: 1; min-height: 0; position: relative; }
 .bt-subpage { display:none; position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding: 1.25rem 1.25rem 1.5rem; color: var(--bt-peach); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
 .bt-subpage.active { display:block; animation: fadeUp 0.22s ease; }
-.bt-nav { display:flex; justify-content:space-around; align-items:center; padding: 8px 0; background: rgba(0,0,0,0.25); border-top: 1px solid var(--bt-p10); flex-shrink: 0; }
-.bt-nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color: var(--bt-mauve); font-family:'DM Sans',sans-serif; font-size: 10px; padding: 4px 8px; cursor:pointer; opacity: 0.6; }
-.bt-nav-btn.active { color: var(--bt-lime); opacity: 1; }
-.bt-nav-btn svg { width: 20px; height: 20px; }
+.bt-nav { display:flex; justify-content:space-around; align-items:center; height: 64px; background: var(--bt-black2); border-top: 1px solid var(--bt-p15); flex-shrink: 0; }
+.bt-nav-btn { display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; color: var(--bt-mauve); font-family:'DM Sans',sans-serif; font-size: 10px; letter-spacing:0.08em; text-transform:uppercase; padding: 8px 16px; cursor:pointer; transition: color 0.2s; }
+.bt-nav-btn.active { color: var(--bt-lime); }
+.bt-nav-btn svg { width: 22px; height: 22px; stroke-width: 1.5; }
 
-.bt-app-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
-.bt-app-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;letter-spacing:-0.02em;color:var(--bt-peach);}
-.bt-screen-sub{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;}
+.bt-page-title{font-family:'Playfair Display',serif;font-weight:800;font-size:28px;letter-spacing:-0.01em;color:var(--bt-peach);text-align:center;margin-bottom:6px;}
+.bt-page-sub{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.7;text-align:center;margin-bottom:24px;}
+.bt-tier-pill-row{display:flex;justify-content:center;margin-bottom:20px;}
+.bt-card{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:20px;padding:24px;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
+.bt-card-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;text-align:center;margin-bottom:16px;}
 .bt-tier-pill{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.26rem 0.6rem;border-radius:100px;font-weight:500;}
 .bt-tp-1{background:var(--bt-m15);color:#a07888;}.bt-tp-2{background:var(--bt-p10);color:var(--bt-peach);}.bt-tp-3{background:var(--bt-f15);color:#8ab88e;}.bt-tp-35{background:var(--bt-f20);color:#a0c8a4;}.bt-tp-4{background:var(--bt-l12);color:var(--bt-lime);}.bt-tp-45{background:var(--bt-l20);color:var(--bt-lime);}.bt-tp-5{background:rgba(195,233,145,0.28);color:var(--bt-lime);}
 
-.bt-hero{border-radius:16px;padding:1.5rem;margin-bottom:1rem;text-align:center;transition:background 0.6s ease,border-color 0.6s ease,box-shadow 0.6s ease;}
+.bt-hero{border-radius:20px;padding:24px;margin-bottom:1rem;text-align:center;transition:background 0.6s ease,border-color 0.6s ease,box-shadow 0.6s ease;}
 .bt-hero.clean{background:linear-gradient(145deg,rgba(80,114,85,0.35) 0%,rgba(195,233,145,0.18) 50%,rgba(80,114,85,0.12) 100%);border:1px solid rgba(195,233,145,0.3);box-shadow:0 0 40px rgba(195,233,145,0.08),inset 0 1px 0 rgba(195,233,145,0.15);}
 .bt-hero.dirty{background:linear-gradient(145deg,rgba(117,72,94,0.5) 0%,rgba(90,32,64,0.35) 50%,rgba(117,72,94,0.2) 100%);border:1px solid rgba(117,72,94,0.4);box-shadow:0 0 40px rgba(117,72,94,0.12),inset 0 1px 0 rgba(117,72,94,0.2);}
 .bt-hero.partial{background:linear-gradient(145deg,rgba(239,210,203,0.15) 0%,rgba(117,72,94,0.2) 60%,rgba(239,210,203,0.08) 100%);border:1px solid rgba(239,210,203,0.18);box-shadow:0 0 30px rgba(239,210,203,0.04),inset 0 1px 0 rgba(239,210,203,0.1);}
@@ -1478,7 +1480,7 @@ body {
 .bt-streak-n{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800;line-height:1;}
 .bt-log-prompt{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);text-align:center;margin-bottom:0.6rem;opacity:0.7;}
 .bt-log-row{display:flex;gap:0.6rem;margin-bottom:0.6rem;}
-.bt-log-btn{flex:1;padding:0.9rem 0.5rem;border-radius:10px;border:2px solid transparent;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;text-align:center;cursor:pointer;transition:transform 0.12s;}
+.bt-log-btn{flex:1;padding:16px;border-radius:14px;border:2px solid transparent;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;text-align:center;cursor:pointer;transition:transform 0.12s;}
 .bt-log-btn:active{transform:scale(0.97);}
 .bt-log-btn.yes{background:linear-gradient(135deg,var(--bt-forest),#3d5940);color:var(--bt-lime);}
 .bt-log-btn.no{background:linear-gradient(135deg,var(--bt-mauve),#5a3648);color:var(--bt-peach);}
@@ -1486,7 +1488,7 @@ body {
 .bt-tier-section{animation:fadeUp 0.22s ease;}
 .bt-tier-sublabel{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);text-align:center;margin-bottom:0.5rem;opacity:0.6;}
 .bt-tier-options{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;}
-.bt-tier-btn{display:flex;align-items:center;gap:0.65rem;padding:0.75rem 0.9rem;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:9px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;width:100%;transition:background 0.15s;}
+.bt-tier-btn{display:flex;align-items:center;gap:0.65rem;padding:14px 16px;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:14px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;width:100%;transition:background 0.15s;}
 .bt-tier-btn:active{background:var(--bt-p10);}
 .bt-ti{font-size:1.2rem;flex-shrink:0;width:1.6rem;text-align:center;}
 .bt-tt{flex:1;}
@@ -1494,22 +1496,19 @@ body {
 .bt-td2{font-size:0.68rem;color:var(--bt-mauve);line-height:1.3;}
 .bt-ts{font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:500;padding:0.18rem 0.45rem;border-radius:100px;flex-shrink:0;}
 .bt-ts-pos{background:var(--bt-l12);color:var(--bt-lime);}.bt-ts-pos2{background:var(--bt-f10);color:#8ab88e;}.bt-ts-neg1{background:var(--bt-p10);color:var(--bt-peach);}.bt-ts-neg2{background:var(--bt-m15);color:#a07888;}
-.bt-logged-msg{text-align:center;font-size:0.82rem;color:var(--bt-mauve);padding:0.85rem 1rem;background:var(--bt-p03);border-radius:10px;margin-bottom:1rem;}
+.bt-logged-msg{text-align:center;font-size:0.82rem;color:var(--bt-mauve);padding:24px;background:var(--bt-p03);border-radius:20px;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-logged-msg strong{color:var(--bt-peach);font-weight:700;}
-.bt-nudge{background:linear-gradient(135deg,var(--bt-f10),var(--bt-l08));border:1px solid var(--bt-f15);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;}
+.bt-nudge{background:linear-gradient(135deg,var(--bt-f10),var(--bt-l08));border:1px solid var(--bt-f15);border-radius:20px;padding:24px;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-nudge-t{font-weight:700;font-size:0.75rem;color:var(--bt-lime);margin-bottom:0.2rem;}
 .bt-nudge-b{font-size:0.72rem;color:var(--bt-forest);line-height:1.45;}
 .bt-nudge-b strong{color:#a8d4a0;font-weight:700;}
-.bt-divider{display:flex;align-items:center;gap:0.5rem;margin:0.75rem 0;}
-.bt-divider-line{flex:1;height:1px;background:rgba(239,210,203,0.05);}
-.bt-divider-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.3;}
-.bt-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;}
-.bt-cal-month{font-weight:700;font-size:0.85rem;color:var(--bt-peach);}
-.bt-cal-nav{background:var(--bt-p06);border:none;color:var(--bt-mauve);width:1.8rem;height:1.8rem;border-radius:7px;font-size:0.75rem;cursor:pointer;}
-.bt-cal-nav:active{background:var(--bt-p10);}
-.bt-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-.bt-cal-dl{font-size:0.55rem;font-weight:600;color:var(--bt-mauve);opacity:0.4;text-transform:uppercase;text-align:center;padding:0.22rem 0;}
-.bt-cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:0.65rem;font-weight:500;color:rgba(239,210,203,0.15);background:rgba(239,210,203,0.02);cursor:pointer;}
+.bt-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.bt-cal-month{font-family:'Playfair Display',serif;font-weight:800;font-size:24px;color:var(--bt-peach);text-align:center;}
+.bt-cal-nav{background:none;border:1px solid var(--bt-p15);color:var(--bt-mauve);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 0.2s;}
+.bt-cal-nav:hover,.bt-cal-nav:active{background:var(--bt-p06);}
+.bt-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.bt-cal-dl{font-size:10px;font-weight:400;letter-spacing:0.08em;color:var(--bt-mauve);opacity:0.6;text-transform:uppercase;text-align:center;padding:4px 0 8px;}
+.bt-cal-d{width:100%;aspect-ratio:1;max-width:38px;max-height:38px;margin:0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;font-weight:300;color:rgba(239,210,203,0.15);background:rgba(239,210,203,0.02);cursor:pointer;transition:all 0.15s;}
 .bt-cal-d.before-start,.bt-cal-d.future{cursor:default;pointer-events:none;}
 .bt-cal-d.future{color:rgba(239,210,203,0.07);}.bt-cal-d.before-start{color:rgba(239,210,203,0.06);}
 .bt-cal-d.t-path-a{background:rgba(195,233,145,0.2);color:var(--bt-lime);font-weight:700;}
@@ -1527,7 +1526,7 @@ body {
 .bt-stat-n{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--bt-peach);line-height:1;margin-bottom:0.2rem;}
 .bt-stat-n.green{color:var(--bt-lime);}
 .bt-stat-l{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;}
-.bt-meter-block{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.bt-meter-block{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:20px;padding:24px;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-meter-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.55rem;}
 .bt-meter-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);}
 .bt-meter-state{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;padding:0.18rem 0.5rem;border-radius:100px;}
@@ -1538,7 +1537,7 @@ body {
 .bt-meter-desc{font-size:0.75rem;color:var(--bt-mauve);line-height:1.5;}
 .bt-meter-desc strong{color:var(--bt-peach);font-weight:700;}
 .bt-meter-rec{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.06em;margin-top:0.4rem;color:#c090a0;}
-.bt-slip-block{background:var(--bt-m10);border:1px solid var(--bt-m20);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.bt-slip-block{background:var(--bt-m10);border:1px solid var(--bt-m20);border-radius:20px;padding:24px;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-slip-top{display:flex;gap:1rem;margin-bottom:0.7rem;}
 .bt-slip-stat{flex:1;text-align:center;}
 .bt-slip-n{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;line-height:1;margin-bottom:0.2rem;}
@@ -1551,37 +1550,35 @@ body {
 .bt-smoke-icon{font-size:0.9rem;flex-shrink:0;margin-top:0.05rem;}
 .bt-smoke-text{font-size:0.72rem;color:rgba(239,210,203,0.5);line-height:1.45;}
 .bt-smoke-text strong{color:var(--bt-peach);font-weight:700;}
-.bt-tonight-did{background:var(--bt-f10);border:1px solid var(--bt-f15);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.bt-tonight-did{background:var(--bt-f10);border:1px solid var(--bt-f15);border-radius:20px;padding:24px;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-td-t{font-weight:700;font-size:0.75rem;color:var(--bt-lime);margin-bottom:0.3rem;}
 .bt-td-b{font-size:0.74rem;color:var(--bt-forest);line-height:1.5;}
 .bt-td-b strong{color:#a8d4a0;font-weight:700;}
-.bt-breakdown{margin-bottom:1rem;}
-.bt-bk-t{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.45;margin-bottom:0.5rem;text-align:center;}
-.bt-bk-bars{display:flex;flex-direction:column;gap:0.32rem;}
-.bt-bk-row{display:flex;align-items:center;gap:0.5rem;}
-.bt-bk-lbl{width:105px;flex-shrink:0;color:var(--bt-mauve);text-align:right;font-size:0.66rem;}
-.bt-bk-track{flex:1;height:5px;background:rgba(239,210,203,0.04);border-radius:2px;overflow:hidden;}
-.bt-bk-fill{height:100%;border-radius:2px;transition:width 0.4s;}
-.bt-bk-cnt{width:22px;text-align:right;font-size:0.66rem;color:var(--bt-mauve);font-weight:600;}
+.bt-bk-bars{display:flex;flex-direction:column;gap:8px;}
+.bt-bk-row{display:flex;align-items:center;gap:10px;}
+.bt-bk-lbl{width:105px;flex-shrink:0;color:var(--bt-mauve);text-align:right;font-size:11px;}
+.bt-bk-track{flex:1;height:6px;background:rgba(239,210,203,0.04);border-radius:3px;overflow:hidden;}
+.bt-bk-fill{height:100%;border-radius:3px;transition:width 0.4s;}
+.bt-bk-cnt{width:24px;text-align:right;font-size:11px;color:var(--bt-mauve);font-weight:600;flex-shrink:0;}
 .bt-reset-wrap{text-align:center;margin-top:2rem;padding-bottom:1rem;}
-.bt-reset-btn{background:var(--bt-m10);border:1px solid var(--bt-m20);color:#c090a0;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;padding:0.85rem 2rem;border-radius:10px;width:100%;max-width:280px;}
+.bt-reset-btn{background:var(--bt-m10);border:1px solid var(--bt-m20);color:#c090a0;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;padding:14px 2rem;border-radius:14px;width:100%;max-width:280px;}
 .bt-pb-products{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.5rem;}
 .bt-pb-product{background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:10px;padding:0.85rem;}
 .bt-pb-product .bt-pe{font-size:1.2rem;margin-bottom:0.3rem;}
 .bt-pb-product .bt-pn{font-weight:700;font-size:0.78rem;color:var(--bt-peach);margin-bottom:0.15rem;}
 .bt-pb-product .bt-pr{font-size:0.68rem;color:var(--bt-mauve);line-height:1.3;}
 .bt-pb-sec{margin-bottom:0.75rem;}
-.bt-pb-tog{width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:10px;padding:0.85rem 1rem;cursor:pointer;font-family:inherit;color:inherit;font-size:inherit;text-align:left;transition:background 0.15s;}
-.bt-pb-tog:active{background:var(--bt-p10);}.bt-pb-tog.open{border-radius:10px 10px 0 0;border-bottom-color:transparent;}
+.bt-pb-tog{width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:14px;padding:14px 16px;cursor:pointer;font-family:inherit;color:inherit;font-size:inherit;text-align:left;transition:background 0.15s;}
+.bt-pb-tog:active{background:var(--bt-p10);}.bt-pb-tog.open{border-radius:14px 14px 0 0;border-bottom-color:transparent;}
 .bt-pb-tog-left{display:flex;align-items:center;gap:0.5rem;}
 .bt-pb-badge{font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;padding:0.22rem 0.55rem;border-radius:100px;}
 .bt-pb-badge.morning{background:rgba(255,200,60,0.1);color:#f0c840;}.bt-pb-badge.night{background:var(--bt-m10);color:#c090a0;}
 .bt-pb-tog-name{font-weight:700;font-size:0.9rem;color:var(--bt-peach);}
 .bt-pb-chev{font-size:0.75rem;color:var(--bt-mauve);transition:transform 0.25s;}
 .bt-pb-tog.open .bt-pb-chev{transform:rotate(180deg);}
-.bt-pb-body{display:none;background:var(--bt-p03);border:1px solid var(--bt-p06);border-top:none;border-radius:0 0 10px 10px;padding:1rem;}
+.bt-pb-body{display:none;background:var(--bt-p03);border:1px solid var(--bt-p06);border-top:none;border-radius:0 0 14px 14px;padding:16px;}
 .bt-pb-body.open{display:block;}
-.bt-pb-rule{background:linear-gradient(135deg,var(--bt-m10),var(--bt-f10));border:1px solid var(--bt-m15);border-radius:10px;padding:1rem;margin-bottom:1rem;text-align:center;}
+.bt-pb-rule{background:linear-gradient(135deg,var(--bt-m10),var(--bt-f10));border:1px solid var(--bt-m15);border-radius:20px;padding:24px;margin-bottom:1rem;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-pb-rule-t{font-family:'Playfair Display',serif;font-size:1rem;font-weight:800;color:var(--bt-peach);margin-bottom:0.25rem;}
 .bt-pb-rule-d{font-size:0.75rem;color:var(--bt-mauve);}
 .bt-pb-steps{list-style:none;counter-reset:step;}
@@ -1604,7 +1601,6 @@ body {
 .bt-ach-ov-n{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--bt-peach);line-height:1;margin-bottom:0.2rem;}
 .bt-ach-ov-n.green{color:var(--bt-lime);}
 .bt-ach-ov-l{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;}
-.bt-ach-sec-lbl{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.4;margin-bottom:0.75rem;}
 .bt-badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:1.5rem;}
 .bt-badge-card{display:flex;flex-direction:column;align-items:center;gap:0.35rem;padding:0.85rem 0.4rem;border-radius:12px;text-align:center;}
 .bt-badge-card.earned{background:var(--bt-p06);border:1px solid var(--bt-p10);}
@@ -1641,7 +1637,7 @@ body {
 .bt-dig-div{display:flex;align-items:center;gap:0.5rem;margin:1.25rem 0 1rem;}
 .bt-dig-div-line{flex:1;height:1px;background:rgba(239,210,203,0.06);}
 .bt-dig-div-lbl{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.4;}
-.bt-dhs{border-radius:12px;padding:1rem 1.1rem;margin-bottom:0.75rem;text-align:center;}
+.bt-dhs{border-radius:20px;padding:24px;margin-bottom:0.75rem;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-dhs.first{background:linear-gradient(160deg,var(--bt-f10),var(--bt-l08));border:1px solid var(--bt-l15);}
 .bt-dhs.up{background:linear-gradient(160deg,var(--bt-l08),var(--bt-f10));border:1px solid var(--bt-l20);}
 .bt-dhs.down{background:linear-gradient(160deg,var(--bt-m15),var(--bt-m10));border:1px solid var(--bt-m20);}
@@ -1659,7 +1655,7 @@ body {
 .bt-dc-val{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:var(--bt-peach);line-height:1;}
 .bt-dc-val.green{color:var(--bt-lime);}.bt-dc-val.dim{color:var(--bt-mauve);}
 .bt-dp{color:var(--bt-lime);}.bt-dn2{color:#c090a0;}.bt-dz{color:var(--bt-mauve);}
-.bt-tm{border-radius:10px;padding:0.75rem 0.85rem;margin-bottom:0.55rem;}
+.bt-tm{border-radius:20px;padding:24px;margin-bottom:0.55rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-tm.up{background:var(--bt-l08);border:1px solid var(--bt-l15);}.bt-tm.down{background:var(--bt-m10);border:1px solid var(--bt-m15);}.bt-tm.flat{background:var(--bt-p03);border:1px solid var(--bt-p06);}
 .bt-tm-in{flex:1;}
 .bt-tm-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.35rem;}
@@ -1667,7 +1663,7 @@ body {
 .bt-tm-pill{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.07em;text-transform:uppercase;padding:0.22rem 0.6rem;border-radius:100px;font-weight:500;}
 .bt-tm-arr{font-size:0.8rem;}.bt-tm-arr.up{color:var(--bt-lime);}.bt-tm-arr.down{color:#c090a0;}
 .bt-tm-same{font-size:0.7rem;color:var(--bt-mauve);opacity:0.6;}
-.bt-wkbk{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:10px;padding:0.7rem 0.85rem;margin-bottom:0.55rem;}
+.bt-wkbk{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:20px;padding:24px;margin-bottom:0.55rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-wkbk-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.55rem;}
 .bt-wkbk-rows{display:flex;flex-direction:column;gap:0.3rem;}
 .bt-wkbk-row{display:flex;align-items:center;gap:0.5rem;}
@@ -1676,7 +1672,7 @@ body {
 .bt-wkbk-bw{width:60px;height:4px;background:rgba(239,210,203,0.05);border-radius:2px;overflow:hidden;}
 .bt-wkbk-bf{height:100%;border-radius:2px;}
 .bt-wkbk-ct{width:16px;text-align:right;font-weight:700;font-size:0.7rem;color:var(--bt-peach);}
-.bt-dig-bdg{background:var(--bt-l08);border:1px solid var(--bt-l12);border-radius:10px;padding:0.7rem 0.85rem;margin-top:0.55rem;}
+.bt-dig-bdg{background:var(--bt-l08);border:1px solid var(--bt-l12);border-radius:20px;padding:24px;margin-top:0.55rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
 .bt-db-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.5rem;}
 .bt-db-chips{display:flex;gap:0.4rem;flex-wrap:wrap;}
 .bt-db-chip{display:flex;align-items:center;gap:0.35rem;padding:0.28rem 0.6rem;border-radius:100px;font-size:0.68rem;font-weight:600;}
@@ -1704,7 +1700,7 @@ body {
 .bt-deficit-option.selected .bt-deficit-name{color:#e0a0b8;}
 .bt-deficit-nights{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);margin-bottom:0.3rem;}
 .bt-deficit-desc{font-size:0.75rem;color:var(--bt-mauve);line-height:1.45;opacity:0.8;}
-.bt-ob-confirm{width:100%;padding:1rem;background:linear-gradient(135deg,var(--bt-forest),#3d5940);color:var(--bt-lime);font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;border:none;border-radius:12px;cursor:pointer;}
+.bt-ob-confirm{width:100%;padding:16px;background:linear-gradient(135deg,var(--bt-forest),#3d5940);color:var(--bt-lime);font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;border:none;border-radius:14px;cursor:pointer;}
 .bt-ob-confirm:disabled{opacity:0.3;pointer-events:none;}
 </style>
 <script src="vendor/confetti.min.js"></script>
@@ -1824,8 +1820,10 @@ body {
         <div class="legend-item"><div class="legend-dot" style="background:var(--ovulation)"></div>Ovulation</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--luteal)"></div>Luteal</div>
         <div class="legend-item"><div class="legend-dot" style="border:1.5px dashed var(--menstrual);background:transparent"></div>Predicted</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#4FA8A8"></div>Illness</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--luteal)"></div>High stress</div>
         <div class="legend-item"><div class="legend-dot" style="background:#E0555A"></div>Unprotected · high risk</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#7B8FA6"></div>Unprotected · low risk</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9B8FBF"></div>Unprotected · low risk</div>
       </div>
     </div>
 
@@ -2074,51 +2072,65 @@ body {
             <button class="bt-ob-confirm" id="bt-ob-confirm" disabled onclick="btConfirmOb()">Start the mission</button>
           </div>
           <div id="bt-dashboard-body" style="display:none;">
-            <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-tier-pill" id="bt-tier-pill">—</div></div>
+            <div class="bt-page-title">dashboard 🪥</div>
+            <div class="bt-page-sub">tonight's status</div>
+            <div class="bt-tier-pill-row"><div class="bt-tier-pill" id="bt-tier-pill">—</div></div>
             <div class="bt-hero neutral" id="bt-hero"><div class="bt-hero-emoji" id="bt-hero-emoji">🪥</div><div class="bt-hero-hl" id="bt-hero-hl">Start tracking tonight</div><div class="bt-hero-fact" id="bt-hero-fact">Log what you did each night.</div><div id="bt-streak-slot"></div></div>
             <div id="bt-nudge-slot"></div>
             <div id="bt-log-section"></div>
-            <div class="bt-divider"><div class="bt-divider-line"></div><div class="bt-divider-label">This month</div><div class="bt-divider-line"></div></div>
-            <div class="bt-cal-header"><button class="bt-cal-nav" onclick="btChMo(-1)">◀</button><span class="bt-cal-month" id="bt-cal-month"></span><button class="bt-cal-nav" onclick="btChMo(1)">▶</button></div>
-            <div class="bt-cal-grid" id="bt-cal-grid"></div>
-            <div class="bt-legend">
-              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(195,233,145,0.45)"></div>Path A</div>
-              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(195,233,145,0.25)"></div>Couch ⚡</div>
-              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(80,114,85,0.35)"></div>Couch 🪫</div>
-              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(239,210,203,0.2)"></div>Rinse+</div>
-              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(239,210,203,0.1)"></div>Rinse</div>
-              <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(117,72,94,0.3)"></div>Nothing</div>
+            <div class="bt-card">
+              <div class="bt-card-label">this month</div>
+              <div class="bt-cal-header"><button class="bt-cal-nav" onclick="btChMo(-1)">◀</button><span class="bt-cal-month" id="bt-cal-month"></span><button class="bt-cal-nav" onclick="btChMo(1)">▶</button></div>
+              <div class="bt-cal-grid" id="bt-cal-grid"></div>
+              <div class="bt-legend">
+                <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(195,233,145,0.45)"></div>Path A</div>
+                <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(195,233,145,0.25)"></div>Couch ⚡</div>
+                <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(80,114,85,0.35)"></div>Couch 🪫</div>
+                <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(239,210,203,0.2)"></div>Rinse+</div>
+                <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(239,210,203,0.1)"></div>Rinse</div>
+                <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(117,72,94,0.3)"></div>Nothing</div>
+              </div>
             </div>
-            <div class="bt-divider" style="margin-top:1rem;"><div class="bt-divider-line"></div><div class="bt-divider-label">Stats</div><div class="bt-divider-line"></div></div>
-            <div class="bt-stats-row">
-              <div class="bt-stat-box"><div class="bt-stat-n" id="bt-stat-total">0</div><div class="bt-stat-l">Nights</div></div>
-              <div class="bt-stat-box"><div class="bt-stat-n green" id="bt-stat-brushed">0</div><div class="bt-stat-l">Brushed</div></div>
-              <div class="bt-stat-box"><div class="bt-stat-n" id="bt-stat-rate">—</div><div class="bt-stat-l">Brush rate</div></div>
+            <div class="bt-card">
+              <div class="bt-card-label">stats</div>
+              <div class="bt-stats-row">
+                <div class="bt-stat-box"><div class="bt-stat-n" id="bt-stat-total">0</div><div class="bt-stat-l">Nights</div></div>
+                <div class="bt-stat-box"><div class="bt-stat-n green" id="bt-stat-brushed">0</div><div class="bt-stat-l">Brushed</div></div>
+                <div class="bt-stat-box"><div class="bt-stat-n" id="bt-stat-rate">—</div><div class="bt-stat-l">Brush rate</div></div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Science -->
         <div class="bt-subpage" id="bt-subpage-science">
-          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">The Science</div></div>
+          <div class="bt-page-title">the science 🔬</div>
+          <div class="bt-page-sub">the biology behind the streak</div>
           <div id="bt-meter-slot"></div><div id="bt-slip-slot"></div><div id="bt-smoke-slot"></div><div id="bt-tonight-slot"></div><div id="bt-breakdown-slot"></div>
           <div class="bt-reset-wrap" id="bt-reset-wrap"><button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button></div>
         </div>
 
         <!-- Playbook -->
         <div class="bt-subpage" id="bt-subpage-playbook">
-          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">The Playbook</div></div>
-          <div class="bt-pb-ref">
-            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-m')"><span class="bt-pb-ref-w">☀️ Morning</span><span class="bt-pb-ref-wh">Floss + CloSYS + Twice + tongue scrape ↓</span></div>
-            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-a')"><span class="bt-pb-ref-w">🌙 Normal Night</span><span class="bt-pb-ref-wh">Full routine after dinner + bedside CloSYS ↓</span></div>
-            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-bh')"><span class="bt-pb-ref-w">🛋️ Couch Night ⚡</span><span class="bt-pb-ref-wh">Full routine in bathroom + smoke + CloSYS ↓</span></div>
-            <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-bl')"><span class="bt-pb-ref-w">🛋️ Couch Night 🪫</span><span class="bt-pb-ref-wh">Brush + CloSYS + smoke + CloSYS ↓</span></div>
+          <div class="bt-page-title">the playbook 📖</div>
+          <div class="bt-page-sub">your nightly routine, step by step</div>
+          <div class="bt-card">
+            <div class="bt-card-label">quick reference</div>
+            <div class="bt-pb-ref">
+              <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-m')"><span class="bt-pb-ref-w">☀️ Morning</span><span class="bt-pb-ref-wh">Floss + CloSYS + Twice + tongue scrape ↓</span></div>
+              <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-a')"><span class="bt-pb-ref-w">🌙 Normal Night</span><span class="bt-pb-ref-wh">Full routine after dinner + bedside CloSYS ↓</span></div>
+              <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-bh')"><span class="bt-pb-ref-w">🛋️ Couch Night ⚡</span><span class="bt-pb-ref-wh">Full routine in bathroom + smoke + CloSYS ↓</span></div>
+              <div class="bt-pb-ref-row" onclick="btPbJump('bt-pb-bl')"><span class="bt-pb-ref-w">🛋️ Couch Night 🪫</span><span class="bt-pb-ref-wh">Brush + CloSYS + smoke + CloSYS ↓</span></div>
+            </div>
           </div>
-          <div class="bt-pb-products">
-            <div class="bt-pb-product"><div class="bt-pe">☀️</div><div class="bt-pn">Twice Spearmint Eucalyptus</div><div class="bt-pr">Morning paste — SLS-free stain lifting</div></div>
-            <div class="bt-pb-product"><div class="bt-pe">🌙</div><div class="bt-pn">SuperMouth Hydroxamin</div><div class="bt-pr">Night paste — dual-mineral enamel repair</div></div>
-            <div class="bt-pb-product"><div class="bt-pe">🧴</div><div class="bt-pn">CloSYS Ultra Sensitive</div><div class="bt-pr">Mouthwash — chlorine dioxide antimicrobial</div></div>
-            <div class="bt-pb-product"><div class="bt-pe">🛏️</div><div class="bt-pn">Bedside Kit</div><div class="bt-pr">Floss picks + CloSYS bottle + discard cup</div></div>
+          <div class="bt-card">
+            <div class="bt-card-label">product lineup</div>
+            <div class="bt-pb-products">
+              <div class="bt-pb-product"><div class="bt-pe">☀️</div><div class="bt-pn">Twice Spearmint Eucalyptus</div><div class="bt-pr">Morning paste — SLS-free stain lifting</div></div>
+              <div class="bt-pb-product"><div class="bt-pe">🌙</div><div class="bt-pn">SuperMouth Hydroxamin</div><div class="bt-pr">Night paste — dual-mineral enamel repair</div></div>
+              <div class="bt-pb-product"><div class="bt-pe">🧴</div><div class="bt-pn">CloSYS Ultra Sensitive</div><div class="bt-pr">Mouthwash — chlorine dioxide antimicrobial</div></div>
+              <div class="bt-pb-product"><div class="bt-pe">🛏️</div><div class="bt-pn">Bedside Kit</div><div class="bt-pr">Floss picks + CloSYS bottle + discard cup</div></div>
+            </div>
           </div>
           <div class="bt-pb-sec" id="bt-pb-m">
             <button class="bt-pb-tog" onclick="btPbTog(this)"><div class="bt-pb-tog-left"><span class="bt-pb-badge morning">Morning</span><span class="bt-pb-tog-name">Morning Routine</span></div><span class="bt-pb-chev">▼</span></button>
@@ -2157,10 +2169,14 @@ body {
 
         <!-- Achievements -->
         <div class="bt-subpage" id="bt-subpage-achievements">
-          <div class="bt-app-header"><div class="bt-app-title">Did You Brush?</div><div class="bt-screen-sub">Achievements</div></div>
-          <div class="bt-ach-ov" id="bt-ach-ov"></div>
-          <div id="bt-ach-mil"></div>
-          <div id="bt-ach-rep"></div>
+          <div class="bt-page-title">achievements 🏆</div>
+          <div class="bt-page-sub">milestones &amp; streaks earned</div>
+          <div class="bt-card">
+            <div class="bt-card-label">overview</div>
+            <div class="bt-ach-ov" id="bt-ach-ov"></div>
+          </div>
+          <div class="bt-card" id="bt-ach-mil"></div>
+          <div class="bt-card" id="bt-ach-rep"></div>
         </div>
 
       </div>
@@ -3619,11 +3635,11 @@ function renderCalendar() {
     }
     const evType = eventDates[ds];
     const evDot = evType
-      ? `<span class="cal-event-dot" style="background:${evType==='illness'?'var(--menstrual)':'var(--luteal)'};"></span>`
+      ? `<span class="cal-event-dot" style="background:${evType==='illness'?'#4FA8A8':'var(--luteal)'};"></span>`
       : '';
     const hasIntimacy = (appData.intimacy || []).includes(ds);
     const intimacyDot = hasIntimacy
-      ? `<span class="cal-intimacy-dot" style="background:${getFertileRisk(ds)==='high'?'#E0555A':'#7B8FA6'};"></span>`
+      ? `<span class="cal-intimacy-dot" style="background:${getFertileRisk(ds)==='high'?'#E0555A':'#9B8FBF'};"></span>`
       : '';
     html+=`<div class="${cls}" style="position:relative;">${d}${evDot}${intimacyDot}</div>`;
   }
@@ -5660,7 +5676,7 @@ function btRenderSci(data,tonight,logged,tier,score,ms,nbs,ns){
   if(logged&&tonight&&BT_TDB[tonight])ts.innerHTML=`<div class="bt-tonight-did"><div class="bt-td-t">What tonight's brush actually did</div><div class="bt-td-b">${BT_TDB[tonight]}</div></div>`;else ts.innerHTML='';
   const bks=document.getElementById('bt-breakdown-slot');
   const st=btPd(data.startDate),all2=Object.entries(data.logs).filter(([k])=>btPd(k)>=st);
-  if(all2.length>0){const counts={};all2.forEach(([,v])=>{counts[v]=(counts[v]||0)+1;});const mx=Math.max(...Object.values(counts),1);let rows='';for(const[key,t]of Object.entries(BT_TM)){const c=counts[key]||0;if(!c)continue;rows+=`<div class="bt-bk-row"><span class="bt-bk-lbl">${t.ic} ${t.lbl}</span><div class="bt-bk-track"><div class="bt-bk-fill" style="width:${(c/mx)*100}%;background:${t.co}"></div></div><span class="bt-bk-cnt">${c}</span></div>`;}bks.innerHTML=rows?`<div class="bt-breakdown"><div class="bt-bk-t">All-time breakdown</div><div class="bt-bk-bars">${rows}</div></div>`:'';}else bks.innerHTML='';
+  if(all2.length>0){const counts={};all2.forEach(([,v])=>{counts[v]=(counts[v]||0)+1;});const mx=Math.max(...Object.values(counts),1);let rows='';for(const[key,t]of Object.entries(BT_TM)){const c=counts[key]||0;if(!c)continue;rows+=`<div class="bt-bk-row"><span class="bt-bk-lbl">${t.ic} ${t.lbl}</span><div class="bt-bk-track"><div class="bt-bk-fill" style="width:${(c/mx)*100}%;background:${t.co}"></div></div><span class="bt-bk-cnt">${c}</span></div>`;}bks.innerHTML=rows?`<div class="bt-card bt-breakdown"><div class="bt-card-label">all-time breakdown</div><div class="bt-bk-bars">${rows}</div></div>`:'';}else bks.innerHTML='';
 }
 function btRenderAch(){
   const data=btData();if(!data)return;
@@ -5671,8 +5687,8 @@ function btRenderAch(){
   if(earned)return`<div class="bt-badge-card earned ${cl}-card"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div>${cnt>1?`<div class="bt-badge-cnt ${cl}">×${cnt}</div>`:''}</div>`;
   return`<div class="bt-badge-card locked"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div><div class="bt-badge-meta">${dc}</div></div>`;
 }
-  document.getElementById('bt-ach-mil').innerHTML=`<div class="bt-ach-sec-lbl">Milestones</div><div class="bt-badge-grid">${BT_MILE.map(x=>card(x.ic,x.nm,x.cl,m[x.id],x.dc,1)).join('')}</div>`;
-  document.getElementById('bt-ach-rep').innerHTML=`<div class="bt-ach-sec-lbl">Achievements</div><div class="bt-badge-grid">${BT_REPS.map(x=>card(x.ic,x.nm,x.cl,c[x.ck]>0,x.dc,c[x.ck])).join('')}</div>`;
+  document.getElementById('bt-ach-mil').innerHTML=`<div class="bt-card-label">milestones</div><div class="bt-badge-grid">${BT_MILE.map(x=>card(x.ic,x.nm,x.cl,m[x.id],x.dc,1)).join('')}</div>`;
+  document.getElementById('bt-ach-rep').innerHTML=`<div class="bt-card-label">achievements</div><div class="bt-badge-grid">${BT_REPS.map(x=>card(x.ic,x.nm,x.cl,c[x.ck]>0,x.dc,c[x.ck])).join('')}</div>`;
 }
 function btShowTiers(phase){
   const slot=document.getElementById('bt-tier-slot'),list=phase==='brushed'?BT_BL:BT_NL;
