@@ -1591,11 +1591,11 @@ body {
 .bt-pb-timer{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;background:var(--bt-f10);border:1px solid var(--bt-f15);border-radius:100px;color:var(--bt-lime);font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;margin-top:0.75rem;}
 .bt-pb-timer.running{background:var(--bt-f15);}.bt-pb-timer.done{background:rgba(195,233,145,0.12);}
 .bt-pb-timer-d{font-variant-numeric:tabular-nums;min-width:2.8rem;text-align:center;}
-.bt-pb-ref{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.5rem;}
-.bt-pb-ref-row{display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0.9rem;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:8px;cursor:pointer;color:inherit;transition:background 0.15s;font-size:0.8rem;}
+.bt-pb-ref{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
+.bt-pb-ref-row{display:flex;flex-direction:column;gap:6px;padding:14px 16px;background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:14px;cursor:pointer;color:inherit;transition:background 0.15s;}
 .bt-pb-ref-row:active{background:var(--bt-p10);}
-.bt-pb-ref-w{font-weight:700;color:var(--bt-peach);font-size:0.8rem;}
-.bt-pb-ref-wh{font-size:0.72rem;color:var(--bt-mauve);text-align:right;}
+.bt-pb-ref-w{font-weight:700;color:var(--bt-peach);font-size:14px;display:flex;align-items:center;gap:6px;}
+.bt-pb-ref-wh{font-size:12px;color:var(--bt-mauve);line-height:1.55;}
 .bt-ach-ov{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:1.5rem;}
 .bt-ach-ov-box{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:9px;padding:0.7rem 0.4rem;text-align:center;}
 .bt-ach-ov-n{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--bt-peach);line-height:1;margin-bottom:0.2rem;}
@@ -5718,12 +5718,48 @@ function btPbJump(id){
   el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 const btAT=new Map();
+async function btAcquireWakeLock(state){
+  if(!('wakeLock' in navigator))return;
+  try{ state.wakeLock=await navigator.wakeLock.request('screen'); }catch(e){ /* ignore — best-effort only */ }
+}
+function btReleaseWakeLock(state){
+  if(state.wakeLock){ state.wakeLock.release().catch(()=>{}); state.wakeLock=null; }
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible')return;
+  btAT.forEach(state=>{ if(!state.done) btAcquireWakeLock(state); });
+});
 function btPbTimer(btn,total,label){
-  if(btAT.has(btn)){clearInterval(btAT.get(btn));btAT.delete(btn);btn.classList.remove('running','done');btn.querySelector('span').textContent=`⏱ ${btFmtTimer(total)} ${label.toLowerCase()}`;btn.querySelector('.bt-pb-timer-d').textContent='';return;}
-  let rem=total;const disp=btn.querySelector('.bt-pb-timer-d'),ls=btn.querySelector('span');
-  btn.classList.add('running');ls.textContent=`⏸ ${label}`;disp.textContent=btFmtTimer(rem);
-  const iv=setInterval(()=>{rem--;disp.textContent=btFmtTimer(rem);if(rem<=0){clearInterval(iv);btAT.delete(btn);btn.classList.remove('running');btn.classList.add('done');ls.textContent=`✓ ${label} done`;disp.textContent='';if(navigator.vibrate)navigator.vibrate([200,100,200]);setTimeout(()=>{btn.classList.remove('done');ls.textContent=`⏱ ${btFmtTimer(total)} ${label.toLowerCase()}`;disp.textContent='';},5000);}},1000);
-  btAT.set(btn,iv);
+  if(btAT.has(btn)){
+    const state=btAT.get(btn);
+    clearInterval(state.iv);
+    btReleaseWakeLock(state);
+    btAT.delete(btn);
+    btn.classList.remove('running','done');
+    btn.querySelector('span').textContent=`⏱ ${btFmtTimer(total)} ${label.toLowerCase()}`;
+    btn.querySelector('.bt-pb-timer-d').textContent='';
+    return;
+  }
+  const disp=btn.querySelector('.bt-pb-timer-d'),ls=btn.querySelector('span');
+  const endTime=Date.now()+total*1000;
+  const state={iv:null,wakeLock:null,done:false};
+  btn.classList.add('running');ls.textContent=`⏸ ${label}`;disp.textContent=btFmtTimer(total);
+  btAcquireWakeLock(state);
+  const tick=()=>{
+    const rem=Math.max(0,Math.round((endTime-Date.now())/1000));
+    disp.textContent=btFmtTimer(rem);
+    if(rem<=0){
+      clearInterval(state.iv);
+      state.done=true;
+      btReleaseWakeLock(state);
+      btAT.delete(btn);
+      btn.classList.remove('running');btn.classList.add('done');ls.textContent=`✓ ${label} done`;disp.textContent='';
+      if(navigator.vibrate)navigator.vibrate([200,100,200]);
+      setTimeout(()=>{btn.classList.remove('done');ls.textContent=`⏱ ${btFmtTimer(total)} ${label.toLowerCase()}`;disp.textContent='';},5000);
+    }
+  };
+  state.iv=setInterval(tick,1000);
+  btAT.set(btn,state);
 }
 let btViewMonth=new Date();btViewMonth.setDate(1);
 function btChMo(dir){btViewMonth.setMonth(btViewMonth.getMonth()+dir);btRenderCal();}
