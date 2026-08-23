@@ -1444,7 +1444,8 @@ body {
   padding: 0 !important;
 }
 #page-brushtracker.active { display: flex; flex-direction: column; height: calc(100% - 20px); }
-.bt-shell { flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bt-black2); border-radius: 20px; overflow: hidden; }
+.bt-shell { position: relative; flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bt-black2); border-radius: 20px; overflow: hidden; }
+#bt-sync-dot { position: absolute !important; top: 14px; right: 14px; z-index: 5; }
 .bt-back { display:flex; align-items:center; gap:8px; padding: 20px 20px 0; cursor:pointer; flex-shrink: 0; }
 .bt-subpages { flex: 1; min-height: 0; position: relative; }
 .bt-subpage { display:none; position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding: 1.25rem 1.25rem 1.5rem; color: var(--bt-peach); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
@@ -1800,6 +1801,15 @@ body {
       <div class="card-label" style="margin-top:14px">How are you feeling? 🫶🏾</div>
       <div class="symptom-grid" id="symptom-grid"></div>
     </div>
+
+    <div class="card" id="today-intimacy-card">
+      <div class="card-label">log intimacy</div>
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button class="flow-tap" style="flex:1;padding:10px;font-size:12px;" onclick="logIntimacy(false)">protected 🔒</button>
+        <button class="flow-tap" style="flex:1;padding:10px;font-size:12px;" onclick="logIntimacy(true)">unprotected 🔓</button>
+      </div>
+      <div id="intimacy-log-list"></div>
+    </div>
   </div>
 
   <!-- CALENDAR -->
@@ -2028,6 +2038,7 @@ body {
   <!-- BRUSH TRACKER -->
   <div class="screen page" id="page-brushtracker">
     <div class="bt-shell">
+      <div class="sync-dot" id="bt-sync-dot"></div>
       <div class="bt-back" onclick="closeBrushTracker()">
         <span style="font-size:22px;color:var(--bt-mauve, var(--text-xsoft));">‹</span>
         <span style="font-size:12px;color:var(--bt-mauve, var(--text-xsoft));letter-spacing:0.04em;">data</span>
@@ -2418,6 +2429,7 @@ async function launchApp() {
     if (!appData.wraps)    appData.wraps     = [];
     if (!appData.events)   appData.events    = [];
     if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false };
+    if (!appData.intimacy) appData.intimacy = [];
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
     setSyncDot('');
   } catch(e) {
@@ -2472,6 +2484,7 @@ async function loadFromSupabase() {
         spotting:     safeParseArray(row.spotting),
         events:       safeParseArray(row.events),
         brushTracker: Object.keys(safeParseObject(row.brush_tracker)).length ? safeParseObject(row.brush_tracker) : { startDate: null, logs: {}, ss: false },
+        intimacy:     safeParseArray(row.intimacy),
         activePeriod: row.active_period || null,
         settings:     safeParseObject(row.settings)    && Object.keys(safeParseObject(row.settings)).length ? safeParseObject(row.settings) : TEMPDROP_DEFAULT.settings
       };
@@ -2495,6 +2508,7 @@ async function saveToSupabase(data) {
       spotting:      data.spotting || [],
       events:        data.events   || [],
       brush_tracker: data.brushTracker || { startDate: null, logs: {}, ss: false },
+      intimacy:      data.intimacy || [],
       active_period: data.activePeriod || null,
       settings:      data.settings,
       updated_at:    new Date().toISOString()
@@ -2569,7 +2583,8 @@ const TEMPDROP_DEFAULT = {
   symptoms: {},
   journal: {},
   events: [],
-  brushTracker: { startDate: null, logs: {}, ss: false }
+  brushTracker: { startDate: null, logs: {}, ss: false },
+  intimacy: []
 };
 
 let appData = JSON.parse(JSON.stringify(TEMPDROP_DEFAULT));
@@ -2580,8 +2595,9 @@ function save() { saveToSupabase(appData); }
 
 function setSyncDot(state) {
   const dot = document.getElementById('sync-dot');
-  if (!dot) return;
-  dot.className = 'sync-dot' + (state ? ' ' + state : '');
+  if (dot) dot.className = 'sync-dot' + (state ? ' ' + state : '');
+  const btDot = document.getElementById('bt-sync-dot');
+  if (btDot) btDot.className = 'sync-dot' + (state ? ' ' + state : '');
 }
 
 window.onload = async () => {
@@ -2611,6 +2627,7 @@ function renderAll() {
   renderJournalTab();
   updateWrapNotif();
   renderWrappedHome();
+  renderIntimacyLog();
 }
 
 // ── LOG TAB ────────────────────────────────────────────────────────────────
@@ -5685,6 +5702,42 @@ function btRenderCal(){
     h+=`<div class="${cls}" onclick="btTapDay('${k}')">${d}</div>`;
   }
   grid.innerHTML=h;
+}
+
+// ── INTIMACY LOG ─────────────────────────────────────────────────────────────
+function logIntimacy(unprotected) {
+  haptic('light');
+  if (!appData.intimacy) appData.intimacy = [];
+  appData.intimacy.push({ id: Date.now(), date: fmt(today()), protected: !unprotected, notes: '' });
+  save();
+  renderIntimacyLog();
+  showToast(unprotected ? 'logged — unprotected 🔓' : 'logged — protected 🔒');
+}
+
+function deleteIntimacy(id) {
+  appData.intimacy = (appData.intimacy || []).filter(e => e.id !== id);
+  save();
+  renderIntimacyLog();
+}
+
+function renderIntimacyLog() {
+  const wrap = document.getElementById('intimacy-log-list');
+  if (!wrap) return;
+  const entries = (appData.intimacy || [])
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id)
+    .slice(0, 10);
+  if (!entries.length) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<div style="height:1px;background:var(--border);margin:14px 0 4px;"></div>` + entries.map(e => `
+    <div class="event-marker-row">
+      <div class="event-pip" style="background:${e.protected ? 'var(--follicular)' : 'var(--menstrual)'};"></div>
+      <div class="event-marker-content">
+        <div class="event-marker-title">${e.protected ? 'protected' : 'unprotected'}</div>
+        <div class="event-marker-meta">${fmtDisplay(e.date)}</div>
+      </div>
+      <button class="event-del-btn" onclick="deleteIntimacy(${e.id})">×</button>
+    </div>
+  `).join('');
 }
 
 // ── NAV ────────────────────────────────────────────────────────────────────

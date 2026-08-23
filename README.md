@@ -8,7 +8,9 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ## what's new — v2.6 · august 2026
 
-**Brush tracker** — a nightly dental habit tracker, tucked into the app behind a glowing 🦷 in the data tab. Progresses through 7 habit-formation tiers (Initiation through Maintenance) over ~91 days of consistent nightly brushing, with contextual "science" messaging tied to your tier and slip streak, a weekly Sunday digest with confetti, a full achievements/milestones system, and a reference playbook with routine steps and countdown timers. Own 4-screen bottom nav (Dashboard / Science / Playbook / Awards) inside the tracker. Fully independent from period data — resetting it doesn't touch your cycle history, and resetting to baseline doesn't touch it either. Synced via Supabase under a new `brush_tracker` column, same as the rest of the app. The confetti effect is bundled locally (`vendor/confetti.min.js`) rather than loaded from a CDN, so it still works offline.
+**Brush tracker** — a nightly dental habit tracker, tucked into the app behind the glowing 🗄️ in the data tab. Progresses through 7 habit-formation tiers (Initiation through Maintenance) over ~91 days of consistent nightly brushing, with contextual "science" messaging tied to your tier and slip streak, a weekly Sunday digest with confetti, a full achievements/milestones system, and a reference playbook with routine steps and countdown timers. Own 4-screen bottom nav (Dashboard / Science / Playbook / Awards) inside the tracker, with its own sync dot mirroring the main app's sync state. Fully independent from period data — resetting it doesn't touch your cycle history, and resetting to baseline doesn't touch it either. Synced via Supabase under a new `brush_tracker` column, same as the rest of the app. The confetti effect is bundled locally (`vendor/confetti.min.js`) rather than loaded from a CDN, so it still works offline.
+
+**Intimacy log** — two quick-tap buttons on Today ("protected 🔒" / "unprotected 🔓") log a single instant entry for the current date, with the last 10 entries shown below (each deletable). Plain personal record for now — no fertile-window flagging or pregnancy-risk prediction yet, but the data model (date + protected/unprotected + notes) is set up to support that later. Synced via Supabase under a new `intimacy` column.
 
 ---
 
@@ -152,11 +154,20 @@ cycle/
 **Supabase project:** `sdvmycusfyavsuvsjvrv`
 **Table:** `cycle_data`
 
-**Columns:** `user_token`, `periods`, `symptoms`, `journal`, `spotting`, `events`, `brush_tracker`, `active_period`, `settings`, `updated_at`
+**Columns:** `user_token`, `periods`, `symptoms`, `journal`, `spotting`, `events`, `brush_tracker`, `intimacy`, `active_period`, `settings`, `updated_at`
 
 `settings` stores: `cycleLength`, `periodLength`, `wrappedPeriods` (array of period ids that have a standalone wrap file)
 
-`brush_tracker` stores: `{ startDate, logs: { "YYYY-MM-DD": logType }, ss }` for the brush tracker feature — see "Brush tracker" above. **This column needs to be added to the `cycle_data` table manually** (e.g. `alter table cycle_data add column brush_tracker jsonb;`) before the brush tracker will sync — the app falls back to the localStorage cache (`cycleApp3`) if the column is missing, so nothing breaks, but it won't sync across devices until the column exists.
+`brush_tracker` stores: `{ startDate, logs: { "YYYY-MM-DD": logType }, ss }` for the brush tracker feature — see "Brush tracker" above.
+
+`intimacy` stores an array of `{ id, date, protected, notes }` entries — see "Intimacy log" above.
+
+**Both `brush_tracker` and `intimacy` must be added to the `cycle_data` table manually before use:**
+```sql
+alter table cycle_data add column brush_tracker jsonb;
+alter table cycle_data add column intimacy jsonb;
+```
+PostgREST rejects the whole PATCH if the JSON body references a column that doesn't exist yet — so until these columns exist, **every save fails, not just the new features' data** (it silently falls back to the `cycleApp3` localStorage cache and lights up the sync-error dot). Run the migration above before using either feature.
 
 ---
 
