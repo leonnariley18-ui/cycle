@@ -18,6 +18,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker calendar now matches the cycle app's** — circular day bubbles (was rounded squares), a large serif month label (was a tiny bold sans label), bordered square nav arrows (was flat borderless buttons), and the same day-of-week label sizing/header spacing as the main calendar. Own color palette and "today" outline-ring indicator stay as they were — this is about shape and scale reading as one app, not a palette swap.
 
+**Brush tracker cards & buttons now match the cycle app's scale** — every standalone panel (hero, baseline meter, slip tracker, tonight-did, nudge, playbook rule, tier-movement, weekly digest, digest badges) moved from a 9-12px radius with tight padding to the same 20px radius, 24px padding, and soft drop shadow as cycle's `.card`. Buttons (log buttons, tier-option rows, playbook toggles, onboarding confirm, reset) moved from 9-10px radius to the same 14px radius/16px padding as cycle's primary and secondary buttons. Colors are untouched — the tracker's own peach/mauve/lime palette throughout; dense grid tiles (badge cards, stat boxes, product cards) were left at their existing compact size since they're multi-column cells, not standalone cards.
+
 ---
 
 ## what's new — v2.5 · may 2026
