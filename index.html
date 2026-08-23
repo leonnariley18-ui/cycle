@@ -1824,8 +1824,10 @@ body {
         <div class="legend-item"><div class="legend-dot" style="background:var(--ovulation)"></div>Ovulation</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--luteal)"></div>Luteal</div>
         <div class="legend-item"><div class="legend-dot" style="border:1.5px dashed var(--menstrual);background:transparent"></div>Predicted</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#4FA8A8"></div>Illness</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--luteal)"></div>High stress</div>
         <div class="legend-item"><div class="legend-dot" style="background:#E0555A"></div>Unprotected · high risk</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#7B8FA6"></div>Unprotected · low risk</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9B8FBF"></div>Unprotected · low risk</div>
       </div>
     </div>
 
@@ -3619,11 +3621,11 @@ function renderCalendar() {
     }
     const evType = eventDates[ds];
     const evDot = evType
-      ? `<span class="cal-event-dot" style="background:${evType==='illness'?'var(--menstrual)':'var(--luteal)'};"></span>`
+      ? `<span class="cal-event-dot" style="background:${evType==='illness'?'#4FA8A8':'var(--luteal)'};"></span>`
       : '';
     const hasIntimacy = (appData.intimacy || []).includes(ds);
     const intimacyDot = hasIntimacy
-      ? `<span class="cal-intimacy-dot" style="background:${getFertileRisk(ds)==='high'?'#E0555A':'#7B8FA6'};"></span>`
+      ? `<span class="cal-intimacy-dot" style="background:${getFertileRisk(ds)==='high'?'#E0555A':'#9B8FBF'};"></span>`
       : '';
     html+=`<div class="${cls}" style="position:relative;">${d}${evDot}${intimacyDot}</div>`;
   }
