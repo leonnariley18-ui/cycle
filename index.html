@@ -5481,6 +5481,8 @@ function btGoTo(sub){
 }
 function openBrushTracker(){
   goTo('brushtracker', null);
+  const hostNav = document.querySelector('nav.nav');
+  if (hostNav) hostNav.style.display = 'none';
   btGoTo('dashboard');
   const data=btData();
   if(data){
@@ -5495,6 +5497,8 @@ function openBrushTracker(){
   }
 }
 function closeBrushTracker(){
+  const hostNav = document.querySelector('nav.nav');
+  if (hostNav) hostNav.style.display = '';
   goTo('data', document.querySelector('.nav-btn[onclick*="data"]'));
 }
 
@@ -5763,7 +5767,7 @@ function getFertileRisk(dateStr) {
   const cycleStart = parse(lastPeriod.start);
   const ad = diffDays(cycleStart, parse(dateStr)) + 1;
   const ovD = cl - 14;
-  return (ad >= ovD - 5 && ad <= ovD + 1) ? 'high' : 'low';
+  return (ad >= ovD - 5 && ad <= ovD + 2) ? 'high' : 'low';
 }
 
 function initIntimacyToggle() {
