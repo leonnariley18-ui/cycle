@@ -10,7 +10,7 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker** — a nightly dental habit tracker, tucked into the app behind the glowing 🗄️ in the data tab. Progresses through 7 habit-formation tiers (Initiation through Maintenance) over ~91 days of consistent nightly brushing, with contextual "science" messaging tied to your tier and slip streak, a weekly Sunday digest with confetti, a full achievements/milestones system, and a reference playbook with routine steps and countdown timers. Own 4-screen bottom nav (Dashboard / Science / Playbook / Awards) inside the tracker, with its own sync dot mirroring the main app's sync state. Fully independent from period data — resetting it doesn't touch your cycle history, and resetting to baseline doesn't touch it either. Synced via Supabase under a new `brush_tracker` column, same as the rest of the app. The confetti effect is bundled locally (`vendor/confetti.min.js`) rather than loaded from a CDN, so it still works offline.
 
-**Intimacy log** — two quick-tap buttons on Today ("protected 🔒" / "unprotected 🔓") log a single instant entry for the current date, with the last 10 entries shown below (each deletable). Plain personal record for now — no fertile-window flagging or pregnancy-risk prediction yet, but the data model (date + protected/unprotected + notes) is set up to support that later. Synced via Supabase under a new `intimacy` column.
+**Unprotected sex log** — lives in the calendar tab as a simple date field + "logged" checkbox, defaulting to today but freely backfillable to any past date. Checking a date adds it to your log; unchecking removes it. Each logged date shows up as a small dot on the calendar, colored by fertility risk — red for "high risk" (fertile window: 5 days before your estimated ovulation day through 1 day after, the standard sperm/egg-viability window), blue-gray for "low risk" (everywhere else in your cycle). Risk is computed live from your current cycle settings rather than stored, so it stays accurate if your average cycle length changes later. Synced via Supabase under a new `intimacy` column (now a plain array of logged dates — no protected-sex tracking, no notes).
 
 ---
 
@@ -160,7 +160,7 @@ cycle/
 
 `brush_tracker` stores: `{ startDate, logs: { "YYYY-MM-DD": logType }, ss }` for the brush tracker feature — see "Brush tracker" above.
 
-`intimacy` stores an array of `{ id, date, protected, notes }` entries — see "Intimacy log" above.
+`intimacy` stores a flat array of `"YYYY-MM-DD"` strings — the dates unprotected sex was logged. See "Unprotected sex log" above.
 
 **Both `brush_tracker` and `intimacy` must be added to the `cycle_data` table manually before use:**
 ```sql

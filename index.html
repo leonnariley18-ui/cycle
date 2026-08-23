@@ -415,6 +415,7 @@ body {
 .event-toggle-label { font-size: 13px; color: var(--text-soft); line-height: 1.4; }
 .event-toggle-sub { font-size: 11px; color: var(--text-xsoft); margin-top: 3px; line-height: 1.45; font-style: italic; }
 .cal-event-dot { position: absolute; top: 1px; right: 1px; width: 5px; height: 5px; border-radius: 50%; }
+.cal-intimacy-dot { position: absolute; bottom: 1px; right: 1px; width: 5px; height: 5px; border-radius: 50%; }
 
 .phase-transition-banner {
   position: fixed;
@@ -1801,15 +1802,6 @@ body {
       <div class="card-label" style="margin-top:14px">How are you feeling? 🫶🏾</div>
       <div class="symptom-grid" id="symptom-grid"></div>
     </div>
-
-    <div class="card" id="today-intimacy-card">
-      <div class="card-label">log intimacy</div>
-      <div style="display:flex; gap:8px; margin-top:10px;">
-        <button class="flow-tap" style="flex:1;padding:10px;font-size:12px;" onclick="logIntimacy(false)">protected 🔒</button>
-        <button class="flow-tap" style="flex:1;padding:10px;font-size:12px;" onclick="logIntimacy(true)">unprotected 🔓</button>
-      </div>
-      <div id="intimacy-log-list"></div>
-    </div>
   </div>
 
   <!-- CALENDAR -->
@@ -1832,8 +1824,22 @@ body {
         <div class="legend-item"><div class="legend-dot" style="background:var(--ovulation)"></div>Ovulation</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--luteal)"></div>Luteal</div>
         <div class="legend-item"><div class="legend-dot" style="border:1.5px dashed var(--menstrual);background:transparent"></div>Predicted</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#E0555A"></div>Unprotected · high risk</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7B8FA6"></div>Unprotected · low risk</div>
       </div>
     </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="card-label">unprotected sex</div>
+      <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
+        <input type="date" id="intimacy-date" onchange="syncIntimacyCheckbox()" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--text);outline:none;-webkit-appearance:none;color-scheme:dark;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-soft);white-space:nowrap;cursor:pointer;">
+          <input type="checkbox" id="intimacy-checkbox" onchange="toggleIntimacyForDate()" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
+          logged
+        </label>
+      </div>
+    </div>
+
     <div id="cal-events-section"></div>
   </div>
 
@@ -2627,7 +2633,7 @@ function renderAll() {
   renderJournalTab();
   updateWrapNotif();
   renderWrappedHome();
-  renderIntimacyLog();
+  initIntimacyToggle();
 }
 
 // ── LOG TAB ────────────────────────────────────────────────────────────────
@@ -3602,7 +3608,11 @@ function renderCalendar() {
     const evDot = evType
       ? `<span class="cal-event-dot" style="background:${evType==='illness'?'var(--menstrual)':'var(--luteal)'};"></span>`
       : '';
-    html+=`<div class="${cls}" style="position:relative;">${d}${evDot}</div>`;
+    const hasIntimacy = (appData.intimacy || []).includes(ds);
+    const intimacyDot = hasIntimacy
+      ? `<span class="cal-intimacy-dot" style="background:${getFertileRisk(ds)==='high'?'#E0555A':'#7B8FA6'};"></span>`
+      : '';
+    html+=`<div class="${cls}" style="position:relative;">${d}${evDot}${intimacyDot}</div>`;
   }
   grid.innerHTML=html;
 }
@@ -5704,40 +5714,52 @@ function btRenderCal(){
   grid.innerHTML=h;
 }
 
-// ── INTIMACY LOG ─────────────────────────────────────────────────────────────
-function logIntimacy(unprotected) {
+// ── INTIMACY LOG (unprotected sex, calendar tab) ────────────────────────────
+// Fertile window = ovulation day minus 5 (sperm viability) through ovulation
+// day plus 1 (egg viability) — a standard approximation, not medical advice.
+function getFertileRisk(dateStr) {
+  const sorted = [...appData.periods].filter(p => p.end || p.id === appData.activePeriod)
+    .sort((a,b) => a.start.localeCompare(b.start));
+  if (!sorted.length) return 'low';
+  let lastPeriod = null;
+  for (let i = sorted.length-1; i >= 0; i--) {
+    if (parse(sorted[i].start) <= parse(dateStr)) { lastPeriod = sorted[i]; break; }
+  }
+  if (!lastPeriod) return 'low';
+  const cl = avgCycleLength();
+  const cycleStart = parse(lastPeriod.start);
+  const ad = diffDays(cycleStart, parse(dateStr)) + 1;
+  const ovD = cl - 14;
+  return (ad >= ovD - 5 && ad <= ovD + 1) ? 'high' : 'low';
+}
+
+function initIntimacyToggle() {
+  const dateInput = document.getElementById('intimacy-date');
+  if (!dateInput) return;
+  dateInput.value = fmt(today());
+  dateInput.max = fmt(today());
+  syncIntimacyCheckbox();
+}
+function syncIntimacyCheckbox() {
+  const dateInput = document.getElementById('intimacy-date');
+  const checkbox = document.getElementById('intimacy-checkbox');
+  if (!dateInput || !checkbox) return;
+  checkbox.checked = (appData.intimacy || []).includes(dateInput.value);
+}
+function toggleIntimacyForDate() {
   haptic('light');
+  const dateInput = document.getElementById('intimacy-date');
+  const checkbox = document.getElementById('intimacy-checkbox');
   if (!appData.intimacy) appData.intimacy = [];
-  appData.intimacy.push({ id: Date.now(), date: fmt(today()), protected: !unprotected, notes: '' });
+  const ds = dateInput.value;
+  if (checkbox.checked) {
+    if (!appData.intimacy.includes(ds)) appData.intimacy.push(ds);
+    showToast(getFertileRisk(ds) === 'high' ? 'logged — fertile window ⚠️' : 'logged');
+  } else {
+    appData.intimacy = appData.intimacy.filter(d => d !== ds);
+  }
   save();
-  renderIntimacyLog();
-  showToast(unprotected ? 'logged — unprotected 🔓' : 'logged — protected 🔒');
-}
-
-function deleteIntimacy(id) {
-  appData.intimacy = (appData.intimacy || []).filter(e => e.id !== id);
-  save();
-  renderIntimacyLog();
-}
-
-function renderIntimacyLog() {
-  const wrap = document.getElementById('intimacy-log-list');
-  if (!wrap) return;
-  const entries = (appData.intimacy || [])
-    .slice()
-    .sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id)
-    .slice(0, 10);
-  if (!entries.length) { wrap.innerHTML = ''; return; }
-  wrap.innerHTML = `<div style="height:1px;background:var(--border);margin:14px 0 4px;"></div>` + entries.map(e => `
-    <div class="event-marker-row">
-      <div class="event-pip" style="background:${e.protected ? 'var(--follicular)' : 'var(--menstrual)'};"></div>
-      <div class="event-marker-content">
-        <div class="event-marker-title">${e.protected ? 'protected' : 'unprotected'}</div>
-        <div class="event-marker-meta">${fmtDisplay(e.date)}</div>
-      </div>
-      <button class="event-del-btn" onclick="deleteIntimacy(${e.id})">×</button>
-    </div>
-  `).join('');
+  renderCalendar();
 }
 
 // ── NAV ────────────────────────────────────────────────────────────────────
