@@ -2728,7 +2728,7 @@ function renderLogTab() {
 }
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
-function fmt(d)  { return d.toISOString().split('T')[0]; }
+function fmt(d)  { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function parse(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 function diffDays(a,b){ return Math.round((b-a)/86400000); }
 function today() { const d=new Date(); d.setHours(0,0,0,0); return d; }
@@ -5399,7 +5399,7 @@ const BT_REPS=[
 function btData(){ const d = appData.brushTracker; return (d && d.startDate) ? d : null; }
 function btPersist(d){ appData.brushTracker = d; save(); }
 function btFmtTimer(s){const m=Math.floor(s/60);return`${m}:${(s%60).toString().padStart(2,'0')}`;}
-function btFd(d){return d.toISOString().split('T')[0];}
+function btFd(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function btPd(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
 function btGetTK(){const n=new Date();if(n.getHours()<5)n.setDate(n.getDate()-1);return btFd(n);}
 function btGetMon(s){const d=btPd(s),day=d.getDay(),diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return btFd(d);}
