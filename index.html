@@ -1506,6 +1506,8 @@ body {
 .bt-cal-month{font-family:'Playfair Display',serif;font-weight:800;font-size:24px;color:var(--bt-peach);text-align:center;}
 .bt-cal-nav{background:none;border:1px solid var(--bt-p15);color:var(--bt-mauve);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 0.2s;}
 .bt-cal-nav:hover,.bt-cal-nav:active{background:var(--bt-p06);}
+.bt-cal-today-btn{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--bt-lime);background:var(--bt-l08);border:1px solid var(--bt-l15);border-radius:20px;padding:3px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.bt-cal-today-btn:hover{background:var(--bt-l12);}
 .bt-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
 .bt-cal-dl{font-size:10px;font-weight:400;letter-spacing:0.08em;color:var(--bt-mauve);opacity:0.6;text-transform:uppercase;text-align:center;padding:4px 0 8px;}
 .bt-cal-d{width:100%;aspect-ratio:1;max-width:38px;max-height:38px;margin:0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;font-weight:300;color:rgba(239,210,203,0.15);background:rgba(239,210,203,0.02);cursor:pointer;transition:all 0.15s;}
@@ -2080,7 +2082,14 @@ body {
             <div id="bt-log-section"></div>
             <div class="bt-card">
               <div class="bt-card-label">this month</div>
-              <div class="bt-cal-header"><button class="bt-cal-nav" onclick="btChMo(-1)">◀</button><span class="bt-cal-month" id="bt-cal-month"></span><button class="bt-cal-nav" onclick="btChMo(1)">▶</button></div>
+              <div class="bt-cal-header">
+                <button class="bt-cal-nav" onclick="btChMo(-1)">◀</button>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+                  <span class="bt-cal-month" id="bt-cal-month"></span>
+                  <button class="bt-cal-today-btn" id="bt-cal-today-btn" onclick="btCalToday()" style="display:none">today</button>
+                </div>
+                <button class="bt-cal-nav" onclick="btChMo(1)">▶</button>
+              </div>
               <div class="bt-cal-grid" id="bt-cal-grid"></div>
               <div class="bt-legend">
                 <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(195,233,145,0.45)"></div>Path A</div>
@@ -5488,7 +5497,7 @@ function openBrushTracker(){
   if(data){
     document.getElementById('bt-onboarding').style.display='none';
     document.getElementById('bt-dashboard-body').style.display='block';
-    btViewMonth=new Date(btPd(data.startDate));btViewMonth.setDate(1);
+    btViewMonth=new Date();btViewMonth.setDate(1);
     btRender();
   }else{
     document.getElementById('bt-onboarding').style.display='block';
@@ -5763,6 +5772,7 @@ function btPbTimer(btn,total,label){
 }
 let btViewMonth=new Date();btViewMonth.setDate(1);
 function btChMo(dir){btViewMonth.setMonth(btViewMonth.getMonth()+dir);btRenderCal();}
+function btCalToday(){const n=new Date();btViewMonth=new Date(n.getFullYear(),n.getMonth(),1);btRenderCal();}
 function btRenderCal(){
   const data=btData();if(!data)return;
   const grid=document.getElementById('bt-cal-grid'),label=document.getElementById('bt-cal-month');
@@ -5773,6 +5783,8 @@ function btRenderCal(){
   const first=new Date(y,mo,1),fd2=first.getDay(),offset=fd2===0?6:fd2-1;
   const dim=new Date(y,mo+1,0).getDate();
   const tk=btGetTK(),today=new Date(),st=btPd(data.startDate);
+  const todayBtn=document.getElementById('bt-cal-today-btn');
+  if(todayBtn)todayBtn.style.display=(y===today.getFullYear()&&mo===today.getMonth())?'none':'block';
   let h=DL.map(d=>`<div class="bt-cal-dl">${d}</div>`).join('');
   for(let i=0;i<offset;i++)h+='<div class="bt-cal-d"></div>';
   for(let d=1;d<=dim;d++){

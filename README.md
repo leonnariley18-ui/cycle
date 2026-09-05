@@ -18,7 +18,7 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Evening date bug fixed** — `fmt()` built date strings via `toISOString()`, which converts to UTC first. In any timezone behind UTC, after roughly 8pm local the date would silently roll to tomorrow — most visibly, starting a period in the evening could pre-fill and save tomorrow's date, showing "day 0" and blocking flow logging until the date passed. Rewrote `fmt()` (and the brush tracker's equivalent `btFd()`) to build the string from local date parts instead. If you already have a period recorded with a start date one day ahead of when you actually started it, edit it back via Log → History → ✏️.
 
-**Brush tracker fixes** — host nav bar no longer blocks the tracker's own nav; onboarding's deficit backfill no longer pre-logs tonight if your start date is very close; background lightened for contrast; playbook quick-reference cards restructured for readability; playbook timers now hold the screen awake and stay accurate through backgrounding.
+**Brush tracker fixes** — host nav bar no longer blocks the tracker's own nav; onboarding's deficit backfill no longer pre-logs tonight if your start date is very close; background lightened for contrast; playbook quick-reference cards restructured for readability; playbook timers now hold the screen awake and stay accurate through backgrounding; calendar now opens to the actual current month instead of resetting to your start month every time, and has a "today" button to jump back after browsing other months.
 
 ---
 
