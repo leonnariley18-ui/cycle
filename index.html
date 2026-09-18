@@ -1564,6 +1564,8 @@ body {
 .bt-bk-cnt{width:24px;text-align:right;font-size:11px;color:var(--bt-mauve);font-weight:600;flex-shrink:0;}
 .bt-reset-wrap{text-align:center;margin-top:2rem;padding-bottom:1rem;}
 .bt-reset-btn{background:var(--bt-m10);border:1px solid var(--bt-m20);color:#c090a0;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;padding:14px 2rem;border-radius:14px;width:100%;max-width:280px;}
+.bt-clean-btn{background:var(--bt-l08);border:1px solid var(--bt-l15);color:var(--bt-lime);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;padding:16px;border-radius:14px;width:100%;margin-bottom:1rem;}
+.bt-clean-btn:active{background:var(--bt-l12);}
 .bt-pb-products{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.5rem;}
 .bt-pb-product{background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:10px;padding:0.85rem;}
 .bt-pb-product .bt-pe{font-size:1.2rem;margin-bottom:0.3rem;}
@@ -2115,7 +2117,9 @@ body {
         <div class="bt-subpage" id="bt-subpage-science">
           <div class="bt-page-title">the science 🔬</div>
           <div class="bt-page-sub">the biology behind the streak</div>
-          <div id="bt-meter-slot"></div><div id="bt-slip-slot"></div><div id="bt-smoke-slot"></div><div id="bt-tonight-slot"></div><div id="bt-breakdown-slot"></div>
+          <div id="bt-meter-slot"></div>
+          <button class="bt-clean-btn" onclick="btLogCleaning()">🪥✨ log a professional cleaning</button>
+          <div id="bt-slip-slot"></div><div id="bt-smoke-slot"></div><div id="bt-tonight-slot"></div><div id="bt-breakdown-slot"></div>
           <div class="bt-reset-wrap" id="bt-reset-wrap"><button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button></div>
         </div>
 
@@ -2460,7 +2464,8 @@ async function launchApp() {
     if (!appData.spotting) appData.spotting  = [];
     if (!appData.wraps)    appData.wraps     = [];
     if (!appData.events)   appData.events    = [];
-    if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false };
+    if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false, cleanings: [] };
+    if (!appData.brushTracker.cleanings) appData.brushTracker.cleanings = [];
     if (!appData.intimacy) appData.intimacy = [];
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
     // A period's cycle isn't complete until the *next* period starts, so the
@@ -5391,6 +5396,7 @@ const BT_MILE=[
   {id:'survived-inst',ic:'💀',nm:'Survived Instability',cl:'mauve',dc:'Complete Tier 2'},
   {id:'reached-maint',ic:'🏅',nm:'Maintenance',cl:'lime',dc:'Reach Tier 5'},
   {id:'full-year',ic:'🌍',nm:'Full Year',cl:'lime',dc:'365 logged nights'},
+  {id:'first-cleaning',ic:'🦷✨',nm:'Professional Clean',cl:'lime',dc:'Log your first professional cleaning'},
 ];
 const BT_REPS=[
   {id:'tier-up',ic:'⬆️',nm:'Tier Up',cl:'lime',dc:'Advance to a new tier',ck:'tu'},
@@ -5403,6 +5409,7 @@ const BT_REPS=[
   {id:'streak-90',ic:'👑',nm:'Streak: 90',cl:'lime',dc:'Full automaticity',ck:'s90'},
   {id:'path-a-7',ic:'🌟',nm:'Path A Perfectionist',cl:'forest',dc:'7 consecutive Path A nights',ck:'pa7'},
   {id:'smoke-brush',ic:'🚬',nm:'Smoke & Brush',cl:'forest',dc:'Perfect week despite nightly smoking',ck:'sb'},
+  {id:'cleaning-logged',ic:'🪥✨',nm:'Deep Clean',cl:'lime',dc:'Each professional cleaning logged',ck:'dc'},
 ];
 
 function btData(){ const d = appData.brushTracker; return (d && d.startDate) ? d : null; }
@@ -5430,11 +5437,21 @@ function btGetNS(data){
 }
 function btGetScore(data){
   const st=btPd(data.startDate),tier=btGetTier(btGetConsec(data));let sc=0;
-  Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b)).forEach(([,v])=>{if(BT_TM[v])sc=Math.max(0,Math.min(tier.mx,sc+BT_TM[v].s));});return sc;
+  const events=[
+    ...Object.entries(data.logs).filter(([k])=>btPd(k)>=st).map(([k,v])=>({d:k,clean:false,v})),
+    ...(data.cleanings||[]).filter(d=>btPd(d)>=st).map(d=>({d,clean:true}))
+  ].sort((a,b)=>a.d.localeCompare(b.d));
+  events.forEach(e=>{ if(e.clean) sc=tier.mx; else if(BT_TM[e.v]) sc=Math.max(0,Math.min(tier.mx,sc+BT_TM[e.v].s)); });
+  return sc;
 }
 function btGetScoreAt(data,ds){
-  const st=btPd(data.startDate),tg=btPd(ds);let sc=0;
-  Object.entries(data.logs).filter(([k])=>{const d=btPd(k);return d>=st&&d<=tg;}).sort(([a],[b])=>a.localeCompare(b)).forEach(([,v])=>{if(BT_TM[v])sc=Math.max(0,sc+BT_TM[v].s);});return sc;
+  const st=btPd(data.startDate),tg=btPd(ds),tier=btGetTier(btGetConsec(data));let sc=0;
+  const events=[
+    ...Object.entries(data.logs).filter(([k])=>{const d=btPd(k);return d>=st&&d<=tg;}).map(([k,v])=>({d:k,clean:false,v})),
+    ...(data.cleanings||[]).filter(d=>{const dd=btPd(d);return dd>=st&&dd<=tg;}).map(d=>({d,clean:true}))
+  ].sort((a,b)=>a.d.localeCompare(b.d));
+  events.forEach(e=>{ if(e.clean) sc=tier.mx; else if(BT_TM[e.v]) sc=Math.max(0,sc+BT_TM[e.v].s); });
+  return sc;
 }
 function btGetTierAt(data,ds){
   const st=btPd(data.startDate),tg=btPd(ds);
@@ -5458,8 +5475,8 @@ function btCompAch(data){
   const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b));
   const hasBr=all.some(([,v])=>BT_TM[v]?.b);
   let mxStr=0,str=0;for(const[,v]of all){if(BT_TM[v]?.b){str++;mxStr=Math.max(mxStr,str);}else str=0;}
-  const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365};
-  const c={tu:0,cb:0,pw:0,s7:0,s14:0,s30:0,s66:0,s90:0,pa7:0,sb:0};
+  const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365,'first-cleaning':(data.cleanings||[]).length>=1};
+  const c={tu:0,cb:0,pw:0,s7:0,s14:0,s30:0,s66:0,s90:0,pa7:0,sb:0,dc:(data.cleanings||[]).length};
   let consec=0,consecPA=0,slip=0,fromSlip=false,prevTIdx=0;
   for(const[,v]of all){
     if(BT_TM[v]?.b){
@@ -5530,7 +5547,7 @@ function btSelMon2(el,ds){document.querySelectorAll('.bt-monday-option').forEach
 function btSelDef(el,n){document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');btSelDefN=n;btChkOb();}
 function btChkOb(){document.getElementById('bt-ob-confirm').disabled=!(btSelMon&&btSelDefN);}
 function btConfirmOb(){
-  const data={startDate:btSelMon,logs:{},ss:false};
+  const data={startDate:btSelMon,logs:{},ss:false,cleanings:[]};
   const st=btPd(btSelMon);
   for(let i=btSelDefN;i>=1;i--){const d=new Date(st);d.setDate(st.getDate()-i);const ds=btFd(d);if(ds>=btGetTK())continue;data.logs[ds]='nothing';}
   btPersist(data);
@@ -5554,7 +5571,7 @@ function btCancelReset(){
   wrap.innerHTML = '<button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button>';
 }
 function btDoReset(){
-  btPersist({ startDate: null, logs: {}, ss: false });
+  btPersist({ startDate: null, logs: {}, ss: false, cleanings: [] });
   btSelMon=null;btSelDefN=null;
   document.querySelectorAll('.bt-monday-option').forEach(o=>o.classList.remove('selected'));
   document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));
@@ -5564,6 +5581,15 @@ function btDoReset(){
   btGoTo('dashboard');
   btBuildMondays();
   showToast('brush tracker reset');
+}
+function btLogCleaning(){
+  const data=btData();if(!data)return;
+  if(!data.cleanings)data.cleanings=[];
+  const tk=btGetTK();
+  if(!data.cleanings.includes(tk))data.cleanings.push(tk);
+  btPersist(data);
+  btRender();
+  showToast('cleaning logged — baseline reset 🪷');
 }
 
 // SHEET

@@ -20,6 +20,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker fixes** — host nav bar no longer blocks the tracker's own nav; onboarding's deficit backfill no longer pre-logs tonight if your start date is very close; background lightened for contrast; playbook quick-reference cards restructured for readability; playbook timers now hold the screen awake and stay accurate through backgrounding; calendar now opens to the actual current month instead of resetting to your start month every time, and has a "today" button to jump back after browsing other months.
 
+**Professional cleaning logging** — a button on Science tops off your baseline meter to your current tier's max, representing the real reset a dental scaling/cleaning gives your mouth (removes calculus that brushing alone can't touch). Doesn't touch your tier or streak — those track nightly consistency, not a dentist visit — and doesn't rewrite past nights. Comes with a milestone ("Professional Clean") and a repeatable achievement ("Deep Clean ×N").
+
 ---
 
 ## what's new — v2.5 · may 2026
