@@ -5435,8 +5435,19 @@ function btGetNS(data){
   const st=btPd(data.startDate);let d=btPd(btGetTK()),c=0,fi=true;
   while(true){if(d<st)break;const k=btFd(d),v=data.logs[k];if(v===undefined&&fi&&k===btGetTK()){fi=false;d.setDate(d.getDate()-1);continue;}fi=false;if(v==='nothing'){c++;d.setDate(d.getDate()-1);}else break;}return c;
 }
+function btGetEffectiveTierIdx(data){
+  const st=btPd(data.startDate);
+  const ents=Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b));
+  let streak=0,idx=0;
+  for(const[,v]of ents){
+    if(BT_TM[v]?.b){streak++;const ti=BT_TD.findIndex(t=>t===btGetTier(streak));idx=Math.max(idx,ti);}
+    else{streak=0;idx=Math.max(0,idx-1);}
+  }
+  return idx;
+}
+function btGetEffectiveTier(data){ return BT_TD[btGetEffectiveTierIdx(data)]; }
 function btGetScore(data){
-  const st=btPd(data.startDate),tier=btGetTier(btGetConsec(data));let sc=0;
+  const st=btPd(data.startDate),tier=btGetEffectiveTier(data);let sc=0;
   const events=[
     ...Object.entries(data.logs).filter(([k])=>btPd(k)>=st).map(([k,v])=>({d:k,clean:false,v})),
     ...(data.cleanings||[]).filter(d=>btPd(d)>=st).map(d=>({d,clean:true}))
@@ -5445,7 +5456,7 @@ function btGetScore(data){
   return sc;
 }
 function btGetScoreAt(data,ds){
-  const st=btPd(data.startDate),tg=btPd(ds),tier=btGetTier(btGetConsec(data));let sc=0;
+  const st=btPd(data.startDate),tg=btPd(ds),tier=btGetEffectiveTier(data);let sc=0;
   const events=[
     ...Object.entries(data.logs).filter(([k])=>{const d=btPd(k);return d>=st&&d<=tg;}).map(([k,v])=>({d:k,clean:false,v})),
     ...(data.cleanings||[]).filter(d=>{const dd=btPd(d);return dd>=st&&dd<=tg;}).map(d=>({d,clean:true}))
@@ -5670,7 +5681,7 @@ function btRender(){
   const data=btData();if(!data)return;
   const tk=btGetTK(),tonight=data.logs[tk],logged=tonight!==undefined;
   const bs=btGetConsec(data),nbs=btGetNBS(data),ns=btGetNS(data);
-  const tier=btGetTier(bs),score=btGetScore(data),ms=btGetMS(score,tier.mx);
+  const tier=btGetEffectiveTier(data),score=btGetScore(data),ms=btGetMS(score,tier.mx);
   const st=btPd(data.startDate);
   const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st);
   const pill=document.getElementById('bt-tier-pill');

@@ -22,6 +22,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Professional cleaning logging** — a button on Science tops off your baseline meter to your current tier's max, representing the real reset a dental scaling/cleaning gives your mouth (removes calculus that brushing alone can't touch). Doesn't touch your tier or streak — those track nightly consistency, not a dentist visit — and doesn't rewrite past nights. Comes with a milestone ("Professional Clean") and a repeatable achievement ("Deep Clean ×N").
 
+**Tier grace mechanism** — a missed night used to send your tier all the way back to Tier 1, regardless of how long a streak preceded it. That's harsher than the research supports: habit-formation and lapse literature treats a single missed cue as a gradual step down in automaticity, not a full reset, and punishing it as one risks manufacturing the exact discouragement that causes real relapse. Tier now steps down by one level per consecutive missed night instead of collapsing to Tier 1, and climbs back as you rebuild a real streak. Your nightly points (the baseline meter within a tier) still take their usual hit on a missed night — this only changes the coarser tier classification, not the fine-grained score.
+
 ---
 
 ## what's new — v2.5 · may 2026
