@@ -5438,10 +5438,10 @@ function btGetNS(data){
 function btGetEffectiveTierIdx(data){
   const st=btPd(data.startDate);
   const ents=Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b));
-  let streak=0,idx=0;
+  let streak=0,idx=0,missDebt=0;
   for(const[,v]of ents){
-    if(BT_TM[v]?.b){streak++;const ti=BT_TD.findIndex(t=>t===btGetTier(streak));idx=Math.max(idx,ti);}
-    else{streak=0;idx=Math.max(0,idx-1);}
+    if(BT_TM[v]?.b){streak++;const ti=BT_TD.findIndex(t=>t===btGetTier(streak));idx=Math.max(idx,ti);missDebt=0;}
+    else{streak=0;missDebt++;const resistance=idx+1;if(missDebt>=resistance){idx=Math.max(0,idx-1);missDebt=0;}}
   }
   return idx;
 }
