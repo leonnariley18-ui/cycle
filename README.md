@@ -20,6 +20,10 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Brush tracker fixes** — host nav bar no longer blocks the tracker's own nav; onboarding's deficit backfill no longer pre-logs tonight if your start date is very close; background lightened for contrast; playbook quick-reference cards restructured for readability; playbook timers now hold the screen awake and stay accurate through backgrounding; calendar now opens to the actual current month instead of resetting to your start month every time, and has a "today" button to jump back after browsing other months.
 
+**Professional cleaning logging** — a button on Science tops off your baseline meter to your current tier's max, representing the real reset a dental scaling/cleaning gives your mouth (removes calculus that brushing alone can't touch). Doesn't touch your tier or streak — those track nightly consistency, not a dentist visit — and doesn't rewrite past nights. Comes with a milestone ("Professional Clean") and a repeatable achievement ("Deep Clean ×N").
+
+**Tier grace mechanism** — a missed night used to send your tier all the way back to Tier 1, regardless of how long a streak preceded it. That's harsher than the research supports: habit-formation and lapse literature treats a single missed cue as a gradual step down in automaticity, not a full reset, and punishing it as one risks manufacturing the exact discouragement that causes real relapse. Deeper tiers now resist drops more, in line with the same literature — it takes progressively more consecutive missed nights to knock a level off the further along you are (a miss at Tier 1 still drops immediately; a miss at Tier 5 needs a full week of consecutive misses before it costs even one level). Tier climbs back only as you rebuild a real streak — no free recovery from a single make-up night. Your nightly points (the baseline meter within a tier) still take their usual hit on a missed night — this only changes the coarser tier classification, not the fine-grained score.
+
 ---
 
 ## what's new — v2.5 · may 2026
