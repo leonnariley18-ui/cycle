@@ -6,6 +6,12 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
+## what's new — v2.7 · october 2026
+
+**Recommit** — a button on Science for coming back after a real gap (9+ nights with nothing logged at all — not just missed nights, actual silence). Shows you the gap plainly and asks for one honest estimate ("out of these N nights, how many did you actually brush?") instead of making you backfill the calendar. The guess blends into your tier and baseline score like real nights would, but can never unlock a streak achievement on its own — only genuinely logged nights do that. Estimated nights are always visually distinct (a dashed ring on the calendar, a clearly labeled day-detail view) so a guess never reads back as a real memory. New permanent "Recommits" counter on Awards, two new achievements, and a quieter Sunday digest treatment for any week that included one — confetti still plays in full for a genuinely earned badge that week, with a soft glow following after, but a recommit on its own gets the glow alone, never fireworks.
+
+---
+
 ## what's new — v2.6 · august 2026
 
 **Brush tracker** — a nightly dental habit tracker behind the glowing 🗄️ in the data tab. 7 habit-formation tiers, tier/slip-based science messaging, weekly Sunday digest with confetti, achievements, and a routine playbook. Own bottom nav (Dashboard / Science / Playbook / Awards), visually aligned with the rest of the app (calendar shape, cards, buttons, headers, layout all match cycle's own conventions; own peach/mauve/lime palette kept). Independent from period data. Synced via Supabase under a new `brush_tracker` column; confetti is bundled locally so it works offline.
@@ -178,7 +184,7 @@ cycle/
 
 `settings` stores: `cycleLength`, `periodLength`, `wrappedPeriods` (array of period ids that have a standalone wrap file)
 
-`brush_tracker` stores: `{ startDate, logs: { "YYYY-MM-DD": logType }, ss }` for the brush tracker feature — see "Brush tracker" above.
+`brush_tracker` stores: `{ startDate, logs: { "YYYY-MM-DD": logType }, ss, cleanings, estimatedDates, recommits }` for the brush tracker feature — see "Brush tracker" above.
 
 `intimacy` stores a flat array of `"YYYY-MM-DD"` strings — the dates unprotected sex was logged. See "Unprotected sex log" above.
 
