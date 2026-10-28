@@ -1520,6 +1520,7 @@ body {
 .bt-cal-d.t-closys-only{background:rgba(239,210,203,0.06);color:#a08878;font-weight:700;}
 .bt-cal-d.t-nothing{background:rgba(117,72,94,0.15);color:#a07888;font-weight:700;}
 .bt-cal-d.today{outline:1.5px solid rgba(239,210,203,0.22);outline-offset:-1.5px;}
+.bt-cal-d.estimated{background:transparent!important;border:1.5px dashed rgba(224,160,184,0.55);color:#e0a0b8!important;}
 .bt-legend{display:flex;flex-wrap:wrap;gap:0.4rem 0.9rem;margin-top:0.6rem;justify-content:center;}
 .bt-legend-item{display:flex;align-items:center;gap:0.25rem;font-size:0.58rem;color:var(--bt-mauve);}
 .bt-legend-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
@@ -1534,7 +1535,10 @@ body {
 .bt-meter-state{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;padding:0.18rem 0.5rem;border-radius:100px;}
 .bt-ms-holding{background:var(--bt-l12);color:var(--bt-lime);}.bt-ms-pressure{background:var(--bt-p15);color:var(--bt-peach);}.bt-ms-compromised{background:var(--bt-m15);color:#c090a0;}.bt-ms-critical{background:var(--bt-m25);color:#e0a0b8;}
 .bt-meter-track{height:4px;background:rgba(239,210,203,0.05);border-radius:2px;overflow:hidden;margin-bottom:0.6rem;}
-.bt-meter-fill{height:100%;border-radius:2px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+.bt-meter-fill{height:100%;border-radius:2px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);position:relative;}
+.bt-meter-fill::after{content:"";position:absolute;top:0;right:0;width:16px;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.55),rgba(255,255,255,0));opacity:0;}
+.bt-meter-fill.bt-meter-fill-glow::after{animation:btMeterSweep 0.9s cubic-bezier(.22,.9,.3,1);}
+@keyframes btMeterSweep{0%{opacity:0;}20%{opacity:1;}100%{opacity:0;}}
 .bt-mf-holding{background:linear-gradient(90deg,var(--bt-forest),var(--bt-lime));}.bt-mf-pressure{background:linear-gradient(90deg,var(--bt-mauve),var(--bt-peach));}.bt-mf-compromised{background:linear-gradient(90deg,#5a2040,var(--bt-mauve));}.bt-mf-critical{background:linear-gradient(90deg,#3a1030,#5a2040);}
 .bt-meter-desc{font-size:0.75rem;color:var(--bt-mauve);line-height:1.5;}
 .bt-meter-desc strong{color:var(--bt-peach);font-weight:700;}
@@ -1566,6 +1570,8 @@ body {
 .bt-reset-btn{background:var(--bt-m10);border:1px solid var(--bt-m20);color:#c090a0;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;padding:14px 2rem;border-radius:14px;width:100%;max-width:280px;}
 .bt-clean-btn{background:var(--bt-l08);border:1px solid var(--bt-l15);color:var(--bt-lime);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;padding:16px;border-radius:14px;width:100%;margin-bottom:1rem;}
 .bt-clean-btn:active{background:var(--bt-l12);}
+.bt-recommit-btn{background:var(--bt-m15);border:1px solid var(--bt-m25);color:#e0a0b8;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;padding:16px;border-radius:14px;width:100%;margin-bottom:1rem;}
+.bt-recommit-btn:active{background:var(--bt-m20);}
 .bt-pb-products{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.5rem;}
 .bt-pb-product{background:var(--bt-p06);border:1px solid var(--bt-p06);border-radius:10px;padding:0.85rem;}
 .bt-pb-product .bt-pe{font-size:1.2rem;margin-bottom:0.3rem;}
@@ -1600,7 +1606,7 @@ body {
 .bt-pb-ref-row:active{background:var(--bt-p10);}
 .bt-pb-ref-w{font-weight:700;color:var(--bt-peach);font-size:14px;display:flex;align-items:center;gap:6px;}
 .bt-pb-ref-wh{font-size:12px;color:var(--bt-mauve);line-height:1.55;}
-.bt-ach-ov{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:1.5rem;}
+.bt-ach-ov{display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;margin-bottom:1.5rem;}
 .bt-ach-ov-box{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:9px;padding:0.7rem 0.4rem;text-align:center;}
 .bt-ach-ov-n{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--bt-peach);line-height:1;margin-bottom:0.2rem;}
 .bt-ach-ov-n.green{color:var(--bt-lime);}
@@ -1638,6 +1644,17 @@ body {
 .bt-sde-icon{font-size:1.8rem;flex-shrink:0;}
 .bt-sde-date{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;margin-bottom:0.2rem;}
 .bt-sde-label{font-weight:700;font-size:0.9rem;color:var(--bt-peach);}
+.bt-sde.bt-sde-est{background:var(--bt-m15);border:1px solid var(--bt-m25);}
+.bt-sde.bt-sde-est .bt-sde-label{color:#e0a0b8;}
+.bt-sde-note{font-size:0.68rem;color:var(--bt-mauve);line-height:1.5;margin:-0.3rem 0 0.75rem;}
+.bt-sde-note strong{color:var(--bt-peach);}
+.bt-recommit-eyebrow{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:#e0a0b8;text-align:center;margin-bottom:0.4rem;}
+.bt-recommit-h{font-family:'Playfair Display',serif;font-weight:800;font-size:1.15rem;text-align:center;margin-bottom:0.5rem;color:var(--bt-peach);}
+.bt-recommit-sub{font-size:0.78rem;color:var(--bt-mauve);text-align:center;line-height:1.5;margin-bottom:1rem;}
+.bt-recommit-sub strong{color:var(--bt-peach);}
+.bt-recommit-q{font-size:0.8rem;color:var(--bt-peach);text-align:center;margin-bottom:0.8rem;line-height:1.4;}
+.bt-recommit-input{display:block;width:100%;background:var(--bt-p06);border:1px solid var(--bt-p15);border-radius:12px;color:var(--bt-peach);font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;text-align:center;padding:0.6rem;margin-bottom:1rem;}
+.bt-recommit-submit{background:linear-gradient(135deg,var(--bt-mauve),#5a3648);color:var(--bt-peach);font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.85rem;padding:14px;border-radius:14px;width:100%;cursor:pointer;}
 .bt-dig-div{display:flex;align-items:center;gap:0.5rem;margin:1.25rem 0 1rem;}
 .bt-dig-div-line{flex:1;height:1px;background:rgba(239,210,203,0.06);}
 .bt-dig-div-lbl{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.4;}
@@ -1645,13 +1662,17 @@ body {
 .bt-dhs.first{background:linear-gradient(160deg,var(--bt-f10),var(--bt-l08));border:1px solid var(--bt-l15);}
 .bt-dhs.up{background:linear-gradient(160deg,var(--bt-l08),var(--bt-f10));border:1px solid var(--bt-l20);}
 .bt-dhs.down{background:linear-gradient(160deg,var(--bt-m15),var(--bt-m10));border:1px solid var(--bt-m20);}
+.bt-dhs.recommit{background:linear-gradient(160deg,var(--bt-m15),var(--bt-m10));border:1px solid var(--bt-m20);position:relative;overflow:hidden;}
+.bt-dhs.recommit::before{content:"";position:absolute;top:1.6rem;left:50%;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,rgba(224,160,184,0.9),rgba(224,160,184,0));transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none;}
+.bt-dhs.recommit.bt-bloom-play::before{animation:btBloomOut 1.4s cubic-bezier(.2,.8,.3,1);}
+@keyframes btBloomOut{0%{transform:translate(-50%,-50%) scale(0);opacity:0.9;}60%{opacity:0.35;}100%{transform:translate(-50%,-50%) scale(14);opacity:0;}}
 .bt-dhs-e{font-size:1.8rem;line-height:1;margin-bottom:0.4rem;}
 .bt-dhs-t{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:800;margin-bottom:0.25rem;line-height:1.2;}
-.bt-dhs.first .bt-dhs-t,.bt-dhs.up .bt-dhs-t{color:var(--bt-lime);}.bt-dhs.down .bt-dhs-t{color:#c090a0;}
+.bt-dhs.first .bt-dhs-t,.bt-dhs.up .bt-dhs-t{color:var(--bt-lime);}.bt-dhs.down .bt-dhs-t,.bt-dhs.recommit .bt-dhs-t{color:#c090a0;}
 .bt-dhs-s{font-size:0.72rem;line-height:1.45;}
-.bt-dhs.first .bt-dhs-s,.bt-dhs.up .bt-dhs-s{color:var(--bt-forest);}.bt-dhs.down .bt-dhs-s{color:var(--bt-mauve);}
+.bt-dhs.first .bt-dhs-s,.bt-dhs.up .bt-dhs-s{color:var(--bt-forest);}.bt-dhs.down .bt-dhs-s,.bt-dhs.recommit .bt-dhs-s{color:var(--bt-mauve);}
 .bt-dhs-w{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;margin-top:0.5rem;opacity:0.45;}
-.bt-dhs.first .bt-dhs-w,.bt-dhs.up .bt-dhs-w{color:var(--bt-forest);}.bt-dhs.down .bt-dhs-w{color:var(--bt-mauve);}
+.bt-dhs.first .bt-dhs-w,.bt-dhs.up .bt-dhs-w{color:var(--bt-forest);}.bt-dhs.down .bt-dhs-w,.bt-dhs.recommit .bt-dhs-w{color:var(--bt-mauve);}
 .bt-dig-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;margin-bottom:0.55rem;}
 .bt-dig-cell{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:10px;padding:0.7rem 0.85rem;}
 .bt-dig-cell.wide{grid-column:1/-1;}
@@ -2119,6 +2140,7 @@ body {
           <div class="bt-page-sub">the biology behind the streak</div>
           <div id="bt-meter-slot"></div>
           <button class="bt-clean-btn" onclick="btLogCleaning()">🪥✨ log a professional cleaning</button>
+          <div id="bt-recommit-slot"></div>
           <div id="bt-slip-slot"></div><div id="bt-smoke-slot"></div><div id="bt-tonight-slot"></div><div id="bt-breakdown-slot"></div>
           <div class="bt-reset-wrap" id="bt-reset-wrap"><button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button></div>
         </div>
@@ -2464,8 +2486,10 @@ async function launchApp() {
     if (!appData.spotting) appData.spotting  = [];
     if (!appData.wraps)    appData.wraps     = [];
     if (!appData.events)   appData.events    = [];
-    if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false, cleanings: [] };
+    if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false, cleanings: [], estimatedDates: [], recommits: [] };
     if (!appData.brushTracker.cleanings) appData.brushTracker.cleanings = [];
+    if (!appData.brushTracker.estimatedDates) appData.brushTracker.estimatedDates = [];
+    if (!appData.brushTracker.recommits) appData.brushTracker.recommits = [];
     if (!appData.intimacy) appData.intimacy = [];
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
     // A period's cycle isn't complete until the *next* period starts, so the
@@ -5397,6 +5421,7 @@ const BT_MILE=[
   {id:'reached-maint',ic:'🏅',nm:'Maintenance',cl:'lime',dc:'Reach Tier 5'},
   {id:'full-year',ic:'🌍',nm:'Full Year',cl:'lime',dc:'365 logged nights'},
   {id:'first-cleaning',ic:'🦷✨',nm:'Professional Clean',cl:'lime',dc:'Log your first professional cleaning'},
+  {id:'first-recommit',ic:'🔁',nm:'Recommitted',cl:'mauve',dc:'Use Recommit after a long gap'},
 ];
 const BT_REPS=[
   {id:'tier-up',ic:'⬆️',nm:'Tier Up',cl:'lime',dc:'Advance to a new tier',ck:'tu'},
@@ -5410,6 +5435,7 @@ const BT_REPS=[
   {id:'path-a-7',ic:'🌟',nm:'Path A Perfectionist',cl:'forest',dc:'7 consecutive Path A nights',ck:'pa7'},
   {id:'smoke-brush',ic:'🚬',nm:'Smoke & Brush',cl:'forest',dc:'Perfect week despite nightly smoking',ck:'sb'},
   {id:'cleaning-logged',ic:'🪥✨',nm:'Deep Clean',cl:'lime',dc:'Each professional cleaning logged',ck:'dc'},
+  {id:'recommit-used',ic:'🔁',nm:'Fresh Start',cl:'mauve',dc:'Each time you recommit',ck:'rc'},
 ];
 
 function btData(){ const d = appData.brushTracker; return (d && d.startDate) ? d : null; }
@@ -5446,6 +5472,19 @@ function btGetEffectiveTierIdx(data){
   return idx;
 }
 function btGetEffectiveTier(data){ return BT_TD[btGetEffectiveTierIdx(data)]; }
+
+function btGetGapInfo(data){
+  const st=btPd(data.startDate),today=btPd(btGetTK());
+  const gaps=[];let current=[];
+  for(let d=new Date(st);d<today;d.setDate(d.getDate()+1)){
+    const k=btFd(d);
+    if(data.logs[k]===undefined)current.push(k);
+    else{if(current.length)gaps.push(current);current=[];}
+  }
+  if(current.length)gaps.push(current);
+  const qualifying=gaps.filter(g=>g.length>=9);
+  return qualifying.length?qualifying[qualifying.length-1]:[];
+}
 function btGetScore(data){
   const st=btPd(data.startDate),tier=btGetEffectiveTier(data);let sc=0;
   const events=[
@@ -5483,11 +5522,11 @@ function btIn7(ds){const diff=Math.floor((btPd(btGetTK())-btPd(ds))/86400000);re
 function btCompAch(data){
   if(!data)return{m:{},c:{}};
   const st=btPd(data.startDate);
-  const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b));
+  const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st&&!(data.estimatedDates||[]).includes(k)).sort(([a],[b])=>a.localeCompare(b));
   const hasBr=all.some(([,v])=>BT_TM[v]?.b);
   let mxStr=0,str=0;for(const[,v]of all){if(BT_TM[v]?.b){str++;mxStr=Math.max(mxStr,str);}else str=0;}
-  const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365,'first-cleaning':(data.cleanings||[]).length>=1};
-  const c={tu:0,cb:0,pw:0,s7:0,s14:0,s30:0,s66:0,s90:0,pa7:0,sb:0,dc:(data.cleanings||[]).length};
+  const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365,'first-cleaning':(data.cleanings||[]).length>=1,'first-recommit':(data.recommits||[]).length>=1};
+  const c={tu:0,cb:0,pw:0,s7:0,s14:0,s30:0,s66:0,s90:0,pa7:0,sb:0,dc:(data.cleanings||[]).length,rc:(data.recommits||[]).length};
   let consec=0,consecPA=0,slip=0,fromSlip=false,prevTIdx=0;
   for(const[,v]of all){
     if(BT_TM[v]?.b){
@@ -5558,7 +5597,7 @@ function btSelMon2(el,ds){document.querySelectorAll('.bt-monday-option').forEach
 function btSelDef(el,n){document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');btSelDefN=n;btChkOb();}
 function btChkOb(){document.getElementById('bt-ob-confirm').disabled=!(btSelMon&&btSelDefN);}
 function btConfirmOb(){
-  const data={startDate:btSelMon,logs:{},ss:false,cleanings:[]};
+  const data={startDate:btSelMon,logs:{},ss:false,cleanings:[],estimatedDates:[],recommits:[]};
   const st=btPd(btSelMon);
   for(let i=btSelDefN;i>=1;i--){const d=new Date(st);d.setDate(st.getDate()-i);const ds=btFd(d);if(ds>=btGetTK())continue;data.logs[ds]='nothing';}
   btPersist(data);
@@ -5582,7 +5621,7 @@ function btCancelReset(){
   wrap.innerHTML = '<button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button>';
 }
 function btDoReset(){
-  btPersist({ startDate: null, logs: {}, ss: false, cleanings: [] });
+  btPersist({ startDate: null, logs: {}, ss: false, cleanings: [], estimatedDates: [], recommits: [] });
   btSelMon=null;btSelDefN=null;
   document.querySelectorAll('.bt-monday-option').forEach(o=>o.classList.remove('selected'));
   document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));
@@ -5602,9 +5641,65 @@ function btLogCleaning(){
   btRender();
   showToast('cleaning logged — baseline reset 🪷');
 }
+function btOpenRecommit(){
+  const data=btData();if(!data)return;
+  const gap=btGetGapInfo(data);if(gap.length<9)return;
+  btOpenSheet(btBuildRecommitSheet(gap));
+}
+function btBuildRecommitSheet(gap){
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const d0=btPd(gap[0]),d1=btPd(gap[gap.length-1]);
+  const rangeLbl=`${MN[d0.getMonth()]} ${d0.getDate()} – ${MN[d1.getMonth()]} ${d1.getDate()}`;
+  return`<div class="bt-recommit-sheet">
+    <div class="bt-recommit-eyebrow">it's been a while</div>
+    <div class="bt-recommit-h">${gap.length} nights, no log</div>
+    <div class="bt-recommit-sub">${rangeLbl}. Nothing logged, and that's fine — <strong>no need to fill in the calendar.</strong> Just a gut estimate.</div>
+    <div class="bt-recommit-q">Out of those ${gap.length} nights, about how many do you think you actually brushed?</div>
+    <input type="number" id="bt-recommit-input" min="0" max="${gap.length}" value="0" class="bt-recommit-input">
+    <button class="bt-recommit-submit" onclick="btRecommit(parseInt(document.getElementById('bt-recommit-input').value,10)||0)">Recommit</button>
+  </div>`;
+}
+function btRecommit(guess){
+  const data=btData();if(!data)return;
+  const gap=btGetGapInfo(data);if(gap.length<9)return;
+  const g=Math.max(0,Math.min(guess,gap.length));
+  if(!data.estimatedDates)data.estimatedDates=[];
+  if(!data.recommits)data.recommits=[];
+  let acc=0;
+  gap.forEach(k=>{acc+=g;if(acc>=gap.length){acc-=gap.length;data.logs[k]='path-a';}else{data.logs[k]='nothing';}data.estimatedDates.push(k);});
+  data.recommits.push({date:btGetTK(),gapNights:gap.length,estimatedBrushed:g});
+  const oldFill=document.querySelector('#bt-meter-slot .bt-meter-fill');
+  const oldWidth=oldFill?oldFill.style.width:null;
+  btPersist(data);
+  btCloseSheet();
+  btRender();
+  if(oldWidth){
+    const newFill=document.querySelector('#bt-meter-slot .bt-meter-fill');
+    if(newFill){
+      const targetWidth=newFill.style.width;
+      newFill.style.transition='none';
+      newFill.style.width=oldWidth;
+      newFill.classList.add('bt-meter-fill-glow');
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        newFill.style.transition='';
+        newFill.style.width=targetWidth;
+      }));
+      setTimeout(()=>newFill.classList.remove('bt-meter-fill-glow'),900);
+    }
+  }
+  showToast(`recommitted — ${gap.length} nights accounted for 🪷`);
+}
 
 // SHEET
-function btOpenSheet(html,withConfetti){document.getElementById('bt-sheet-content').innerHTML=html;document.getElementById('bt-sheet-overlay').classList.add('open');document.getElementById('bt-bottom-sheet').classList.add('open');if(withConfetti)setTimeout(btFireConfetti,300);}
+function btOpenSheet(html,fx){
+  document.getElementById('bt-sheet-content').innerHTML=html;
+  document.getElementById('bt-sheet-overlay').classList.add('open');
+  document.getElementById('bt-bottom-sheet').classList.add('open');
+  if(fx==='confetti')setTimeout(btFireConfetti,300);
+  else if(fx==='bloom')setTimeout(btFireBloom,300);
+  else if(fx==='both'){setTimeout(btFireConfetti,300);setTimeout(btFireBloom,1300);}
+}
+function btFireBloom(){document.querySelector('#bt-sheet-content .bt-dhs.recommit')?.classList.add('bt-bloom-play');}
 function btCloseSheet(){document.getElementById('bt-sheet-overlay').classList.remove('open');document.getElementById('bt-bottom-sheet').classList.remove('open');}
 
 function btTapDay(ds){
@@ -5612,14 +5707,32 @@ function btTapDay(ds){
   const tk=btGetTK(),st=btPd(data.startDate),tap=btPd(ds);
   if(tap>btPd(tk))return;
   const logged=data.logs[ds];
-  if(logged){let h=btBuildDayView(data,ds);let hasBadges=false;if(btIsSun(ds)){const digest=btBuildDigest(data,ds);hasBadges=digest.includes('bt-dig-bdg');h+=digest;}btOpenSheet(h,hasBadges);}
+  if(logged){
+    let h=btBuildDayView(data,ds);
+    let fx=null;
+    if(btIsSun(ds)){
+      const digest=btBuildDigest(data,ds);
+      const hasBadges=digest.includes('bt-dig-bdg'),hasRecommit=digest.includes('bt-dig-recommit');
+      fx=hasBadges&&hasRecommit?'both':hasBadges?'confetti':hasRecommit?'bloom':null;
+      h+=digest;
+    }
+    btOpenSheet(h,fx);
+  }
   else if(ds!==tk&&btIn7(ds)&&btCanBF(data))btOpenSheet(btBuildBF(data,ds));
 }
 function btBuildDayView(data,ds){
   const v=data.logs[ds];if(!v||!BT_TM[v])return'';
-  const t=BT_TM[v],d=btPd(ds);
   const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
   const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const d=btPd(ds);
+  if((data.estimatedDates||[]).includes(ds)){
+    const rec=(data.recommits||[]).find(r=>r.date>ds);
+    const recD=rec?btPd(rec.date):null;
+    const recLbl=recD?`${MN[recD.getMonth()]} ${recD.getDate()}`:'a recommit';
+    const note=rec?`Part of a <strong>${rec.gapNights}-night gap</strong> you recommitted on ${recLbl}, estimating ${rec.estimatedBrushed} brushed.`:'';
+    return`<div class="bt-sde bt-sde-est"><div class="bt-sde-icon">🔁</div><div><div class="bt-sde-date">${DN[d.getDay()]}, ${MN[d.getMonth()]} ${d.getDate()}</div><div class="bt-sde-label">Estimated — not logged in real time</div></div></div><div class="bt-sde-note">${note}</div>`;
+  }
+  const t=BT_TM[v];
   return`<div class="bt-sde"><div class="bt-sde-icon">${t.ic}</div><div><div class="bt-sde-date">${DN[d.getDay()]}, ${MN[d.getMonth()]} ${d.getDate()}</div><div class="bt-sde-label">${t.lbl}</div></div></div>`;
 }
 function btBuildDigest(data,sunStr){
@@ -5628,8 +5741,9 @@ function btBuildDigest(data,sunStr){
   const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const wl=`${MN[mon.getMonth()]} ${mon.getDate()} – ${MN[sun.getMonth()]} ${sun.getDate()}`;
   const isFirst=mon<=st&&sun>=st;
+  const recommitThisWeek=(data.recommits||[]).some(r=>r.date>=btFd(mon)&&r.date<=sunStr);
   let brushed=0;const wc={};
-  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const k=btFd(d),v=data.logs[k];if(v&&BT_TM[v]){if(BT_TM[v].b)brushed++;wc[v]=(wc[v]||0)+1;}}
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const k=btFd(d);if((data.estimatedDates||[]).includes(k))continue;const v=data.logs[k];if(v&&BT_TM[v]){if(BT_TM[v].b)brushed++;wc[v]=(wc[v]||0)+1;}}
   const rate=Math.round((brushed/7)*100);
   const prev=new Date(mon);prev.setDate(mon.getDate()-1);
   const s0=Math.round(btGetScoreAt(data,btFd(prev))),s1=Math.round(btGetScoreAt(data,sunStr)),delta=s1-s0;
@@ -5638,7 +5752,11 @@ function btBuildDigest(data,sunStr){
   const t0=btGetTierAt(data,btFd(prev)),t1=btGetTierAt(data,sunStr);
   const moved=t0.id!==t1.id,up=moved&&BT_TD.findIndex(t=>t.id===t1.id)>BT_TD.findIndex(t=>t.id===t0.id),down=moved&&!up;
   let hdr='';
-  if(isFirst)hdr=`<div class="bt-dhs first"><div class="bt-dhs-e">🌱</div><div class="bt-dhs-t">Week 1 — Mission Accepted</div><div class="bt-dhs-s">You started from a deficit and showed up anyway. That's the whole game right there.</div><div class="bt-dhs-w">${wl}</div></div>`;
+  if(recommitThisWeek){
+    const rec=data.recommits.filter(r=>r.date>=btFd(mon)&&r.date<=sunStr).pop();
+    hdr=`<div class="bt-dhs recommit bt-dig-recommit"><div class="bt-dhs-e">🔁</div><div class="bt-dhs-t">Recommit</div><div class="bt-dhs-s">You went quiet for ${rec.gapNights} nights, estimated ${rec.estimatedBrushed} as brushed, and started logging again. That's this week's real data.</div><div class="bt-dhs-w">${wl}</div></div>`;
+  }
+  else if(isFirst)hdr=`<div class="bt-dhs first"><div class="bt-dhs-e">🌱</div><div class="bt-dhs-t">Week 1 — Mission Accepted</div><div class="bt-dhs-s">You started from a deficit and showed up anyway. That's the whole game right there.</div><div class="bt-dhs-w">${wl}</div></div>`;
   else if(up)hdr=`<div class="bt-dhs up"><div class="bt-dhs-e">⬆️</div><div class="bt-dhs-t">Tier Up — ${t1.nm} Unlocked</div><div class="bt-dhs-s">${t1.mn} consecutive nights. The habit is doing more of the work now.</div><div class="bt-dhs-w">${wl}</div></div>`;
   else if(down)hdr=`<div class="bt-dhs down"><div class="bt-dhs-e">⬇️</div><div class="bt-dhs-t">Tier Drop — Back to ${t1.nm}</div><div class="bt-dhs-s">A hard week. The path back is the same as it always was.</div><div class="bt-dhs-w">${wl}</div></div>`;
   const tmc=up?'up':down?'down':'flat';
@@ -5718,6 +5836,8 @@ function btRenderSci(data,tonight,logged,tier,score,ms,nbs,ns){
   else if(ms==='compromised')md=`Your baseline is compromised. <strong>${Math.round(score)}/${tier.mx} pts.</strong> Real progress is eroding.`;
   else md=`Your baseline is in critical state. <strong>${Math.round(score)}/${tier.mx} pts.</strong> Structural gains still yours. Microbiome is not.`;
   document.getElementById('bt-meter-slot').innerHTML=`<div class="bt-meter-block"><div class="bt-meter-top"><div class="bt-meter-lbl">Baseline — Tier ${tier.id}</div><div class="bt-meter-state bt-ms-${ms}">${sl[ms]}</div></div><div class="bt-meter-track"><div class="bt-meter-fill bt-mf-${ms}" style="width:${pct}%"></div></div><div class="bt-meter-desc">${md}</div>${rn?`<div class="bt-meter-rec">${rn} brush night${rn===1?'':'s'} to stabilize</div>`:''}</div>`;
+  const gapN=btGetGapInfo(data).length;
+  document.getElementById('bt-recommit-slot').innerHTML=gapN>=9?`<button class="bt-recommit-btn" onclick="btOpenRecommit()">🔁 recommit — ${gapN} nights unlogged</button>`:'';
   const slipSlot=document.getElementById('bt-slip-slot');
   if(nbs>0||(logged&&tonight&&!BT_TM[tonight]?.b)){const sm=btGetSlipMsg(tier.id,nbs||1);slipSlot.innerHTML=`<div class="bt-slip-block"><div class="bt-slip-top"><div class="bt-slip-stat"><div class="bt-slip-n bt-sn-b">${nbs}</div><div class="bt-slip-l">Nights without<br>brushing</div></div><div class="bt-slip-dv"></div><div class="bt-slip-stat"><div class="bt-slip-n bt-sn-n">${ns}</div><div class="bt-slip-l">Nights with<br>nothing at all</div></div></div><div class="bt-slip-bio">${sm.bio}</div></div>`;}else slipSlot.innerHTML='';
   let smokeMsg=BT_SMOKE.nb;if(logged){if(BT_TM[tonight]?.b)smokeMsg=BT_SMOKE.br;else if(tonight!=='nothing')smokeMsg=BT_SMOKE.pt;}
@@ -5732,7 +5852,7 @@ function btRenderAch(){
   const data=btData();if(!data)return;
   const{m,c}=btCompAch(data);
   const eM=BT_MILE.filter(x=>m[x.id]).length,eR=BT_REPS.filter(x=>c[x.ck]>0).length,tot=eM+eR,total=BT_MILE.length+BT_REPS.length;
-  document.getElementById('bt-ach-ov').innerHTML=`<div class="bt-ach-ov-box"><div class="bt-ach-ov-n green">${tot}</div><div class="bt-ach-ov-l">Earned</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total}</div><div class="bt-ach-ov-l">Total</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total>0?Math.round((tot/total)*100):0}%</div><div class="bt-ach-ov-l">Complete</div></div>`;
+  document.getElementById('bt-ach-ov').innerHTML=`<div class="bt-ach-ov-box"><div class="bt-ach-ov-n green">${tot}</div><div class="bt-ach-ov-l">Earned</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total}</div><div class="bt-ach-ov-l">Total</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total>0?Math.round((tot/total)*100):0}%</div><div class="bt-ach-ov-l">Complete</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${(data.recommits||[]).length}</div><div class="bt-ach-ov-l">Recommits</div></div>`;
   function card(ic,nm,cl,earned,dc,cnt){
   if(earned)return`<div class="bt-badge-card earned ${cl}-card"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div>${cnt>1?`<div class="bt-badge-cnt ${cl}">×${cnt}</div>`:''}</div>`;
   return`<div class="bt-badge-card locked"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div><div class="bt-badge-meta">${dc}</div></div>`;
@@ -5831,6 +5951,7 @@ function btRenderCal(){
     if(dt>today)cls+=' future';
     else if(dt<st&&!data.logs[k])cls+=' before-start';
     const v=data.logs[k];if(v)cls+=` t-${v}`;
+    if((data.estimatedDates||[]).includes(k))cls+=' estimated';
     h+=`<div class="${cls}" onclick="btTapDay('${k}')">${d}</div>`;
   }
   grid.innerHTML=h;
