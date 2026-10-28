@@ -5474,11 +5474,16 @@ function btGetEffectiveTierIdx(data){
 function btGetEffectiveTier(data){ return BT_TD[btGetEffectiveTierIdx(data)]; }
 
 function btGetGapInfo(data){
-  const st=btPd(data.startDate);
-  let d=btPd(btGetTK());d.setDate(d.getDate()-1);
-  const days=[];
-  while(d>=st){const k=btFd(d);if(data.logs[k]===undefined){days.push(k);d.setDate(d.getDate()-1);}else break;}
-  return days.reverse();
+  const st=btPd(data.startDate),today=btPd(btGetTK());
+  const gaps=[];let current=[];
+  for(let d=new Date(st);d<today;d.setDate(d.getDate()+1)){
+    const k=btFd(d);
+    if(data.logs[k]===undefined)current.push(k);
+    else{if(current.length)gaps.push(current);current=[];}
+  }
+  if(current.length)gaps.push(current);
+  const qualifying=gaps.filter(g=>g.length>=9);
+  return qualifying.length?qualifying[qualifying.length-1]:[];
 }
 function btGetScore(data){
   const st=btPd(data.startDate),tier=btGetEffectiveTier(data);let sc=0;
