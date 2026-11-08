@@ -381,12 +381,15 @@ body.simple-mode .nav-label.sm-home-label { display: inline; }
 body.simple-mode #today-insight-card,
 body.simple-mode #today-journal-card,
 body.simple-mode #today-symptom-card { display: none !important; }
+body.simple-mode #journal-phase-cards { display: none !important; }
 .simple-shortcuts { display: none; gap: 10px; margin-top: 14px; }
 body.simple-mode .simple-shortcuts { display: flex; }
 .simple-shortcut-btn { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 8px; text-align: center; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--text); transition: background 0.2s; }
 .simple-shortcut-btn:hover { background: var(--bg3); }
 .simple-shortcut-ic { font-size: 20px; display: block; margin-bottom: 4px; }
 .simple-shortcut-lbl { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-xsoft); }
+.simple-home-calendar { display: none; margin-top: 14px; }
+body.simple-mode .simple-home-calendar { display: block; }
 
 .phase-badge-menstrual  { background: var(--menstrual-bg);  color: var(--menstrual);  }
 .phase-badge-follicular { background: var(--follicular-bg); color: var(--follicular); }
@@ -1789,6 +1792,10 @@ body.simple-mode .simple-shortcuts { display: flex; }
 .bt-wkbk-bf{height:100%;border-radius:2px;}
 .bt-wkbk-ct{width:16px;text-align:right;font-weight:700;font-size:0.7rem;color:var(--bt-peach);}
 .bt-dig-bdg{background:var(--bt-l08);border:1px solid var(--bt-l12);border-radius:20px;padding:24px;margin-top:0.55rem;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
+.bt-commit-dig-row{display:flex;align-items:center;gap:0.5rem;font-size:0.68rem;color:var(--bt-mauve);}
+.bt-commit-dig-ic{width:1.1rem;text-align:center;flex-shrink:0;font-size:0.8rem;}
+.bt-commit-dig-row.passed{color:var(--bt-lime);}
+.bt-commit-dig-row.failed{color:#e0a0b8;}
 .bt-db-lbl{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.5;margin-bottom:0.5rem;}
 .bt-db-chips{display:flex;gap:0.4rem;flex-wrap:wrap;}
 .bt-db-chip{display:flex;align-items:center;gap:0.35rem;padding:0.28rem 0.6rem;border-radius:100px;font-size:0.68rem;font-weight:600;}
@@ -1890,6 +1897,8 @@ body.simple-mode .simple-shortcuts { display: flex; }
       <div class="hero-glow-border" id="hero-glow-border"></div>
     </div>
 
+    <div class="simple-home-calendar" id="simple-home-calendar-slot"></div>
+
     <div class="card active-period-card" id="today-context-card" style="display:none">
       <div class="card-label" id="today-context-label">Active period</div>
       <div id="today-context-body"></div>
@@ -1916,10 +1925,6 @@ body.simple-mode .simple-shortcuts { display: flex; }
     </div>
 
     <div class="simple-shortcuts">
-      <div class="simple-shortcut-btn" onclick="goTo('calendar', document.querySelectorAll('.nav-btn')[1])">
-        <span class="simple-shortcut-ic">📅</span>
-        <span class="simple-shortcut-lbl">Calendar</span>
-      </div>
       <div class="simple-shortcut-btn" onclick="goTo('log', document.getElementById('log-nav-btn'))">
         <span class="simple-shortcut-ic">🩸</span>
         <span class="simple-shortcut-lbl">Log</span>
@@ -1935,7 +1940,7 @@ body.simple-mode .simple-shortcuts { display: flex; }
   <div class="screen page" id="page-calendar">
     <div class="page-title">calendar <span class="crystal-ball-emoji" onclick="openEventLog()" style="font-size:28px;">🗓️</span></div>
     <div class="page-sub">your cycle at a glance</div>
-    <div class="card" style="padding: 24px 16px;overflow:hidden">
+    <div class="card" id="calendar-grid-card" style="padding: 24px 16px;overflow:hidden">
       <div class="cal-header">
         <button class="cal-nav" onclick="calPrev()">‹</button>
         <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
@@ -1958,7 +1963,7 @@ body.simple-mode .simple-shortcuts { display: flex; }
       </div>
     </div>
 
-    <div class="card" style="margin-top:14px;">
+    <div class="card" id="intimacy-log-card" style="margin-top:14px;">
       <div class="card-label">unprotected sex</div>
       <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
         <input type="date" id="intimacy-date" onchange="syncIntimacyCheckbox()" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--text);outline:none;-webkit-appearance:none;color-scheme:dark;">
@@ -2644,6 +2649,13 @@ function applySimpleMode() {
   document.body.classList.toggle('simple-mode', on);
   const cb = document.getElementById('simple-mode-toggle');
   if (cb) cb.checked = on;
+  const calCard = document.getElementById('calendar-grid-card');
+  const homeSlot = document.getElementById('simple-home-calendar-slot');
+  const calPage = document.getElementById('page-calendar');
+  if (calCard && homeSlot && calPage) {
+    if (on && calCard.parentElement !== homeSlot) homeSlot.appendChild(calCard);
+    else if (!on && calCard.parentElement !== calPage) calPage.insertBefore(calCard, document.getElementById('intimacy-log-card'));
+  }
   if (on) {
     const activePage = document.querySelector('.screen.page.active');
     if (activePage && ['page-calendar','page-log','page-insights','page-wrapped-home','page-wrapped-detail'].includes(activePage.id)) {
@@ -5874,6 +5886,20 @@ function btCompAch(data){
   for(const[mo,wk]of Object.entries(wm)){const sun=btPd(btGetSun(mo));if(sun<=today&&wk.b===7){c.pw++;c.sb++;}}
   return{m,c};
 }
+function btCommitAchDates(data){
+  const ch=(data.commitments&&data.commitments.history)||[];
+  const active=data.commitments&&data.commitments.active;
+  const starts=ch.map(h=>h.startDate).concat(active?[active.startDate]:[]);
+  const passedDates=(standard,nights)=>ch.filter(h=>h.status==='passed'&&(!standard||h.standard===standard)&&(nights===undefined||h.nights===nights)).map(h=>h.endDate);
+  const earliest=arr=>arr.length?arr.reduce((a,b)=>a<b?a:b):null;
+  return{
+    'commitment-accepted':earliest(starts),
+    'commitment-passed':earliest(passedDates()),
+    'mastered-dont-skip':earliest(passedDates('dont-skip',10)),
+    'mastered-brush':earliest(passedDates('brush',7)),
+    'mastered-routine':earliest(passedDates('routine',7))
+  };
+}
 
 // ── PAGE NAV (own bottom nav, no swipe) ──
 let btCurSub='dashboard';
@@ -6102,7 +6128,17 @@ function btBuildDigest(data,sunStr){
   if(isFirst){badges.push({ic:'🦷',nm:'First Night',cl:'lime'});badges.push({ic:'📅',nm:'Week 1 Complete',cl:'forest'});}
   if(up)badges.push({ic:'⬆️',nm:'Tier Up',cl:'lime'});
   if(brushed===7)badges.push({ic:'🌙',nm:'Perfect Week',cl:'forest'});
+  const inWeek=ds=>ds>=btFd(mon)&&ds<=sunStr;
+  const commitAchDates=btCommitAchDates(data);
+  for(const x of BT_MILE){if(x.id in commitAchDates&&commitAchDates[x.id]&&inWeek(commitAchDates[x.id]))badges.push({ic:x.ic,nm:x.nm,cl:x.cl});}
   const bdgH=badges.length?`<div class="bt-dig-bdg"><div class="bt-db-lbl">Earned this week</div><div class="bt-db-chips">${badges.map(b=>`<div class="bt-db-chip ${b.cl}"><span>${b.ic}</span>${b.nm}</div>`).join('')}</div></div>`:'';
+  const ch=(data.commitments&&data.commitments.history)||[];
+  const active=data.commitments&&data.commitments.active;
+  const stdNm=id=>(BT_COMMIT_STANDARDS.find(s=>s.id===id)||{nm:id}).nm;
+  const commitRows=[];
+  ch.filter(h=>inWeek(h.endDate)).forEach(h=>{commitRows.push(`<div class="bt-commit-dig-row ${h.status}"><span class="bt-commit-dig-ic">${h.status==='passed'?'✅':'❌'}</span><span>${h.nights}-night ${stdNm(h.standard)} — ${h.status}${h.failReason?` (${h.failReason})`:''}</span></div>`);});
+  if(active&&inWeek(active.startDate)&&!ch.some(h=>h.startDate===active.startDate&&h.standard===active.standard))commitRows.push(`<div class="bt-commit-dig-row active"><span class="bt-commit-dig-ic">🏆</span><span>${active.nights}-night ${stdNm(active.standard)} — accepted, still in progress</span></div>`);
+  const commitH=commitRows.length?`<div class="bt-wkbk"><div class="bt-wkbk-lbl">Commitments this week</div><div class="bt-wkbk-rows">${commitRows.join('')}</div></div>`:'';
   const divH=hdr?'':`<div class="bt-dig-div"><div class="bt-dig-div-line"></div><div class="bt-dig-div-lbl">Week of ${wl}</div><div class="bt-dig-div-line"></div></div>`;
   return`${divH}${hdr}<div class="bt-tm ${tmc}"><div class="bt-tm-in"><div class="bt-tm-lbl">Tier ${moved?'movement':'this week'}</div><div class="bt-tm-row">${tmH}</div></div></div>
     <div class="bt-dig-grid">
@@ -6112,7 +6148,7 @@ function btBuildDigest(data,sunStr){
       <div class="bt-dig-cell"><div class="bt-dc-lbl">Score — end</div><div class="bt-dc-val">${s1}<span style="font-size:0.62rem;color:var(--bt-mauve);font-family:'DM Mono',sans-serif;"> pts</span></div></div>
       <div class="bt-dig-cell wide"><div class="bt-dc-lbl">Score delta</div><div class="bt-dc-val ${dc}">${delta>0?'+':''}${delta} <span style="font-size:0.72rem;font-family:'DM Sans',sans-serif;font-weight:400;">${ds2}</span></div></div>
     </div>
-    ${bars?`<div class="bt-wkbk"><div class="bt-wkbk-lbl">What you logged this week</div><div class="bt-wkbk-rows">${bars}</div></div>`:''}${bdgH}`;
+    ${bars?`<div class="bt-wkbk"><div class="bt-wkbk-lbl">What you logged this week</div><div class="bt-wkbk-rows">${bars}</div></div>`:''}${commitH}${bdgH}`;
 }
 function btBuildBF(data,ds){
   const d=btPd(ds);
