@@ -14,7 +14,9 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Simple Mode** — a toggle inside Data → sync & backup that collapses the app down to just the essentials: phase/period tracking, the calendar, spotting and unprotected-sex logging, and the brush tracker. Journal, symptom logging, insights, and wrapped stay fully intact underneath — nothing is deleted or touched — they're just tucked out of the way while the toggle is on. Nav shrinks to Home and Data; the real calendar card itself (not a shortcut) sits right on Home, instantly viewable, with quick shortcuts to Log and the brush tracker below it. Data tab shows only the sync & backup bubble — the journal-by-phase history is hidden too. Switches instantly, no reopening the app, and the setting is remembered like any other.
 
-**Sunday digest now covers Commitments** — a commitment accepted, passed, or failed during the week gets its own "Commitments this week" line (standard, length, outcome), and the five commitment-related achievements now show up in "Earned this week" the first time each is actually earned, same as the original badges.
+**Sunday digest now covers Commitments** — a commitment accepted, passed, or failed during the week gets its own "Commitments this week" line (standard, length, outcome).
+
+**"Earned this week" is now actually complete** — it used to be a small hand-picked list (First Night, Week 1, Tier Up, Perfect Week) that silently missed everything else, including Cleanings, Recommits, long streaks, and the new commitment achievements. It now works by comparing your real achievement state at the start and end of the week, so every milestone and repeatable — old or new — shows up in the digest the week it's actually earned, with a ×N if a repeatable landed more than once.
 
 ---
 

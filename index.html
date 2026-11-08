@@ -5886,19 +5886,24 @@ function btCompAch(data){
   for(const[mo,wk]of Object.entries(wm)){const sun=btPd(btGetSun(mo));if(sun<=today&&wk.b===7){c.pw++;c.sb++;}}
   return{m,c};
 }
-function btCommitAchDates(data){
-  const ch=(data.commitments&&data.commitments.history)||[];
-  const active=data.commitments&&data.commitments.active;
-  const starts=ch.map(h=>h.startDate).concat(active?[active.startDate]:[]);
-  const passedDates=(standard,nights)=>ch.filter(h=>h.status==='passed'&&(!standard||h.standard===standard)&&(nights===undefined||h.nights===nights)).map(h=>h.endDate);
-  const earliest=arr=>arr.length?arr.reduce((a,b)=>a<b?a:b):null;
-  return{
-    'commitment-accepted':earliest(starts),
-    'commitment-passed':earliest(passedDates()),
-    'mastered-dont-skip':earliest(passedDates('dont-skip',10)),
-    'mastered-brush':earliest(passedDates('brush',7)),
-    'mastered-routine':earliest(passedDates('routine',7))
-  };
+function btDataAsOf(data,cutoff){
+  const logs={};
+  for(const k in data.logs)if(k<=cutoff)logs[k]=data.logs[k];
+  const cleanings=(data.cleanings||[]).filter(d=>d<=cutoff);
+  const recommits=(data.recommits||[]).filter(r=>r.date<=cutoff);
+  const estimatedDates=(data.estimatedDates||[]).filter(d=>d<=cutoff);
+  const history=((data.commitments&&data.commitments.history)||[]).filter(h=>h.endDate<=cutoff);
+  const liveActive=data.commitments&&data.commitments.active;
+  const active=(liveActive&&liveActive.startDate<=cutoff)?liveActive:null;
+  return{...data,logs,cleanings,recommits,estimatedDates,commitments:{active,history}};
+}
+function btAchEarnedBetween(data,fromCutoff,toCutoff){
+  const{m:m0,c:c0}=btCompAch(btDataAsOf(data,fromCutoff));
+  const{m:m1,c:c1}=btCompAch(btDataAsOf(data,toCutoff));
+  const earned=[];
+  for(const x of BT_MILE)if(!m0[x.id]&&m1[x.id])earned.push({ic:x.ic,nm:x.nm,cl:x.cl,cnt:1});
+  for(const x of BT_REPS){const d=(c1[x.ck]||0)-(c0[x.ck]||0);if(d>0)earned.push({ic:x.ic,nm:x.nm,cl:x.cl,cnt:d});}
+  return earned;
 }
 
 // ── PAGE NAV (own bottom nav, no swipe) ──
@@ -6124,14 +6129,9 @@ function btBuildDigest(data,sunStr){
   else tmH=`<span class="bt-tm-pill ${t1.pl}">${t1.id} — ${t1.nm}</span><span class="bt-tm-same">— no change</span>`;
   const mx=Math.max(...Object.values(wc),1);
   let bars='';for(const[key,t]of Object.entries(BT_TM)){const c=wc[key]||0;if(!c)continue;bars+=`<div class="bt-wkbk-row"><div class="bt-wkbk-ic">${t.ic}</div><div class="bt-wkbk-nm">${t.lbl}</div><div class="bt-wkbk-bw"><div class="bt-wkbk-bf" style="width:${(c/mx)*100}%;background:${t.co}"></div></div><div class="bt-wkbk-ct">${c}</div></div>`;}
-  const badges=[];
-  if(isFirst){badges.push({ic:'🦷',nm:'First Night',cl:'lime'});badges.push({ic:'📅',nm:'Week 1 Complete',cl:'forest'});}
-  if(up)badges.push({ic:'⬆️',nm:'Tier Up',cl:'lime'});
-  if(brushed===7)badges.push({ic:'🌙',nm:'Perfect Week',cl:'forest'});
   const inWeek=ds=>ds>=btFd(mon)&&ds<=sunStr;
-  const commitAchDates=btCommitAchDates(data);
-  for(const x of BT_MILE){if(x.id in commitAchDates&&commitAchDates[x.id]&&inWeek(commitAchDates[x.id]))badges.push({ic:x.ic,nm:x.nm,cl:x.cl});}
-  const bdgH=badges.length?`<div class="bt-dig-bdg"><div class="bt-db-lbl">Earned this week</div><div class="bt-db-chips">${badges.map(b=>`<div class="bt-db-chip ${b.cl}"><span>${b.ic}</span>${b.nm}</div>`).join('')}</div></div>`:'';
+  const badges=btAchEarnedBetween(data,btFd(prev),sunStr);
+  const bdgH=badges.length?`<div class="bt-dig-bdg"><div class="bt-db-lbl">Earned this week</div><div class="bt-db-chips">${badges.map(b=>`<div class="bt-db-chip ${b.cl}"><span>${b.ic}</span>${b.nm}${b.cnt>1?` ×${b.cnt}`:''}</div>`).join('')}</div></div>`:'';
   const ch=(data.commitments&&data.commitments.history)||[];
   const active=data.commitments&&data.commitments.active;
   const stdNm=id=>(BT_COMMIT_STANDARDS.find(s=>s.id===id)||{nm:id}).nm;
