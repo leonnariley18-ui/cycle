@@ -1524,6 +1524,67 @@ body {
 .bt-legend{display:flex;flex-wrap:wrap;gap:0.4rem 0.9rem;margin-top:0.6rem;justify-content:center;}
 .bt-legend-item{display:flex;align-items:center;gap:0.25rem;font-size:0.58rem;color:var(--bt-mauve);}
 .bt-legend-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+/* COMMITMENTS */
+.commit-nudge{display:flex;align-items:center;gap:0.5rem;background:var(--bt-m15);border:1px solid var(--bt-m25);border-radius:12px;padding:0.6rem 0.8rem;margin-bottom:0.9rem;}
+.commit-nudge-ic{font-size:0.85rem;flex-shrink:0;}
+.commit-nudge-t{font-size:0.68rem;color:#e0a0b8;line-height:1.4;}
+.commit-nudge-t strong{color:var(--bt-peach);}
+.active-commit-card{background:linear-gradient(135deg,var(--bt-m15),var(--bt-m10));border:1px solid var(--bt-m25);border-radius:16px;padding:0.9rem;margin-bottom:0.75rem;cursor:pointer;}
+.active-commit-card:active{background:linear-gradient(135deg,var(--bt-m25),var(--bt-m15));}
+.acc-eyebrow{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:#e0a0b8;margin-bottom:0.45rem;}
+.acc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;}
+.acc-title{font-size:0.8rem;font-weight:700;color:var(--bt-peach);}
+.acc-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:#e0a0b8;background:var(--bt-m25);border-radius:20px;padding:3px 9px;}
+.ch-progress{display:flex;gap:3px;}
+.ch-pip{flex:1;height:5px;border-radius:3px;background:var(--bt-p10);}
+.ch-pip.filled{background:var(--bt-mauve);}
+.ch-pip.today{background:#e0a0b8;box-shadow:0 0 6px rgba(224,160,184,0.6);}
+.commit-card{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:18px;padding:1.1rem;margin-bottom:0.9rem;}
+.card-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;margin-bottom:0.6rem;}
+.std-row{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;}
+.std-opt{display:flex;align-items:center;justify-content:space-between;background:var(--bt-p06);border:1px solid var(--bt-p10);border-radius:12px;padding:0.75rem 0.9rem;cursor:pointer;}
+.std-opt.sel{background:var(--bt-m15);border-color:var(--bt-m25);}
+.std-nm{font-size:0.8rem;font-weight:700;color:var(--bt-peach);}
+.std-desc{font-size:0.62rem;color:var(--bt-mauve);margin-top:1px;}
+.std-radio{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--bt-p15);flex-shrink:0;margin-left:0.6rem;}
+.std-opt.sel .std-radio{border-color:#e0a0b8;background:radial-gradient(circle,#e0a0b8 40%,transparent 44%);}
+.len-divider{height:1px;background:var(--bt-p06);margin-bottom:1rem;}
+.len-row{display:flex;gap:7px;flex-wrap:wrap;}
+.len-chip{flex:1;min-width:56px;text-align:center;background:var(--bt-p06);border:1px solid var(--bt-p10);border-radius:10px;padding:10px 6px;cursor:pointer;}
+.len-chip.sel{background:var(--bt-m25);border-color:rgba(224,160,184,0.6);}
+.len-chip.done{background:var(--bt-l08);border-color:var(--bt-l15);}
+.len-chip.locked{opacity:0.4;cursor:default;}
+.len-chip.soon{border-style:dashed;opacity:0.45;flex:1.5;cursor:default;}
+.len-n{font-family:'Playfair Display',serif;font-weight:800;font-size:1rem;color:var(--bt-peach);}
+.len-lbl{font-size:0.5rem;color:var(--bt-mauve);text-transform:uppercase;letter-spacing:0.03em;margin-top:2px;}
+.len-chip.sel .len-lbl{color:#e0a0b8;}
+.len-chip.done .len-lbl{color:var(--bt-lime);}
+.lock-hint{font-size:0.65rem;color:var(--bt-mauve);text-align:center;margin-top:0.6rem;opacity:0.8;line-height:1.4;}
+.confirm-strip{background:var(--bt-m15);border:1px solid var(--bt-m25);border-radius:12px;padding:0.8rem 0.9rem;margin-top:0.9rem;}
+.confirm-t{font-size:0.72rem;color:var(--bt-peach);margin-bottom:0.6rem;line-height:1.4;}
+.confirm-t strong{color:#e0a0b8;}
+.confirm-btn{background:linear-gradient(135deg,var(--bt-mauve),#5a3648);border:none;color:var(--bt-peach);font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:700;padding:11px;border-radius:10px;width:100%;text-align:center;cursor:pointer;}
+.grp{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:16px;margin-bottom:0.7rem;overflow:hidden;}
+.grp-head{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem;cursor:pointer;}
+.grp-left{display:flex;align-items:center;gap:0.5rem;}
+.grp-chev{font-size:0.7rem;color:var(--bt-mauve);transition:transform 0.2s;display:inline-block;}
+.grp-chev.open{transform:rotate(90deg);}
+.grp-nm{font-size:0.85rem;font-weight:700;color:var(--bt-peach);}
+.grp-last{font-size:0.62rem;font-family:'DM Mono',monospace;text-align:right;}
+.grp-last.pass{color:var(--bt-lime);}
+.grp-last.fail{color:#e0a0b8;}
+.grp-last.active{color:#c9a0e0;}
+.grp-last.none{color:var(--bt-mauve);opacity:0.6;}
+.grp-body{padding:0 1rem 1rem 2rem;border-top:1px solid var(--bt-p06);}
+.grp-body ul{margin:0;padding:0;list-style:none;}
+.grp-body li{position:relative;padding-left:0.9rem;margin-bottom:0.6rem;font-size:0.68rem;color:var(--bt-mauve);line-height:1.5;margin-top:0.7rem;}
+.grp-body li::before{content:"•";position:absolute;left:0;color:var(--bt-p10);}
+.grp-body li strong{color:var(--bt-peach);}
+.grp-count{font-size:0.64rem;color:var(--bt-mauve);margin-top:0.7rem;}
+.outcome.pass{color:var(--bt-lime);}
+.outcome.fail{color:#e0a0b8;}
+.outcome.active{color:#c9a0e0;}
+
 .bt-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:1rem;}
 .bt-stat-box{background:var(--bt-p03);border:1px solid var(--bt-p06);border-radius:9px;padding:0.75rem 0.4rem;text-align:center;}
 .bt-stat-n{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--bt-peach);line-height:1;margin-bottom:0.2rem;}
@@ -1612,7 +1673,17 @@ body {
 .bt-ach-ov-n.green{color:var(--bt-lime);}
 .bt-ach-ov-l{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;}
 .bt-badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:1.5rem;}
-.bt-badge-card{display:flex;flex-direction:column;align-items:center;gap:0.35rem;padding:0.85rem 0.4rem;border-radius:12px;text-align:center;}
+.bt-badge-card{display:flex;flex-direction:column;align-items:center;gap:0.35rem;padding:0.85rem 0.4rem;border-radius:12px;text-align:center;cursor:pointer;}
+.ach-sheet{padding:0.5rem;}
+.ach-sheet-ic{font-size:2rem;text-align:center;margin-bottom:0.5rem;}
+.ach-sheet-nm{font-family:'Playfair Display',serif;font-weight:800;font-size:1.05rem;color:var(--bt-peach);text-align:center;margin-bottom:0.4rem;}
+.ach-sheet-status{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.07em;text-transform:uppercase;text-align:center;margin-bottom:0.7rem;}
+.ach-sheet-status.earned{color:var(--bt-lime);}
+.ach-sheet-status.locked{color:var(--bt-mauve);}
+.ach-sheet-blurb{font-size:0.78rem;color:var(--bt-mauve);text-align:center;line-height:1.5;}
+.sheet-hist{margin-top:0.8rem;border-top:1px solid var(--bt-p06);padding-top:0.7rem;}
+.sheet-hist-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--bt-mauve);opacity:0.6;margin-bottom:0.5rem;text-align:center;}
+.sheet-hist-item{font-size:0.7rem;color:var(--bt-peach);text-align:center;margin-bottom:0.3rem;}
 .bt-badge-card.earned{background:var(--bt-p06);border:1px solid var(--bt-p10);}
 .bt-badge-card.earned.lime-card{background:var(--bt-l08);border:1px solid var(--bt-l15);}
 .bt-badge-card.earned.forest-card{background:var(--bt-f10);border:1px solid var(--bt-f15);}
@@ -2102,6 +2173,7 @@ body {
             <div class="bt-tier-pill-row"><div class="bt-tier-pill" id="bt-tier-pill">—</div></div>
             <div class="bt-hero neutral" id="bt-hero"><div class="bt-hero-emoji" id="bt-hero-emoji">🪥</div><div class="bt-hero-hl" id="bt-hero-hl">Start tracking tonight</div><div class="bt-hero-fact" id="bt-hero-fact">Log what you did each night.</div><div id="bt-streak-slot"></div></div>
             <div id="bt-nudge-slot"></div>
+            <div id="bt-commit-nudge-slot"></div>
             <div id="bt-log-section"></div>
             <div class="bt-card">
               <div class="bt-card-label">this month</div>
@@ -2123,6 +2195,7 @@ body {
                 <div class="bt-legend-item"><div class="bt-legend-dot" style="background:rgba(117,72,94,0.3)"></div>Nothing</div>
               </div>
             </div>
+            <div id="bt-active-commit-slot"></div>
             <div class="bt-card">
               <div class="bt-card-label">stats</div>
               <div class="bt-stats-row">
@@ -2147,8 +2220,11 @@ body {
 
         <!-- Playbook -->
         <div class="bt-subpage" id="bt-subpage-playbook">
-          <div class="bt-page-title">the playbook 📖</div>
-          <div class="bt-page-sub">your nightly routine, step by step</div>
+          <div class="bt-page-title">commitments 🏆</div>
+          <div class="bt-page-sub">self-chosen, strict, repeatable</div>
+          <div id="bt-commit-slot"></div>
+          <div id="bt-commit-hist-slot"></div>
+          <div class="bt-pb-subdiv" style="margin-top:1.5rem;">the playbook — your nightly routine, step by step</div>
           <div class="bt-card">
             <div class="bt-card-label">quick reference</div>
             <div class="bt-pb-ref">
@@ -2226,7 +2302,7 @@ body {
         </button>
         <button class="bt-nav-btn" id="bt-nav-playbook" onclick="btGoTo('playbook')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h11a2 2 0 012 2v14l-6.5-3L4 20V4z"/></svg>
-          <span>Playbook</span>
+          <span>Commitments</span>
         </button>
         <button class="bt-nav-btn" id="bt-nav-achievements" onclick="btGoTo('achievements')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="6"/><path d="M9 13l-2 8 5-3 5 3-2-8"/></svg>
@@ -2486,10 +2562,11 @@ async function launchApp() {
     if (!appData.spotting) appData.spotting  = [];
     if (!appData.wraps)    appData.wraps     = [];
     if (!appData.events)   appData.events    = [];
-    if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false, cleanings: [], estimatedDates: [], recommits: [] };
+    if (!appData.brushTracker) appData.brushTracker = { startDate: null, logs: {}, ss: false, cleanings: [], estimatedDates: [], recommits: [], commitments: {active:null, history:[]} };
     if (!appData.brushTracker.cleanings) appData.brushTracker.cleanings = [];
     if (!appData.brushTracker.estimatedDates) appData.brushTracker.estimatedDates = [];
     if (!appData.brushTracker.recommits) appData.brushTracker.recommits = [];
+    if (!appData.brushTracker.commitments) appData.brushTracker.commitments = {active:null, history:[]};
     if (!appData.intimacy) appData.intimacy = [];
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
     // A period's cycle isn't complete until the *next* period starts, so the
@@ -5422,6 +5499,11 @@ const BT_MILE=[
   {id:'full-year',ic:'🌍',nm:'Full Year',cl:'lime',dc:'365 logged nights'},
   {id:'first-cleaning',ic:'🦷✨',nm:'Professional Clean',cl:'lime',dc:'Log your first professional cleaning'},
   {id:'first-recommit',ic:'🔁',nm:'Recommitted',cl:'mauve',dc:'Use Recommit after a long gap'},
+  {id:'commitment-accepted',ic:'🏆',nm:'First Commitment',cl:'mauve',dc:'Accept your first commitment'},
+  {id:'commitment-passed',ic:'✅',nm:'Challenge Passed',cl:'lime',dc:'Pass your first commitment'},
+  {id:'mastered-dont-skip',ic:'💧',nm:'Mastered Just Don\'t Skip',cl:'lime',dc:'Pass the 10-night Just Don\'t Skip commitment'},
+  {id:'mastered-brush',ic:'🪥',nm:'Mastered Brush',cl:'lime',dc:'Pass the 7-night Brush commitment'},
+  {id:'mastered-routine',ic:'💪',nm:'Mastered Intentional Brushing',cl:'lime',dc:'Pass the 7-night Intentional Brushing commitment'},
 ];
 const BT_REPS=[
   {id:'tier-up',ic:'⬆️',nm:'Tier Up',cl:'lime',dc:'Advance to a new tier',ck:'tu'},
@@ -5503,6 +5585,165 @@ function btGetGapInfo(data){
   const qualifying=gaps.filter(g=>g.length>=9);
   return qualifying.length?qualifying[qualifying.length-1]:[];
 }
+
+// ── COMMITMENTS ──────────────────────────────────────────────────────────────
+const BT_COMMIT_STANDARDS=[
+  {id:'dont-skip',nm:"Just Don't Skip",minRank:BT_AASC.indexOf('closys-only'),lengths:[3,5,7,10],activityPhrase:'using CloSYS',desc:"CloSYS or better — only a true skip fails it"},
+  {id:'brush',nm:'Brush',minRank:BT_AASC.indexOf('couch-low'),lengths:[3,5,7],activityPhrase:'brushing',desc:'Any real brush or better — CloSYS or a skip fails it'},
+  {id:'routine',nm:'Intentional Brushing',minRank:BT_AASC.indexOf('couch-high'),lengths:[3,5,7],activityPhrase:'the full pre-smoke routine',desc:'Couch High or better — Couch Low, CloSYS, or a skip fails it'},
+];
+function btCommitRank(v){ return v?BT_AASC.indexOf(v):-1; }
+function btCommitGateReq(standard,fromLength){
+  if(standard==='brush'&&fromLength===5)return 2;
+  return 1;
+}
+function btCommitPassCount(data,standard,nights){
+  return ((data.commitments&&data.commitments.history)||[]).filter(h=>h.status==='passed'&&h.standard===standard&&h.nights===nights).length;
+}
+function btCommitUnlocked(data,standard,nights){
+  const std=BT_COMMIT_STANDARDS.find(s=>s.id===standard);
+  const idx=std.lengths.indexOf(nights);
+  if(idx<=0)return true;
+  const prevLen=std.lengths[idx-1];
+  return btCommitPassCount(data,standard,prevLen)>=btCommitGateReq(standard,prevLen);
+}
+function btCommitEarliestUnresolved(data){
+  const c=data.commitments&&data.commitments.active;
+  if(!c)return null;
+  let d=btPd(c.startDate);
+  for(let i=0;i<c.nights;i++){
+    const k=btFd(d);
+    if(data.logs[k]===undefined)return k;
+    d.setDate(d.getDate()+1);
+  }
+  return null;
+}
+function btStartCommitment(standard,nights){
+  const data=btData();if(!data)return;
+  if(!data.commitments)data.commitments={active:null,history:[]};
+  if(data.commitments.active)return;
+  if(!btCommitUnlocked(data,standard,nights))return;
+  data.commitments.active={standard,nights,startDate:btGetTK()};
+  btPersist(data);
+  btCommitPickStd=null;btCommitPickLen=null;
+  btRender();
+  showToast('challenge accepted 🏆');
+}
+function btEvalCommitment(data){
+  if(!data.commitments||!data.commitments.active)return;
+  const c=data.commitments.active;
+  if(btCommitEarliestUnresolved(data))return;
+  const std=BT_COMMIT_STANDARDS.find(s=>s.id===c.standard);
+  let d=btPd(c.startDate);
+  for(let i=0;i<c.nights;i++){
+    const k=btFd(d);
+    const v=data.logs[k];
+    if(btCommitRank(v)<std.minRank){
+      data.commitments.history.push({standard:c.standard,nights:c.nights,startDate:c.startDate,endDate:k,status:'failed',failReason:`logged ${BT_TM[v]?BT_TM[v].lbl:v} on this night`});
+      data.commitments.active=null;
+      return;
+    }
+    d.setDate(d.getDate()+1);
+  }
+  const lastD=new Date(d);lastD.setDate(lastD.getDate()-1);
+  data.commitments.history.push({standard:c.standard,nights:c.nights,startDate:c.startDate,endDate:btFd(lastD),status:'passed'});
+  data.commitments.active=null;
+}
+function btCheckCommitVsRecommitGap(data,gap){
+  if(!data.commitments||!data.commitments.active||!gap.length)return;
+  const c=data.commitments.active;
+  let d=btPd(c.startDate);const windowDates=[];
+  for(let i=0;i<c.nights;i++){windowDates.push(btFd(d));d.setDate(d.getDate()+1);}
+  const overlap=gap.find(k=>windowDates.includes(k));
+  if(overlap){
+    data.commitments.history.push({standard:c.standard,nights:c.nights,startDate:c.startDate,endDate:overlap,status:'failed',failReason:'a required night became an estimate instead of a real log'});
+    data.commitments.active=null;
+  }
+}
+let btCommitPickStd=null,btCommitPickLen=null,btCommitHistOpen={};
+function btCommitSelectStd(id){ btCommitPickStd=id; btCommitPickLen=null; btRenderCommitSlot(); }
+function btCommitSelectLen(n){ btCommitPickLen=n; btRenderCommitSlot(); }
+function btRenderCommitSlot(){ const data=btData();if(!data)return; const el=document.getElementById('bt-commit-slot');if(el)el.innerHTML=btBuildCommitCard(data); }
+function btCommitToggleHist(id){ btCommitHistOpen[id]=!btCommitHistOpen[id]; btRenderCommitHistSlot(); }
+function btRenderCommitHistSlot(){ const data=btData();if(!data)return; const el=document.getElementById('bt-commit-hist-slot');if(el)el.innerHTML=btBuildCommitHistory(data); }
+function btBuildCommitCard(data){
+  const active=data.commitments&&data.commitments.active;
+  if(active){
+    const std=BT_COMMIT_STANDARDS.find(s=>s.id===active.standard);
+    let d=btPd(active.startDate),doneCount=0;
+    for(let i=0;i<active.nights;i++){const k=btFd(d);if(data.logs[k]!==undefined)doneCount++;else break;d.setDate(d.getDate()+1);}
+    let pips='';for(let i=0;i<active.nights;i++){let cls='ch-pip';if(i<doneCount)cls+=' filled';else if(i===doneCount)cls+=' today';pips+=`<div class="${cls}"></div>`;}
+    return `<div class="commit-card"><div class="card-lbl">active commitment</div><div class="acc-top"><div class="acc-title">${std.nm}</div><div class="acc-badge">night ${Math.min(doneCount+1,active.nights)} of ${active.nights}</div></div><div class="ch-progress">${pips}</div></div>`;
+  }
+  const stdRows=BT_COMMIT_STANDARDS.map(s=>`<div class="std-opt${btCommitPickStd===s.id?' sel':''}" onclick="btCommitSelectStd('${s.id}')"><div><div class="std-nm">${s.nm}</div><div class="std-desc">${s.desc}</div></div><div class="std-radio"></div></div>`).join('');
+  let lenRow='',lockHint='',confirm='';
+  if(btCommitPickStd){
+    const std=BT_COMMIT_STANDARDS.find(s=>s.id===btCommitPickStd);
+    if(btCommitPickLen&&!btCommitUnlocked(data,std.id,btCommitPickLen))btCommitPickLen=null;
+    const chips=std.lengths.map(n=>{
+      const unlocked=btCommitUnlocked(data,std.id,n);
+      const passCount=btCommitPassCount(data,std.id,n);
+      let cls='len-chip',lbl='select';
+      if(!unlocked){cls+=' locked';lbl='🔒';}
+      else if(passCount>0){cls+=' done';lbl='passed';}
+      if(btCommitPickLen===n)cls+=' sel';
+      return `<div class="${cls}"${unlocked?` onclick="btCommitSelectLen(${n})"`:''}><div class="len-n">${n}</div><div class="len-lbl">${lbl}</div></div>`;
+    }).join('');
+    const soonChip=std.id==='dont-skip'?'<div class="len-chip soon"><div class="len-lbl">more<br>later</div></div>':'';
+    lenRow=`<div class="len-divider"></div><div class="card-lbl">for how many nights?</div><div class="len-row">${chips}${soonChip}</div>`;
+    const lockedOnes=std.lengths.filter(n=>!btCommitUnlocked(data,std.id,n));
+    if(lockedOnes.length){
+      const n=lockedOnes[0],idx2=std.lengths.indexOf(n),prevLen2=std.lengths[idx2-1],req2=btCommitGateReq(std.id,prevLen2);
+      lockHint=`<div class="lock-hint">🔒 ${n} unlocks after passing ${prevLen2}${req2>1?` ${req2} times, on separate occasions`:''}.</div>`;
+    }
+    if(btCommitPickLen){
+      confirm=`<div class="confirm-strip"><div class="confirm-t">Ready to take on the <strong>${btCommitPickLen}-night ${std.nm}</strong> challenge? You know the rules — any night doing less than <strong>${std.activityPhrase}</strong> results in immediate challenge forfeiture. Regular tier streak is unaffected.</div><button class="confirm-btn" onclick="btStartCommitment('${std.id}',${btCommitPickLen})">Challenge Accepted</button></div>`;
+    }
+  }
+  return `<div class="commit-card"><div class="card-lbl">pick a standard</div><div class="std-row">${stdRows}</div>${lenRow}${lockHint}${confirm}</div>`;
+}
+function btBuildCommitHistory(data){
+  const hist=(data.commitments&&data.commitments.history)||[];
+  const active=data.commitments&&data.commitments.active;
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const fmtDate=ds=>{const d=btPd(ds);return `${MN[d.getMonth()]} ${d.getDate()}`;};
+  return BT_COMMIT_STANDARDS.map(std=>{
+    const entries=hist.filter(h=>h.standard===std.id).sort((a,b)=>b.startDate.localeCompare(a.startDate));
+    const activeHere=active&&active.standard===std.id;
+    let mostRecentCls='none',mostRecentLbl='no attempts yet';
+    if(activeHere){mostRecentCls='active';mostRecentLbl=`started ${fmtDate(active.startDate)}`;}
+    else if(entries.length){mostRecentCls=entries[0].status==='passed'?'pass':'fail';mostRecentLbl=`started ${fmtDate(entries[0].startDate)}`;}
+    const open=!!btCommitHistOpen[std.id];
+    let body='';
+    if(open){
+      const passCt=entries.filter(e=>e.status==='passed').length,failCt=entries.filter(e=>e.status==='failed').length;
+      const countLine=`<div class="grp-count"><span class="outcome pass">${passCt} passed</span> · <span class="outcome fail">${failCt} failed</span>${activeHere?' · <span class="outcome active">1 active</span>':''}</div>`;
+      let items='';
+      if(activeHere)items+=`<li><strong>${fmtDate(active.startDate)}</strong> — ${active.nights} nights at ${std.nm} or better — <span class="outcome active">active</span></li>`;
+      items+=entries.map(e=>`<li><strong>${fmtDate(e.startDate)}</strong> — ${e.nights} nights at ${std.nm} or better — <span class="outcome ${e.status==='passed'?'pass':'fail'}">${e.status==='passed'?'passed':`failed on ${fmtDate(e.endDate)}${e.failReason?' — '+e.failReason:''}`}</span></li>`).join('');
+      body=`<div class="grp-body open">${countLine}<ul>${items}</ul></div>`;
+    }
+    return `<div class="grp"><div class="grp-head" onclick="btCommitToggleHist('${std.id}')"><div class="grp-left"><span class="grp-chev${open?' open':''}">▸</span><span class="grp-nm">${std.nm}</span></div><div class="grp-last ${mostRecentCls}">${mostRecentLbl}</div></div>${body}</div>`;
+  }).join('');
+}
+function btBuildCommitNudge(data){
+  const unresolved=btCommitEarliestUnresolved(data);
+  if(!unresolved)return'';
+  const std=BT_COMMIT_STANDARDS.find(s=>s.id===data.commitments.active.standard);
+  const d=btPd(unresolved);
+  const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `<div class="commit-nudge"><span class="commit-nudge-ic">🔒</span><div class="commit-nudge-t">Still need to log <strong>${MN[d.getMonth()]} ${d.getDate()}</strong> for your <strong>${std.nm}</strong> challenge.</div></div>`;
+}
+function btBuildActiveCommitCard(data){
+  const active=data.commitments&&data.commitments.active;
+  if(!active)return'';
+  const std=BT_COMMIT_STANDARDS.find(s=>s.id===active.standard);
+  let d=btPd(active.startDate),doneCount=0;
+  for(let i=0;i<active.nights;i++){const k=btFd(d);if(data.logs[k]!==undefined)doneCount++;else break;d.setDate(d.getDate()+1);}
+  let pips='';for(let i=0;i<active.nights;i++){let cls='ch-pip';if(i<doneCount)cls+=' filled';else if(i===doneCount)cls+=' today';pips+=`<div class="${cls}"></div>`;}
+  return `<div class="active-commit-card" onclick="btGoTo('playbook')"><div class="acc-eyebrow">ACTIVE COMMITMENT</div><div class="acc-top"><div class="acc-title">${std.nm}</div><div class="acc-badge">night ${Math.min(doneCount+1,active.nights)} of ${active.nights}</div></div><div class="ch-progress">${pips}</div></div>`;
+}
+
 function btGetScore(data){
   const st=btPd(data.startDate),tier=btGetEffectiveTier(data);let sc=0;
   const events=[
@@ -5549,7 +5790,14 @@ function btCompAch(data){
   const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st&&!(data.estimatedDates||[]).includes(k)).sort(([a],[b])=>a.localeCompare(b));
   const hasBr=all.some(([,v])=>BT_TM[v]?.b);
   let mxStr=0,str=0;for(const[,v]of all){const fx=btStreakFx(v);if(fx==='brush'){str++;mxStr=Math.max(mxStr,str);}else if(fx==='break')str=0;}
-  const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365,'first-cleaning':(data.cleanings||[]).length>=1,'first-recommit':(data.recommits||[]).length>=1};
+  const ch=(data.commitments&&data.commitments.history)||[];
+  const hasPassed=(standard,nights)=>ch.some(h=>h.status==='passed'&&h.standard===standard&&h.nights===nights);
+  const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365,'first-cleaning':(data.cleanings||[]).length>=1,'first-recommit':(data.recommits||[]).length>=1,
+    'commitment-accepted':!!(data.commitments&&data.commitments.active)||ch.length>=1,
+    'commitment-passed':ch.some(h=>h.status==='passed'),
+    'mastered-dont-skip':hasPassed('dont-skip',10),
+    'mastered-brush':hasPassed('brush',7),
+    'mastered-routine':hasPassed('routine',7)};
   const c={tu:0,cb:0,pw:0,s7:0,s14:0,s30:0,s66:0,s90:0,pa7:0,sb:0,dc:(data.cleanings||[]).length,rc:(data.recommits||[]).length};
   let consec=0,consecPA=0,slip=0,fromSlip=false,prevTIdx=0;
   for(const[,v]of all){
@@ -5622,7 +5870,7 @@ function btSelMon2(el,ds){document.querySelectorAll('.bt-monday-option').forEach
 function btSelDef(el,n){document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');btSelDefN=n;btChkOb();}
 function btChkOb(){document.getElementById('bt-ob-confirm').disabled=!(btSelMon&&btSelDefN);}
 function btConfirmOb(){
-  const data={startDate:btSelMon,logs:{},ss:false,cleanings:[],estimatedDates:[],recommits:[]};
+  const data={startDate:btSelMon,logs:{},ss:false,cleanings:[],estimatedDates:[],recommits:[],commitments:{active:null,history:[]}};
   const st=btPd(btSelMon);
   for(let i=btSelDefN;i>=1;i--){const d=new Date(st);d.setDate(st.getDate()-i);const ds=btFd(d);if(ds>=btGetTK())continue;data.logs[ds]='nothing';}
   btPersist(data);
@@ -5646,7 +5894,7 @@ function btCancelReset(){
   wrap.innerHTML = '<button class="bt-reset-btn" id="bt-reset-btn1" onclick="btShowResetConfirm()">Reset all data</button>';
 }
 function btDoReset(){
-  btPersist({ startDate: null, logs: {}, ss: false, cleanings: [], estimatedDates: [], recommits: [] });
+  btPersist({ startDate: null, logs: {}, ss: false, cleanings: [], estimatedDates: [], recommits: [], commitments: {active:null, history:[]} });
   btSelMon=null;btSelDefN=null;
   document.querySelectorAll('.bt-monday-option').forEach(o=>o.classList.remove('selected'));
   document.querySelectorAll('.bt-deficit-option').forEach(o=>o.classList.remove('selected'));
@@ -5690,6 +5938,7 @@ function btRecommit(guess){
   const g=Math.max(0,Math.min(guess,gap.length));
   if(!data.estimatedDates)data.estimatedDates=[];
   if(!data.recommits)data.recommits=[];
+  btCheckCommitVsRecommitGap(data,gap);
   let acc=0;
   gap.forEach(k=>{acc+=g;if(acc>=gap.length){acc-=gap.length;data.logs[k]='path-a';}else{data.logs[k]='nothing';}data.estimatedDates.push(k);});
   data.recommits.push({date:btGetTK(),gapNights:gap.length,estimatedBrushed:g});
@@ -5817,7 +6066,7 @@ function btBuildBF(data,ds){
   for(const key of[...BT_BL,...BT_NL]){const t=BT_TM[key];h+=`<button class="bt-tier-btn" onclick="btBfLog('${ds}','${key}')"><span class="bt-ti">${t.ic}</span><div class="bt-tt"><div class="bt-tn">${t.lbl}</div><div class="bt-td2">${t.dc}</div></div><span class="bt-ts ${t.sc}">${sl(t.s)}</span></button>`;}
   return h+'</div>';
 }
-function btBfLog(ds,tier){const data=btData();if(!data)return;data.logs[ds]=tier;btPersist(data);btCloseSheet();btRender();}
+function btBfLog(ds,tier){const data=btData();if(!data)return;data.logs[ds]=tier;btEvalCommitment(data);btPersist(data);btCloseSheet();btRender();}
 
 // RENDER
 function btRender(){
@@ -5842,6 +6091,10 @@ function btRender(){
   const last=btGetLastLogged(data);let nudge='';
   if(!logged&&nbs>=3&&last){const idx=BT_AASC.indexOf(last);if(idx>=0&&idx<BT_AASC.length-1){const sug=BT_AASC[idx+1],t=BT_TM[sug];const body=nbs>=6?`Just <strong>${t.lbl.toLowerCase()}</strong>. That's it. ${t.dc}.`:`You've been doing <strong>${BT_TM[last].lbl.toLowerCase()}</strong>. Tonight try: <strong>${t.lbl.toLowerCase()}</strong> — ${t.dc.toLowerCase()}.`;nudge=`<div class="bt-nudge"><div class="bt-nudge-t">${nbs>=6?'🚪 Tonight\'s ask':'📈 One tier up'}</div><div class="bt-nudge-b">${body}</div></div>`;}}
   document.getElementById('bt-nudge-slot').innerHTML=nudge;
+  document.getElementById('bt-commit-nudge-slot').innerHTML=btBuildCommitNudge(data);
+  document.getElementById('bt-active-commit-slot').innerHTML=btBuildActiveCommitCard(data);
+  const commitSlot=document.getElementById('bt-commit-slot');if(commitSlot)commitSlot.innerHTML=btBuildCommitCard(data);
+  const commitHistSlot=document.getElementById('bt-commit-hist-slot');if(commitHistSlot)commitHistSlot.innerHTML=btBuildCommitHistory(data);
   const ls=document.getElementById('bt-log-section');
   if(logged){const t=BT_TM[tonight];ls.innerHTML=`<div class="bt-logged-msg">${t.ic} Tonight: <strong>${t.lbl}</strong></div>`;}
   else{ls.innerHTML=`<div class="bt-log-prompt">What did you do tonight?</div><div class="bt-log-row"><button class="bt-log-btn yes" id="bt-btn-yes" onclick="btShowTiers('brushed')">🪥 I brushed</button><button class="bt-log-btn no" id="bt-btn-no" onclick="btShowTiers('skipped')">😬 I didn't</button></div><div id="bt-tier-slot"></div>`;}
@@ -5878,12 +6131,34 @@ function btRenderAch(){
   const{m,c}=btCompAch(data);
   const eM=BT_MILE.filter(x=>m[x.id]).length,eR=BT_REPS.filter(x=>c[x.ck]>0).length,tot=eM+eR,total=BT_MILE.length+BT_REPS.length;
   document.getElementById('bt-ach-ov').innerHTML=`<div class="bt-ach-ov-box"><div class="bt-ach-ov-n green">${tot}</div><div class="bt-ach-ov-l">Earned</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total}</div><div class="bt-ach-ov-l">Total</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${total>0?Math.round((tot/total)*100):0}%</div><div class="bt-ach-ov-l">Complete</div></div><div class="bt-ach-ov-box"><div class="bt-ach-ov-n">${(data.recommits||[]).length}</div><div class="bt-ach-ov-l">Recommits</div></div>`;
-  function card(ic,nm,cl,earned,dc,cnt){
-  if(earned)return`<div class="bt-badge-card earned ${cl}-card"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div>${cnt>1?`<div class="bt-badge-cnt ${cl}">×${cnt}</div>`:''}</div>`;
-  return`<div class="bt-badge-card locked"><div class="bt-badge-icon-w">${ic}</div><div class="bt-badge-name">${nm}</div><div class="bt-badge-meta">${dc}</div></div>`;
+  function card(x,earned,cnt,isRep){
+    const safeId=x.id;
+    if(earned)return`<div class="bt-badge-card earned ${x.cl}-card" onclick="btOpenAchDetail('${safeId}',${!!isRep})"><div class="bt-badge-icon-w">${x.ic}</div><div class="bt-badge-name">${x.nm}</div>${cnt>1?`<div class="bt-badge-cnt ${x.cl}">×${cnt}</div>`:''}</div>`;
+    return`<div class="bt-badge-card locked" onclick="btOpenAchDetail('${safeId}',${!!isRep})"><div class="bt-badge-icon-w">${x.ic}</div><div class="bt-badge-name">${x.nm}</div><div class="bt-badge-meta">${x.dc}</div></div>`;
+  }
+  document.getElementById('bt-ach-mil').innerHTML=`<button class="bt-pb-tog open" onclick="btPbTog(this)"><div class="bt-pb-tog-left"><span class="bt-pb-tog-name">milestones — ${eM}/${BT_MILE.length}</span></div><span class="bt-pb-chev">▼</span></button><div class="bt-pb-body open"><div class="bt-badge-grid">${BT_MILE.map(x=>card(x,m[x.id],1,false)).join('')}</div></div>`;
+  document.getElementById('bt-ach-rep').innerHTML=`<button class="bt-pb-tog open" onclick="btPbTog(this)"><div class="bt-pb-tog-left"><span class="bt-pb-tog-name">achievements — ${eR}/${BT_REPS.length}</span></div><span class="bt-pb-chev">▼</span></button><div class="bt-pb-body open"><div class="bt-badge-grid">${BT_REPS.map(x=>card(x,c[x.ck]>0,c[x.ck],true)).join('')}</div></div>`;
 }
-  document.getElementById('bt-ach-mil').innerHTML=`<div class="bt-card-label">milestones</div><div class="bt-badge-grid">${BT_MILE.map(x=>card(x.ic,x.nm,x.cl,m[x.id],x.dc,1)).join('')}</div>`;
-  document.getElementById('bt-ach-rep').innerHTML=`<div class="bt-card-label">achievements</div><div class="bt-badge-grid">${BT_REPS.map(x=>card(x.ic,x.nm,x.cl,c[x.ck]>0,x.dc,c[x.ck])).join('')}</div>`;
+function btOpenAchDetail(id,isRep){
+  const data=btData();if(!data)return;
+  const{m,c}=btCompAch(data);
+  const x=isRep?BT_REPS.find(e=>e.id===id):BT_MILE.find(e=>e.id===id);
+  if(!x)return;
+  const earned=isRep?c[x.ck]>0:!!m[x.id];
+  const cnt=isRep?c[x.ck]:1;
+  let statusLine=earned?(isRep?`earned ×${cnt}`:'✓ earned'):'locked';
+  let histBlock='';
+  if(earned&&id==='cleaning-logged'){
+    const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dates=(data.cleanings||[]).slice().sort().reverse().map(ds=>{const d=btPd(ds);return `<div class="sheet-hist-item"><strong>${MN[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}</strong></div>`;}).join('');
+    histBlock=`<div class="sheet-hist"><div class="sheet-hist-lbl">history — real dates</div>${dates}</div>`;
+  }else if(earned&&id==='recommit-used'){
+    const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dates=(data.recommits||[]).slice().sort((a,b)=>b.date.localeCompare(a.date)).map(r=>{const d=btPd(r.date);return `<div class="sheet-hist-item"><strong>${MN[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}</strong></div>`;}).join('');
+    histBlock=`<div class="sheet-hist"><div class="sheet-hist-lbl">history — real dates</div>${dates}</div>`;
+  }
+  const html=`<div class="ach-sheet"><div class="ach-sheet-ic">${x.ic}</div><div class="ach-sheet-nm">${x.nm}</div><div class="ach-sheet-status ${earned?'earned':'locked'}">${statusLine}</div><div class="ach-sheet-blurb">${x.dc}</div>${histBlock}</div>`;
+  btOpenSheet(html);
 }
 function btShowTiers(phase){
   const slot=document.getElementById('bt-tier-slot'),list=phase==='brushed'?BT_BL:BT_NL;
@@ -5898,6 +6173,7 @@ function btLogTier(tier){
   const data=btData();if(!data)return;
   const isBad=!BT_TM[tier]?.b&&tier!=='closys-floss'&&tier!=='closys-only';
   data.logs[btGetTK()]=tier;
+  btEvalCommitment(data);
   if(isBad&&!data.ss){data.ss=true;btPersist(data);btRender();setTimeout(()=>btGoTo('science'),600);}
   else{btPersist(data);btRender();}
 }

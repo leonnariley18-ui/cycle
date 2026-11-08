@@ -6,6 +6,14 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
+## what's new — v2.8 · november 2026
+
+**Commitments** — a new tab (renamed from Playbook, which now lives further down the same page) for self-chosen, strict challenges. Pick a standard (Just Don't Skip, Brush, or Intentional Brushing) and a length, and the app holds you to it exactly — no grace, no pause, unlike the regular tier streak. Only one rule underneath it all: meet or exceed the standard's minimum every required night and you pass; drop below it once and you fail, immediately. Nights wait for you rather than auto-failing from silence — a commitment only resolves when you actually log the specific date it's waiting on, evaluated strictly in order even if you backfill out of sequence — except if an unresolved night ever gets swallowed into a Recommit's estimate, since that can never be a real log. Dashboard shows a short nudge naming the exact date still needed, plus a tappable active-commitment card between the calendar and stats. Commitment history lives as three collapsible groups, one per standard, each with every attempt's date, terms, and outcome. Five new achievements ship alongside it.
+
+**Achievements page reworked** — every badge, locked or earned, is now tappable into a detail sheet. Locked badges show their existing requirement text; earned repeatables show their count once (no redundant restating); Cleanings and Recommits show their real dates, since that's genuinely new information the badge itself doesn't show. Milestones and achievements sections are now collapsible, reusing the same accordion already used in Playbook/Commitments, since the list has grown to 24 badges total.
+
+---
+
 ## what's new — v2.7 · october 2026
 
 **Recommit** — a button on Science for coming back after a real gap (9+ nights with nothing logged at all — not just missed nights, actual silence). Shows you the gap plainly and asks for one honest estimate ("out of these N nights, how many did you actually brush?") instead of making you backfill the calendar. The guess blends into your tier and baseline score like real nights would, but can never unlock a streak achievement on its own — only genuinely logged nights do that. Estimated nights are always visually distinct (a dashed ring on the calendar, a clearly labeled day-detail view) so a guess never reads back as a real memory. New permanent "Recommits" counter on Awards, two new achievements, and a quieter Sunday digest treatment for any week that included one — confetti still plays in full for a genuinely earned badge that week, with a soft glow following after, but a recommit on its own gets the glow alone, never fireworks. Recommit also now finds a big gap anywhere in your history, not just one still touching today — so logging recent nights no longer strands an older unresolved gap out of reach.
