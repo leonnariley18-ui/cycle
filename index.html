@@ -5269,8 +5269,8 @@ const BT_TM={
   'path-a':      {b:true, s:2,   lbl:'Path A — Full routine', ic:'🌟',dc:'Floss + CloSYS + SuperMouth + tongue scrape after dinner',co:'rgba(195,233,145,0.45)',sc:'bt-ts-pos'},
   'couch-high':  {b:true, s:2,   lbl:'Couch Night ⚡',        ic:'💪',dc:'Full routine in the bathroom before smoke',co:'rgba(195,233,145,0.25)',sc:'bt-ts-pos'},
   'couch-low':   {b:true, s:1.5, lbl:'Couch Night 🪫',        ic:'🪥',dc:'Brush + CloSYS in bathroom before smoke',co:'rgba(80,114,85,0.35)',sc:'bt-ts-pos2'},
-  'closys-floss':{b:false,s:-0.5,lbl:'CloSYS + floss pick',   ic:'🧴',dc:'Rinse and floss pick from bed, no brush',co:'rgba(239,210,203,0.2)',sc:'bt-ts-neg1'},
-  'closys-only': {b:false,s:-1,  lbl:'CloSYS only',           ic:'💧',dc:'Mouthwash rinse from bed, nothing else',co:'rgba(239,210,203,0.1)',sc:'bt-ts-neg1'},
+  'closys-floss':{b:false,pause:true,s:-0.5,lbl:'CloSYS + floss pick',   ic:'🧴',dc:'Rinse and floss pick from bed, no brush',co:'rgba(239,210,203,0.2)',sc:'bt-ts-neg1'},
+  'closys-only': {b:false,pause:true,s:-1,  lbl:'CloSYS only',           ic:'💧',dc:'Mouthwash rinse from bed, nothing else',co:'rgba(239,210,203,0.1)',sc:'bt-ts-neg1'},
   'nothing':     {b:false,s:-2,  lbl:'Nothing',               ic:'😬',dc:'Went to bed without doing anything',co:'rgba(117,72,94,0.3)',sc:'bt-ts-neg2'},
 };
 const BT_BL=['path-a','couch-high','couch-low'];
@@ -5449,9 +5449,26 @@ function btGetSun(s){const d=btPd(btGetMon(s));d.setDate(d.getDate()+6);return b
 function btIsSun(s){return btPd(s).getDay()===0;}
 function btGetTier(n){for(let i=BT_TD.length-1;i>=0;i--){if(n>=BT_TD[i].mn)return BT_TD[i];}return BT_TD[0];}
 
+function btStreakFx(v){
+  if(!v)return'break';
+  const t=BT_TM[v];if(!t)return'break';
+  if(t.b)return'brush';
+  if(t.pause)return'pause';
+  return'break';
+}
 function btGetConsec(data){
   const st=btPd(data.startDate);let d=btPd(btGetTK()),c=0,fi=true;
-  while(true){if(d<st)break;const k=btFd(d),v=data.logs[k];if(v===undefined&&fi&&k===btGetTK()){fi=false;d.setDate(d.getDate()-1);continue;}fi=false;if(v&&BT_TM[v]?.b){c++;d.setDate(d.getDate()-1);}else break;}return c;
+  while(true){
+    if(d<st)break;
+    const k=btFd(d),v=data.logs[k];
+    if(v===undefined&&fi&&k===btGetTK()){fi=false;d.setDate(d.getDate()-1);continue;}
+    fi=false;
+    const fx=btStreakFx(v);
+    if(fx==='brush'){c++;d.setDate(d.getDate()-1);}
+    else if(fx==='pause'){d.setDate(d.getDate()-1);}
+    else break;
+  }
+  return c;
 }
 function btGetNBS(data){
   const st=btPd(data.startDate);let d=btPd(btGetTK()),c=0,fi=true;
@@ -5466,8 +5483,9 @@ function btGetEffectiveTierIdx(data){
   const ents=Object.entries(data.logs).filter(([k])=>btPd(k)>=st).sort(([a],[b])=>a.localeCompare(b));
   let streak=0,idx=0,missDebt=0;
   for(const[,v]of ents){
-    if(BT_TM[v]?.b){streak++;const ti=BT_TD.findIndex(t=>t===btGetTier(streak));idx=Math.max(idx,ti);missDebt=0;}
-    else{streak=0;missDebt++;const resistance=idx+1;if(missDebt>=resistance){idx=Math.max(0,idx-1);missDebt=0;}}
+    const fx=btStreakFx(v);
+    if(fx==='brush'){streak++;const ti=BT_TD.findIndex(t=>t===btGetTier(streak));idx=Math.max(idx,ti);missDebt=0;}
+    else if(fx==='break'){streak=0;missDebt++;const resistance=idx+1;if(missDebt>=resistance){idx=Math.max(0,idx-1);missDebt=0;}}
   }
   return idx;
 }
@@ -5506,7 +5524,13 @@ function btGetScoreAt(data,ds){
 function btGetTierAt(data,ds){
   const st=btPd(data.startDate),tg=btPd(ds);
   const ents=Object.entries(data.logs).filter(([k])=>{const d=btPd(k);return d>=st&&d<=tg;}).sort(([a],[b])=>a.localeCompare(b));
-  let streak=0;for(let i=ents.length-1;i>=0;i--){if(BT_TM[ents[i][1]]?.b)streak++;else break;}return btGetTier(streak);
+  let streak=0;
+  for(let i=ents.length-1;i>=0;i--){
+    const fx=btStreakFx(ents[i][1]);
+    if(fx==='brush')streak++;
+    else if(fx==='break')break;
+  }
+  return btGetTier(streak);
 }
 function btGetMS(sc,mx){const p=sc/mx;if(p>=0.75)return'holding';if(p>=0.5)return'pressure';if(p>=0.25)return'compromised';return'critical';}
 function btGetCleanMsg(n){const keys=Object.keys(BT_CM).map(Number).sort((a,b)=>b-a);for(const k of keys){if(n>=k)return BT_CM[k];}return BT_CM[1];}
@@ -5524,19 +5548,20 @@ function btCompAch(data){
   const st=btPd(data.startDate);
   const all=Object.entries(data.logs).filter(([k])=>btPd(k)>=st&&!(data.estimatedDates||[]).includes(k)).sort(([a],[b])=>a.localeCompare(b));
   const hasBr=all.some(([,v])=>BT_TM[v]?.b);
-  let mxStr=0,str=0;for(const[,v]of all){if(BT_TM[v]?.b){str++;mxStr=Math.max(mxStr,str);}else str=0;}
+  let mxStr=0,str=0;for(const[,v]of all){const fx=btStreakFx(v);if(fx==='brush'){str++;mxStr=Math.max(mxStr,str);}else if(fx==='break')str=0;}
   const m={'first-night':hasBr,'week-1':all.length>=7,'survived-inst':mxStr>=22,'reached-maint':mxStr>=91,'full-year':all.length>=365,'first-cleaning':(data.cleanings||[]).length>=1,'first-recommit':(data.recommits||[]).length>=1};
   const c={tu:0,cb:0,pw:0,s7:0,s14:0,s30:0,s66:0,s90:0,pa7:0,sb:0,dc:(data.cleanings||[]).length,rc:(data.recommits||[]).length};
   let consec=0,consecPA=0,slip=0,fromSlip=false,prevTIdx=0;
   for(const[,v]of all){
-    if(BT_TM[v]?.b){
+    const fx=btStreakFx(v);
+    if(fx==='brush'){
       consec++;if(v==='path-a')consecPA++;else consecPA=0;
       if(consec===7)c.s7++;if(consec===14)c.s14++;if(consec===30)c.s30++;if(consec===66)c.s66++;if(consec===90)c.s90++;
       if(consecPA===7)c.pa7++;
       if(fromSlip&&slip>=7)c.cb++;
       fromSlip=false;slip=0;
       const ti=BT_TD.findIndex(t=>t===btGetTier(consec));if(ti>prevTIdx)c.tu++;prevTIdx=ti;
-    }else{if(consec>0)fromSlip=true;consec=0;consecPA=0;slip++;prevTIdx=Math.max(0,BT_TD.findIndex(t=>t===btGetTier(0)));}
+    }else if(fx==='break'){if(consec>0)fromSlip=true;consec=0;consecPA=0;slip++;prevTIdx=Math.max(0,BT_TD.findIndex(t=>t===btGetTier(0)));}
   }
   const wm={},today=btPd(btGetTK());
   for(const[k,v]of all){const mo=btGetMon(k);if(!wm[mo])wm[mo]={b:0};if(BT_TM[v]?.b)wm[mo].b++;}
