@@ -6,7 +6,7 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
-## what's new — v2.8 · november 2026
+## what's new — v4 · november 2026
 
 **Commitments** — a new tab (renamed from Playbook, which now lives further down the same page) for self-chosen, strict challenges. Pick a standard (Just Don't Skip, Brush, or Intentional Brushing) and a length, and the app holds you to it exactly — no grace, no pause, unlike the regular tier streak. Only one rule underneath it all: meet or exceed the standard's minimum every required night and you pass; drop below it once and you fail, immediately. Nights wait for you rather than auto-failing from silence — a commitment only resolves when you actually log the specific date it's waiting on, evaluated strictly in order even if you backfill out of sequence — except if an unresolved night ever gets swallowed into a Recommit's estimate, since that can never be a real log. Dashboard shows a short nudge naming the exact date still needed, plus a tappable active-commitment card between the calendar and stats. Commitment history lives as three collapsible groups, one per standard, each with every attempt's date, terms, and outcome. Five new achievements ship alongside it.
 
@@ -16,7 +16,7 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
-## what's new — v2.7 · october 2026
+## what's new — v3.1 · october 2026
 
 **Recommit** — a button on Science for coming back after a real gap (9+ nights with nothing logged at all — not just missed nights, actual silence). Shows you the gap plainly and asks for one honest estimate ("out of these N nights, how many did you actually brush?") instead of making you backfill the calendar. The guess blends into your tier and baseline score like real nights would, but can never unlock a streak achievement on its own — only genuinely logged nights do that. Estimated nights are always visually distinct (a dashed ring on the calendar, a clearly labeled day-detail view) so a guess never reads back as a real memory. New permanent "Recommits" counter on Awards, two new achievements, and a quieter Sunday digest treatment for any week that included one — confetti still plays in full for a genuinely earned badge that week, with a soft glow following after, but a recommit on its own gets the glow alone, never fireworks. Recommit also now finds a big gap anywhere in your history, not just one still touching today — so logging recent nights no longer strands an older unresolved gap out of reach.
 
@@ -24,7 +24,7 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
-## what's new — v2.6 · august 2026
+## what's new — v3 · august 2026
 
 **Brush tracker** — a nightly dental habit tracker behind the glowing 🗄️ in the data tab. 7 habit-formation tiers, tier/slip-based science messaging, weekly Sunday digest with confetti, achievements, and a routine playbook. Own bottom nav (Dashboard / Science / Playbook / Awards), visually aligned with the rest of the app (calendar shape, cards, buttons, headers, layout all match cycle's own conventions; own peach/mauve/lime palette kept). Independent from period data. Synced via Supabase under a new `brush_tracker` column; confetti is bundled locally so it works offline.
 
@@ -44,55 +44,15 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 ---
 
-## what's new — v2.5 · may 2026
+## what's new — v2 · may 2026
 
-**Event log** — tap 🗓️ in the calendar title to log illness or high stress events. Each event records a date range, phase context (calculated live, handles multi-phase spans), a fever flag for illness, and optional notes. Events appear as colored dots on the calendar grid and in an "events this cycle" section below it. Editable while the cycle is active; read-only once a new period starts. Surfaces in wrapped. Stored in Supabase under a new `events` column.
+**Spotting** — a log (date, timing, color, notes — no effect on cycle calculations) accessible from the log tab in both active and inactive period states, plus a spotting-insights screen (🔮 in the insights title).
 
-**Journal archive dates** — entries in the data tab now show the year for anything logged in a prior year. Current year stays clean.
+**Wrapped introduced, then redesigned** — a per-cycle summary when a new period starts, portal'd via a glowing 🩸 in the log tab. Quickly outgrew an algorithmic summary and became hand-built: standalone, month-themed HTML pages in `/wraps/`, each with an opening observation, cycle stats and comparisons, a cycle map with energy curve, emotional texture anchored by your own journal quote, flow intensity bars, symptoms by phase, spotting with your notes verbatim, and an inferred hormone arc. Registration simplified to one tap ("register new wrap 🪷" in data → sync & backup) once a page is pushed to the repo — no Supabase involvement; tracked instead in `settings.wrappedPeriods`. History entries show period numbers and tint purple once wrapped; "Cycle N" used for wrapped entries specifically. Symptoms-by-phase moved out of Insights and into wrapped.
 
-**spottingInCycle bug fixed** — resolved a ReferenceError in wrapped rendering that could crash the wrapped detail view.
+**Event log** — tap 🗓️ in the calendar title to log illness or high stress events (date range, live phase context, a fever flag for illness, optional notes). Shows as colored calendar dots and in an "events this cycle" section; editable while the cycle is active, read-only once a new period starts; surfaces in wrapped.
 
-**wrapped registration order bug fixed** — "register new wrap 🪷" was registering the *most recent* eligible cycle instead of the oldest unregistered one, letting older cycles get skipped out of order. Registration now always picks the oldest completed, unregistered cycle first, keeping wraps chronological.
-
----
-
-## what's new — v2.4 · may 2026
-
-**Wrapped redesigned** — cycle summaries are now beautiful standalone HTML pages living in `/wraps/` in the repo, themed by month, built manually each cycle. Richer, more personal, and not limited by what an algorithm can infer. Each page includes: an opening observation, cycle stats and comparisons, a cycle map with energy curve, emotional texture anchored by your own journal quote, flow intensity bars, symptoms by phase, spotting with your notes verbatim, and a hormone arc — estrogen and progesterone inferred from your symptom pattern, annotated phase by phase.
-
-**Wrapped archive** — tap the glowing 🩸 in the log tab to open your cycle archive. Each completed cycle shows period number, date range, and links out to its standalone page. The active period shows at the bottom as "in progress."
-
-**Simplified registration** — when a new wrap is ready and pushed to GitHub, tap "register new wrap 🪷" in data → sync & backup. The period tints purple in the history list and the archive row appears. No Supabase involvement.
-
-**History simplified** — flow-by-day pills removed from history entries. That detail lives inside each wrapped. History shows: dates, duration, period number. Border tints purple when a wrap exists for that period.
-
-**Supabase `wraps` column removed** — wrapped data is no longer stored in the database. Wrap registration is stored in `settings.wrappedPeriods` alongside cycle and period length settings.
-
----
-
-## what's new — v2.3 · may 2026
-
-**Wrapped portal** — 🩸 in the log tab title glows softly, always tappable, opens the cycle archive. Nav dot on the log icon when wraps are registered.
-
-**Period numbering** — history entries show period numbers throughout. "Cycle N" used for wrapped entries specifically.
-
----
-
-## what's new — v2.2 · may 2026
-
-**Wrapped** — when a new period starts, the previous cycle gets a summary. Spotting insights restructured. Symptoms by phase retired from insights tab — lives inside each wrapped instead.
-
----
-
-## what's new — v2.1 · may 2026
-
-**Spotting log** — accessible from the log tab in both active and inactive period states. Logs date, timing, color, and notes. No effect on cycle calculations.
-
-**Spotting insights** — tap 🔮 in the insights title. Slides in as a full screen.
-
-**Phase fix** — luteal holds past predicted end date until a period is actually logged.
-
-**Edit lock** — only the most recent period is editable once a new cycle starts.
+**Smaller fixes** — luteal now holds past its predicted end date until a period is actually logged; only the most recent period is editable once a new cycle starts; journal archive entries show the year once they're from a prior year; a wrapped-rendering crash (`spottingInCycle` ReferenceError) was fixed; wrap registration now always picks the oldest completed, unregistered cycle first instead of the most recent, keeping wraps chronological.
 
 ---
 
