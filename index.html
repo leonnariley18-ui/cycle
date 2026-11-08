@@ -367,6 +367,26 @@ body {
 .data-action { font-size: 11px; color: var(--text-xsoft); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
 .data-action:hover { background: var(--bg3); }
 .data-action.danger { color: #C46060; border-color: #6A3030; }
+.simple-mode-switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+.simple-mode-switch input { opacity: 0; width: 0; height: 0; }
+.simple-mode-slider { position: absolute; cursor: pointer; inset: 0; background: var(--border); border-radius: 12px; transition: background 0.2s; }
+.simple-mode-slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 2px; top: 2px; background: var(--text); border-radius: 50%; transition: transform 0.2s; }
+.simple-mode-switch input:checked + .simple-mode-slider { background: var(--accent); }
+.simple-mode-switch input:checked + .simple-mode-slider::before { transform: translateX(18px); }
+
+body.simple-mode .nav-btn.sm-hide { display: none; }
+body.simple-mode .nav-label.sm-hide-label { display: none; }
+body.simple-mode .nav-label.sm-home-label { display: inline; }
+.nav-label.sm-home-label { display: none; }
+body.simple-mode #today-insight-card,
+body.simple-mode #today-journal-card,
+body.simple-mode #today-symptom-card { display: none !important; }
+.simple-shortcuts { display: none; gap: 10px; margin-top: 14px; }
+body.simple-mode .simple-shortcuts { display: flex; }
+.simple-shortcut-btn { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 8px; text-align: center; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--text); transition: background 0.2s; }
+.simple-shortcut-btn:hover { background: var(--bg3); }
+.simple-shortcut-ic { font-size: 20px; display: block; margin-bottom: 4px; }
+.simple-shortcut-lbl { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-xsoft); }
 
 .phase-badge-menstrual  { background: var(--menstrual-bg);  color: var(--menstrual);  }
 .phase-badge-follicular { background: var(--follicular-bg); color: var(--follicular); }
@@ -1894,6 +1914,21 @@ body {
       <div class="card-label" style="margin-top:14px">How are you feeling? 🫶🏾</div>
       <div class="symptom-grid" id="symptom-grid"></div>
     </div>
+
+    <div class="simple-shortcuts">
+      <div class="simple-shortcut-btn" onclick="goTo('calendar', document.querySelectorAll('.nav-btn')[1])">
+        <span class="simple-shortcut-ic">📅</span>
+        <span class="simple-shortcut-lbl">Calendar</span>
+      </div>
+      <div class="simple-shortcut-btn" onclick="goTo('log', document.getElementById('log-nav-btn'))">
+        <span class="simple-shortcut-ic">🩸</span>
+        <span class="simple-shortcut-lbl">Log</span>
+      </div>
+      <div class="simple-shortcut-btn" onclick="openBrushTracker()">
+        <span class="simple-shortcut-ic">🪥</span>
+        <span class="simple-shortcut-lbl">Brush</span>
+      </div>
+    </div>
   </div>
 
   <!-- CALENDAR -->
@@ -2103,6 +2138,7 @@ body {
       </div>
       <div class="data-coll-body" id="data-coll-body">
         <div class="data-coll-inner">
+          <div class="data-row"><span>simple mode</span><label class="simple-mode-switch"><input type="checkbox" id="simple-mode-toggle" onchange="toggleSimpleMode(this.checked)"><span class="simple-mode-slider"></span></label></div>
           <div class="data-row"><span>cloud sync</span><button class="data-action" onclick="manualSync()">sync now ↻</button></div>
           <div class="data-row"><span>export backup</span><button class="data-action" onclick="exportData()">download</button></div>
           <div class="data-row" id="register-wrap-row"><span>register new wrap</span><button class="data-action" onclick="registerLatestWrap()">register 🪷</button></div>
@@ -2318,17 +2354,18 @@ body {
   <nav class="nav">
     <button class="nav-btn active" onclick="goTo('today',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-      <span class="nav-label">Today</span>
+      <span class="nav-label sm-hide-label">Today</span>
+      <span class="nav-label sm-home-label">Home</span>
     </button>
-    <button class="nav-btn" onclick="goTo('calendar',this)">
+    <button class="nav-btn sm-hide" onclick="goTo('calendar',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       <span class="nav-label">Calendar</span>
     </button>
-    <button class="nav-btn" id="log-nav-btn" onclick="goTo('log',this)">
+    <button class="nav-btn sm-hide" id="log-nav-btn" onclick="goTo('log',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
       <span class="nav-label">Log</span>
     </button>
-    <button class="nav-btn" onclick="goTo('insights',this)">
+    <button class="nav-btn sm-hide" onclick="goTo('insights',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-6"/></svg>
       <span class="nav-label">Insights</span>
     </button>
@@ -2569,6 +2606,7 @@ async function launchApp() {
     if (!appData.brushTracker.commitments) appData.brushTracker.commitments = {active:null, history:[]};
     if (!appData.intimacy) appData.intimacy = [];
     if (!appData.settings.wrappedPeriods) appData.settings.wrappedPeriods = [];
+    if (appData.settings.simpleMode === undefined) appData.settings.simpleMode = false;
     // A period's cycle isn't complete until the *next* period starts, so the
     // most recent period can never legitimately be wrapped yet — self-heal
     // any bad state from before this rule was enforced at registration time.
@@ -2592,6 +2630,26 @@ async function launchApp() {
   document.getElementById('today-date-label').textContent =
     now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}).toLowerCase();
   renderAll();
+  applySimpleMode();
+}
+
+function toggleSimpleMode(checked) {
+  appData.settings.simpleMode = checked;
+  save();
+  applySimpleMode();
+}
+
+function applySimpleMode() {
+  const on = !!(appData.settings && appData.settings.simpleMode);
+  document.body.classList.toggle('simple-mode', on);
+  const cb = document.getElementById('simple-mode-toggle');
+  if (cb) cb.checked = on;
+  if (on) {
+    const activePage = document.querySelector('.screen.page.active');
+    if (activePage && ['page-calendar','page-log','page-insights','page-wrapped-home','page-wrapped-detail'].includes(activePage.id)) {
+      goTo('today', document.querySelector('.nav-btn'));
+    }
+  }
 }
 
 async function dbFetch(path, options={}) {
@@ -2729,7 +2787,7 @@ const TEMPDROP_DEFAULT = {
     {id:1021,start:"2026-04-03",end:"2026-04-09",dailyFlow:[],notes:"",source:"tempdrop"}
   ],
   activePeriod: null,
-  settings: { cycleLength: 24, periodLength: 6, wrappedPeriods: [] },
+  settings: { cycleLength: 24, periodLength: 6, wrappedPeriods: [], simpleMode: false },
   symptoms: {},
   journal: {},
   events: [],

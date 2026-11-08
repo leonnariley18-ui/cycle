@@ -12,6 +12,8 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Achievements page reworked** — every badge, locked or earned, is now tappable into a detail sheet. Locked badges show their existing requirement text; earned repeatables show their count once (no redundant restating); Cleanings and Recommits show their real dates, since that's genuinely new information the badge itself doesn't show. Milestones and achievements sections are now collapsible, reusing the same accordion already used in Playbook/Commitments, since the list has grown to 24 badges total.
 
+**Simple Mode** — a toggle inside Data → sync & backup that collapses the app down to just the essentials: phase/period tracking, the calendar, spotting and unprotected-sex logging, and the brush tracker. Journal, symptom logging, insights, and wrapped stay fully intact underneath — nothing is deleted or touched — they're just tucked out of the way while the toggle is on. Nav shrinks to Home and Data, with quick shortcuts to Calendar, Log, and the brush tracker right on Home. Switches instantly, no reopening the app, and the setting is remembered like any other.
+
 ---
 
 ## what's new — v2.7 · october 2026
