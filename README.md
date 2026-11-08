@@ -12,7 +12,11 @@ No accounts. No subscriptions. No ads. No data sharing. PIN-protected, cloud-syn
 
 **Achievements page reworked** — every badge, locked or earned, is now tappable into a detail sheet. Locked badges show their existing requirement text; earned repeatables show their count once (no redundant restating); Cleanings and Recommits show their real dates, since that's genuinely new information the badge itself doesn't show. Milestones and achievements sections are now collapsible, reusing the same accordion already used in Playbook/Commitments, since the list has grown to 24 badges total.
 
-**Simple Mode** — a toggle inside Data → sync & backup that collapses the app down to just the essentials: phase/period tracking, the calendar, spotting and unprotected-sex logging, and the brush tracker. Journal, symptom logging, insights, and wrapped stay fully intact underneath — nothing is deleted or touched — they're just tucked out of the way while the toggle is on. Nav shrinks to Home and Data, with quick shortcuts to Calendar, Log, and the brush tracker right on Home. Switches instantly, no reopening the app, and the setting is remembered like any other.
+**Simple Mode** — a toggle inside Data → sync & backup that collapses the app down to just the essentials: phase/period tracking, the calendar, spotting and unprotected-sex logging, and the brush tracker. Journal, symptom logging, insights, and wrapped stay fully intact underneath — nothing is deleted or touched — they're just tucked out of the way while the toggle is on. Nav shrinks to Home and Data; the real calendar card itself (not a shortcut) sits right on Home, instantly viewable, with quick shortcuts to Log and the brush tracker below it. Data tab shows only the sync & backup bubble — the journal-by-phase history is hidden too. Switches instantly, no reopening the app, and the setting is remembered like any other.
+
+**Sunday digest now covers Commitments** — a commitment accepted, passed, or failed during the week gets its own "Commitments this week" line (standard, length, outcome).
+
+**"Earned this week" is now actually complete** — it used to be a small hand-picked list (First Night, Week 1, Tier Up, Perfect Week) that silently missed everything else, including Cleanings, Recommits, long streaks, and the new commitment achievements. It now works by comparing your real achievement state at the start and end of the week, so every milestone and repeatable — old or new — shows up in the digest the week it's actually earned, with a ×N if a repeatable landed more than once.
 
 ---
 
